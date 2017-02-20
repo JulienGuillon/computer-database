@@ -13,6 +13,7 @@ import com.excilys.computerdatabase.validation.IComputerValidation;
  * 20 févr. 2017
  */
 public class Computer implements IComputer{
+	private int id;
 	private String name;
 	private Date introduced;
 	private Date discontinued;
@@ -110,6 +111,25 @@ public class Computer implements IComputer{
 			IComputerValidation.check(computer);
 			return computer; 
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.excilys.computerdatabase.interfaces.IComputer#getId()
+	 */
+	@Override
+	public int getId() {
+		// TODO Auto-generated method stub
+		return id;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.excilys.computerdatabase.interfaces.IComputer#setId(int)
+	 */
+	@Override
+	public void setId(int pId) {
+		// TODO Auto-generated method stub
+		id = pId;		
 	}
 	
 	

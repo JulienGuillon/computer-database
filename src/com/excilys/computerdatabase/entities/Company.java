@@ -11,6 +11,7 @@ import com.excilys.computerdatabase.validation.ICompanyValidation;
  */
 public class Company implements ICompany{
 	
+	private int id;
 	private String name;
 	
 	private Company(CompanyBuilder pCompanyBuilder)
@@ -31,7 +32,7 @@ public class Company implements ICompany{
 		name = pName;
 	}
 	
-	private static class CompanyBuilder {
+	public static class CompanyBuilder {
 		private String name;
 		
 		public CompanyBuilder(String pName)
@@ -45,5 +46,19 @@ public class Company implements ICompany{
 			return company;
 
 		}
+	}
+	
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+	
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
 	}
 }

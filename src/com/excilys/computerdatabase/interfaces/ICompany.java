@@ -11,6 +11,10 @@ public interface ICompany {
 	
 	public void setName(String pName) throws Exception;
 	
+	public int getId();
+	
+	public void setId(int pId);
+	
 	public default String show() {
 		return "Company [name=" + getName() + "]";
 	}
