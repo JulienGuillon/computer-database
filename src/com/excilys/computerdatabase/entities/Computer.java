@@ -2,9 +2,8 @@ package com.excilys.computerdatabase.entities;
 
 import java.util.Date;
 
+import com.excilys.computerdatabase.interfaces.ICompany;
 import com.excilys.computerdatabase.interfaces.IComputer;
-import com.excilys.computerdatabase.validation.DateCheck;
-import com.excilys.computerdatabase.validation.ICheck;
 import com.excilys.computerdatabase.validation.IComputerValidation;
 
 /**
@@ -13,10 +12,11 @@ import com.excilys.computerdatabase.validation.IComputerValidation;
  * 20 févr. 2017
  */
 public class Computer implements IComputer{
+	private int id;
 	private String name;
 	private Date introduced;
 	private Date discontinued;
-	private Company manufacturer;
+	private ICompany manufacturer;
 	
 	private Computer(ComputerBuilder pComputerBuilder)
 	{
@@ -46,7 +46,7 @@ public class Computer implements IComputer{
 
 
 	@Override
-	public Company getManufacturer() {
+	public ICompany getManufacturer() {
 		return manufacturer;
 	}
 
@@ -70,7 +70,7 @@ public class Computer implements IComputer{
 
 
 	@Override
-	public void setManufacturer(Company pManufacturer) {
+	public void setManufacturer(ICompany pManufacturer) {
 		manufacturer = pManufacturer;
 	}
 	
@@ -110,6 +110,25 @@ public class Computer implements IComputer{
 			IComputerValidation.check(computer);
 			return computer; 
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.excilys.computerdatabase.interfaces.IComputer#getId()
+	 */
+	@Override
+	public int getId() {
+		// TODO Auto-generated method stub
+		return id;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.excilys.computerdatabase.interfaces.IComputer#setId(int)
+	 */
+	@Override
+	public void setId(int pId) {
+		// TODO Auto-generated method stub
+		id = pId;		
 	}
 	
 	

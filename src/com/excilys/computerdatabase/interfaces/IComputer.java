@@ -2,8 +2,6 @@ package com.excilys.computerdatabase.interfaces;
 
 import java.util.Date;
 
-import com.excilys.computerdatabase.entities.Company;
-
 /**
  * @author Guillon Julien
  *
@@ -17,7 +15,7 @@ public interface IComputer {
 	
 	public Date getDiscontinued();
 	
-	public Company getManufacturer();
+	public ICompany getManufacturer();
 	
 	public void setName(String pName);
 	
@@ -25,7 +23,11 @@ public interface IComputer {
 	
 	public void setDiscontinued(Date pDiscontinued);
 	
-	public void setManufacturer(Company pManufacturer);
+	public void setManufacturer(ICompany company);
+	
+	public int getId();
+	
+	public void setId(int pId);
 	
 	public default String show() {
 		return "Computer [name=" + getName() +
