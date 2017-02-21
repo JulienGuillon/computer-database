@@ -5,9 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.interfaces.ICompany;
+import com.excilys.computerdatabase.interfaces.IComputer;
 
 /**
  * @author Guillon Julien
@@ -22,6 +25,7 @@ public class CrudCompany implements ICrud<ICompany>{
 	private ResultSet resultSet;
 	private PreparedStatement preparedStatement;
 	private PreparedStatement preparedStatementInsert;
+	private PreparedStatement preparedStatementPagination;
 
 	
 	public CrudCompany()
@@ -30,7 +34,7 @@ public class CrudCompany implements ICrud<ICompany>{
 			statement = connection.createStatement();
 			preparedStatement = connection.prepareStatement(ConstanteQuery.SELECT_COMPANY_BY_ID);
 			preparedStatementInsert = connection.prepareStatement(ConstanteQuery.INSERT_COMPANY);
-
+			preparedStatementPagination = connection.prepareStatement(ConstanteQuery.PAGINATION_COMPANIES);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -84,6 +88,28 @@ public class CrudCompany implements ICrud<ICompany>{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public List<ICompany> findUsingPagination(int pOffset)
+	{
+		List<ICompany> companies = new ArrayList<>();
+		try {
+			preparedStatementPagination.setInt(1,  ConstanteQuery.PAGE);
+			preparedStatementPagination.setInt(2, pOffset);
+			resultSet = preparedStatementPagination.executeQuery();
+			while(resultSet.next())
+			{
+				companies.add(recreate(resultSet));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return companies;
 	}
 	
 	public ICompany recreate(ResultSet resultSet) throws SQLException, Exception

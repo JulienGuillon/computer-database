@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.interfaces.IComputer;
@@ -25,8 +27,8 @@ public class CrudComputer implements ICrud<IComputer>{
 	private PreparedStatement preparedStatementDelete;
 	private PreparedStatement preparedStatementUpdate;
 	private PreparedStatement preparedStatementInsert;
-
-
+	private PreparedStatement preparedStatementPagination;
+	
 	public CrudComputer()
 	{
 		try {
@@ -35,6 +37,7 @@ public class CrudComputer implements ICrud<IComputer>{
 			preparedStatementDelete = connection.prepareStatement(ConstanteQuery.DELETE_COMPUTER_BY_ID);
 			preparedStatementUpdate = connection.prepareStatement(ConstanteQuery.UPDATE_COMPUTER_BY_ID);
 			preparedStatementInsert = connection.prepareStatement(ConstanteQuery.INSERT_COMPUTER);
+			preparedStatementPagination = connection.prepareStatement(ConstanteQuery.PAGINATION_COMPUTERS);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,6 +122,28 @@ public class CrudComputer implements ICrud<IComputer>{
 			e.printStackTrace();
 		}
 	}
+	
+	public List<IComputer> findUsingPagination(int pOffset)
+	{
+		List<IComputer> computers = new ArrayList<>();
+		try {
+			preparedStatementPagination.setInt(1,  ConstanteQuery.PAGE);
+			preparedStatementPagination.setInt(2, pOffset);
+			resultSet = preparedStatementPagination.executeQuery();
+			while(resultSet.next())
+			{
+				computers.add(recreate(resultSet));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return computers;
+	}
 
 	public IComputer recreate(ResultSet resultSet) throws SQLException, Exception
 	{
@@ -126,7 +151,10 @@ public class CrudComputer implements ICrud<IComputer>{
 		computer.setId(resultSet.getInt("id"));
 		computer.setIntroduced((Date) resultSet.getObject("introduced"));
 		computer.setDiscontinued((Date) resultSet.getObject("introduced"));
-		computer.setManufacturer(new CrudCompany().find(resultSet.getInt("company_id")));
+		int idCompany = resultSet.getInt("company_id");
+		// TODO int validation
+		if(idCompany > 0)
+			computer.setManufacturer(new CrudCompany().find(idCompany));
 		return computer;
 	}
 }

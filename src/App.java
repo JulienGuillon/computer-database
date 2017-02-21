@@ -3,7 +3,7 @@ import java.sql.ResultSet;
 
 import java.util.Date;
 
-
+import com.excilys.computerdatabase.dao.CrudCompany;
 import com.excilys.computerdatabase.dao.CrudComputer;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.entities.Computer;
@@ -57,6 +57,9 @@ public class App {
 		ICompany company  = crudCompany.find(6);
 		System.out.println(company);
 		**/
+		
+		CrudCompany crudCompany = new CrudCompany();
+		System.out.println("\n"+crudCompany.findUsingPagination(1));
 	}
 
 }
