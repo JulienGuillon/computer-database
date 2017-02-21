@@ -2,7 +2,7 @@ package com.excilys.computerdatabase.view;
 
 import java.util.Scanner;
 
-import com.excilys.computerdatabase.Controler.MainMenuControler;
+import com.excilys.computerdatabase.controler.MainMenuControler;
 
 /**
  * @author Guillon Julien
@@ -15,7 +15,9 @@ public class MainMenuView {
 	
 	private MainMenuControler mainMenuControler;
 
-	private int choice;
+	private String choice;
+	
+	private	Scanner sc = new Scanner(System.in);
 	
 	private MainMenuView()
 	{
@@ -28,7 +30,7 @@ public class MainMenuView {
 		return MAIN_MENU_VIEW;
 	}
 	
-	public void displayUI()
+	public void displayUI() throws Exception
 	{
 		System.out.println("\t\t SELECT OPTION \t\t");
 		System.out.println("[1] List computers");
@@ -41,11 +43,8 @@ public class MainMenuView {
 	
 	public void takeUserChoice() throws Exception
 	{
-		Scanner sc = new Scanner(System.in);
-		choice = sc.nextInt();
-		System.out.println(choice);
+		choice = sc.next();
 		mainMenuControler.controlUserChoice(choice);
-		sc.close();
 	}
 	
 	public static void main(String[] args) throws Exception {
@@ -58,10 +57,10 @@ public class MainMenuView {
 	 * @param pChoice
 	 * @throws Exception 
 	 */
-	public void displayError(int pChoice) throws Exception {
+	public void displayError(String pChoice) throws Exception {
 		System.out.println("Your selection "+ pChoice +" is not a valid option.");
-		MAIN_MENU_VIEW.displayUI();
-		MAIN_MENU_VIEW.takeUserChoice();
+		displayUI();
+		takeUserChoice();
 	}
 
 }

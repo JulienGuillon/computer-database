@@ -13,5 +13,5 @@ public class ConstanteDatabase {
 	public static final String DB_NAME = "computer-database-db";
 	public static final String USER = "admincdb";
 	public static final String PASSWORD = "qwerty1234";
-	public static final String CONNECTION = URL + ":" + PORT + "/" + DB_NAME;
+	public static final String CONNECTION = URL + ":" + PORT + "/" + DB_NAME +"?zeroDateTimeBehavior=convertToNull";
 }

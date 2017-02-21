@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.Controler;
+package com.excilys.computerdatabase.controler;
 
 import com.excilys.computerdatabase.dao.CrudComputer;
 import com.excilys.computerdatabase.validation.ICheck;
@@ -28,23 +28,26 @@ public class MainMenuControler {
 	 * @param choice
 	 * @throws Exception 
 	 */
-	public void controlUserChoice(int choice) throws Exception {
+	public void controlUserChoice(String choice) throws Exception {
 		ICheck.isNull(choice);
 		switch (choice)
 		{
-		case 1:
+		case "1":
 			IView.displayComputers();
 			//mainMenuView.displayComputers();
 			break;
-		case 2:
+		case "2":
+			IView.displayCompanies();
 			break;
-		case 3:
+		case "3":
+			IView.displayComputerDetails();
 			break;
-		case 4:
+		case "4":
+			IView.displayComputerUpdate();
 			break;
-		case 5:
+		case "5":
 			break;
-		case 6:
+		case "6":
 			break;
 		default:
 			mainMenuView.displayError(choice);

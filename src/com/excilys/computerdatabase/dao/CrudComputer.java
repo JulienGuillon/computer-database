@@ -153,7 +153,7 @@ public class CrudComputer implements ICrud<IComputer>{
 		computer.setDiscontinued((Date) resultSet.getObject("introduced"));
 		int idCompany = resultSet.getInt("company_id");
 		// TODO int validation
-		if(idCompany > 0)
+		if(idCompany != 0)
 			computer.setManufacturer(new CrudCompany().find(idCompany));
 		return computer;
 	}
