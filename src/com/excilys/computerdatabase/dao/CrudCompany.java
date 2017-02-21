@@ -7,9 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.excilys.computerdatabase.entities.Company;
-import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.interfaces.ICompany;
-import com.excilys.computerdatabase.interfaces.IComputer;
 
 /**
  * @author Guillon Julien
@@ -24,7 +22,6 @@ public class CrudCompany implements ICrud<ICompany>{
 	private ResultSet resultSet;
 	private PreparedStatement preparedStatement;
 	private PreparedStatement preparedStatementInsert;
-	private PreparedStatement preparedStatementDelete;
 
 	
 	public CrudCompany()
@@ -33,7 +30,6 @@ public class CrudCompany implements ICrud<ICompany>{
 			statement = connection.createStatement();
 			preparedStatement = connection.prepareStatement(ConstanteQuery.SELECT_COMPANY_BY_ID);
 			preparedStatementInsert = connection.prepareStatement(ConstanteQuery.INSERT_COMPANY);
-			preparedStatementDelete = connection.prepareStatement(ConstanteQuery.SELECT_COMPANY_BY_ID);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -53,8 +49,7 @@ public class CrudCompany implements ICrud<ICompany>{
 			preparedStatement.setString(1, String.valueOf(pId));
 			resultSet = preparedStatement.executeQuery();
 			resultSet.next();
-			company = new Company.CompanyBuilder(resultSet.getString("name")).build();
-			company.setId(resultSet.getInt("id"));
+			company = recreate(resultSet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -89,6 +84,13 @@ public class CrudCompany implements ICrud<ICompany>{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public ICompany recreate(ResultSet resultSet) throws SQLException, Exception
+	{
+		ICompany company = new Company.CompanyBuilder(resultSet.getString("name")).build();
+		company.setId(resultSet.getInt("id"));
+		return company;
 	}
 
 }

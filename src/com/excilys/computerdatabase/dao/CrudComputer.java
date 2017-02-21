@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.interfaces.IComputer;
@@ -28,14 +29,12 @@ public class CrudComputer implements ICrud<IComputer>{
 
 	public CrudComputer()
 	{
-		// requete pour obtenir les infos necessaires à computer.
-		// select * from computer join company on company.id = computer.company_id
 		try {
 			statement = connection.createStatement();
 			preparedStatement = connection.prepareStatement(ConstanteQuery.SELECT_COMPUTER_BY_ID);
 			preparedStatementDelete = connection.prepareStatement(ConstanteQuery.DELETE_COMPUTER_BY_ID);
-			preparedStatementUpdate = connection.prepareStatement("delete from computer where id = ? ");
-			preparedStatementInsert = connection.prepareStatement("insert into computervalues(name, introduced, discontinued, company_id);");
+			preparedStatementUpdate = connection.prepareStatement(ConstanteQuery.UPDATE_COMPUTER_BY_ID);
+			preparedStatementInsert = connection.prepareStatement(ConstanteQuery.INSERT_COMPUTER);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,10 +51,10 @@ public class CrudComputer implements ICrud<IComputer>{
 		IComputer computer = null;
 		// TODO Auto-generated method stub
 		try {
-			preparedStatement.setInt(0, pId);
+			preparedStatement.setInt(1, pId);
+			resultSet = preparedStatement.executeQuery();
 			resultSet.next();
-			computer = new Computer.ComputerBuilder(resultSet.getString("name")).build();
-			computer.setId(resultSet.getInt("id"));
+			computer = recreate(resultSet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,15 +90,43 @@ public class CrudComputer implements ICrud<IComputer>{
 		}
 	}
 	
-	public void update(int pId)
+	public void update(IComputer pComputer, int pId)
 	{
 		try {
-			preparedStatement.setInt(1, pId);
-			preparedStatementDelete.execute();
+			preparedStatementUpdate.setString(1, pComputer.getName());
+			preparedStatementUpdate.setObject(2, pComputer.getIntroduced());
+			preparedStatementUpdate.setObject(3, pComputer.getDiscontinued());
+			preparedStatementUpdate.setInt(4, pComputer.getManufacturer().getId());
+			preparedStatementUpdate.setInt(5, pId);
+			preparedStatementUpdate.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void create(IComputer pComputer)
+	{
+		try {
+			preparedStatementInsert.setString(1, pComputer.getName());
+			preparedStatementInsert.setObject(2, pComputer.getIntroduced());
+			preparedStatementInsert.setObject(3, pComputer.getDiscontinued());
+			preparedStatementInsert.setInt(4, pComputer.getManufacturer().getId());
+			preparedStatementInsert.execute();
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	public IComputer recreate(ResultSet resultSet) throws SQLException, Exception
+	{
+		IComputer computer = new Computer.ComputerBuilder(resultSet.getString("name")).build();
+		computer.setId(resultSet.getInt("id"));
+		computer.setIntroduced((Date) resultSet.getObject("introduced"));
+		computer.setDiscontinued((Date) resultSet.getObject("introduced"));
+		computer.setManufacturer(new CrudCompany().find(resultSet.getInt("company_id")));
+		return computer;
+	}
 }

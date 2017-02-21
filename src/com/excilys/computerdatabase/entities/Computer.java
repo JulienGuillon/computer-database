@@ -2,9 +2,8 @@ package com.excilys.computerdatabase.entities;
 
 import java.util.Date;
 
+import com.excilys.computerdatabase.interfaces.ICompany;
 import com.excilys.computerdatabase.interfaces.IComputer;
-import com.excilys.computerdatabase.validation.DateCheck;
-import com.excilys.computerdatabase.validation.ICheck;
 import com.excilys.computerdatabase.validation.IComputerValidation;
 
 /**
@@ -17,7 +16,7 @@ public class Computer implements IComputer{
 	private String name;
 	private Date introduced;
 	private Date discontinued;
-	private Company manufacturer;
+	private ICompany manufacturer;
 	
 	private Computer(ComputerBuilder pComputerBuilder)
 	{
@@ -47,7 +46,7 @@ public class Computer implements IComputer{
 
 
 	@Override
-	public Company getManufacturer() {
+	public ICompany getManufacturer() {
 		return manufacturer;
 	}
 
@@ -71,7 +70,7 @@ public class Computer implements IComputer{
 
 
 	@Override
-	public void setManufacturer(Company pManufacturer) {
+	public void setManufacturer(ICompany pManufacturer) {
 		manufacturer = pManufacturer;
 	}
 	

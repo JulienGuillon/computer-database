@@ -1,7 +1,5 @@
 package com.excilys.computerdatabase.dao;
 
-import java.sql.DriverManager;
-
 /**
  * @author Guillon Julien
  *
