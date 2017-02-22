@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.controler;
+package com.excilys.computerdatabase.controller;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -11,29 +11,40 @@ import com.excilys.computerdatabase.view.ListComputerView;
  * @author Guillon Julien
  *
  * 21 févr. 2017
+ * 
+ * Controller for the ListComputerView
+ * It is a singleton.
+ * Allows to catch event on view ListComputerView and make validation,
+ * 
  */
-public class ListComputerControler {
+public class ListComputerController {
 	
-	private static final ListComputerControler LIST_COMPUTER_CONTROLER = new ListComputerControler();
+	private static final ListComputerController LIST_COMPUTER_CONTROLER = new ListComputerController();
 
 	private ListComputerView listComputerView;
 	
 	private CrudComputer crudComputer;
 	
-	private int offset;
+	private  int offset;
 
-	private ListComputerControler()
+	private ListComputerController()
 	{
-		offset = 0;
 		crudComputer = new CrudComputer();
 	}
 	
-	public static ListComputerControler getInstance()
-	{
+	/**
+	 * 
+	 * @return an instance of ListComputerController
+	 */
+	public static ListComputerController getInstance()
+	{	
 		return LIST_COMPUTER_CONTROLER;
 	}
 
 	/**
+	 * Find all computers with pagination by using crud method
+	 * and call to update view 
+	 * @param pChoice: could be "n" or "p" to switch of page 
 	 * @throws SQLException 
 	 * 
 	 */
@@ -42,12 +53,13 @@ public class ListComputerControler {
 		switch(pChoice)
 		{
 		case "n":
-			offset = offset+Constante.PAGE_SIZE;
+			offset = offset+Constant.PAGE_SIZE;
 			break;
 		case "p":
-			offset = (offset-Constante.PAGE_SIZE >= 0) ? offset-Constante.PAGE_SIZE : 0;
+			offset = (offset-Constant.PAGE_SIZE >= 0) ? offset-Constant.PAGE_SIZE : 0;
 			break;
 		case "q":
+			offset = 0;
 			quit = true;
 			break;
 		}

@@ -7,5 +7,7 @@ package com.excilys.computerdatabase.view;
  */
 public class ConstanteView {
 	public static final String FORMAT_COMPUTER = "%3s | %15s | %21s | %21s | %3s\n";
+	
 	public static final String FORMAT_COMPANY = "%3s | %15s \n";
+	
 }

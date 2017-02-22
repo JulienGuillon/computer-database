@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.controler;
+package com.excilys.computerdatabase.controller;
 
 import com.excilys.computerdatabase.dao.CrudComputer;
 import com.excilys.computerdatabase.view.DetailsComputerView;
@@ -7,21 +7,30 @@ import com.excilys.computerdatabase.view.DetailsComputerView;
  * @author Guillon Julien
  *
  * 21 févr. 2017
+ * 
+ * Controller for the DetailsComputerView
+ * It is a singleton.
+ * Allows to catch event on view DetailsComputerView and make validation.
+ * 
  */
-public class DetailsComputerControler {
+public class DetailsComputerController {
 
-	private static final DetailsComputerControler DETAILS_COMPUTER_CONTROLER = new DetailsComputerControler();
+	private static final DetailsComputerController DETAILS_COMPUTER_CONTROLER = new DetailsComputerController();
 	
 	private DetailsComputerView detailsComputerView;
 	
 	private CrudComputer crudComputer;
 
-	private DetailsComputerControler()
+	private DetailsComputerController()
 	{
 		crudComputer = new CrudComputer();
 	}
 	
-	public static DetailsComputerControler getInstance()
+	/**
+	 * 
+	 * @return an instance of DetailsComputerController
+	 */
+	public static DetailsComputerController getInstance()
 	{
 		return DETAILS_COMPUTER_CONTROLER;
 	}

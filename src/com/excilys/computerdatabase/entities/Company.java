@@ -14,6 +14,10 @@ public class Company implements ICompany{
 	private int id;
 	private String name;
 	
+	/**
+	 * 
+	 * @param pCompanyBuilder
+	 */
 	private Company(CompanyBuilder pCompanyBuilder)
 	{
 		super();
@@ -24,7 +28,6 @@ public class Company implements ICompany{
 	public String getName() {
 		return name;
 	}
-
 
 	@Override
 	public void setName(String pName) throws Exception {

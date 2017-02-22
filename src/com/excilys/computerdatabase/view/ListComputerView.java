@@ -4,22 +4,27 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
-import com.excilys.computerdatabase.controler.ListComputerControler;
+import com.excilys.computerdatabase.controller.ListComputerController;
 import com.excilys.computerdatabase.interfaces.IComputer;
 
 /**
  * @author Guillon Julien
  *
  * 21 févr. 2017
+ * 
+ * View that display list of computers
+ * 
  */
 public class ListComputerView {
 	
 	private static final ListComputerView LIST_COMPUTER_VIEW = new ListComputerView();
 		
-	private ListComputerControler listComputerControler;
+	private ListComputerController listComputerControler;
+	
+	private Scanner sc = ScannerInstance.getInstance();
 	
 	private ListComputerView() {
-		listComputerControler = ListComputerControler.getInstance();
+		listComputerControler = ListComputerController.getInstance();
 		listComputerControler.setListComputerView(this);
 	}
 	
@@ -32,18 +37,21 @@ public class ListComputerView {
 	{
 		System.out.format(ConstanteView.FORMAT_COMPUTER, "ID", "NOM", "INTRODUCED", "DISCONTINUED", "COMPANY");
 	}
-	
-	public void displayFooter() throws Exception
-	{
+
+
+	 /**
+	  * Display footer that able to select next page or previous page
+	  * @throws Exception
+	  */
+	 public void displayFooter() throws Exception
+	 {
 		String choice;
-		Scanner sc = new Scanner(System.in);
 		do {
 			System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
 			choice = sc.next();
 			listComputerControler.findComputers(choice);
 		}
 		while(!choice.equals("q"));
-		sc.close();
 		IView.displayMainMenu();
 	}
 	
@@ -55,6 +63,7 @@ public class ListComputerView {
 	}
 
 	/**
+	 * Display view that show list of computers
 	 * @param pComputers
 	 * @throws SQLException 
 	 */

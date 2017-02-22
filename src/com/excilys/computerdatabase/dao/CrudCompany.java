@@ -10,12 +10,13 @@ import java.util.List;
 
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.interfaces.ICompany;
-import com.excilys.computerdatabase.interfaces.IComputer;
 
 /**
  * @author Guillon Julien
  *
  * 20 févr. 2017
+ * 
+ * Allows to make all the crud operation on entity company
  */
 public class CrudCompany implements ICrud<ICompany>{
 
@@ -53,7 +54,7 @@ public class CrudCompany implements ICrud<ICompany>{
 			preparedStatement.setString(1, String.valueOf(pId));
 			resultSet = preparedStatement.executeQuery();
 			resultSet.next();
-			company = recreate(resultSet);
+			company = setToCompany(resultSet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -78,7 +79,10 @@ public class CrudCompany implements ICrud<ICompany>{
 		return resultSet;
 	}
 	
-	
+	/**
+	 * Persist a company on database
+	 * @param pCompany
+	 */
 	public void create(ICompany pCompany)
 	{
 		try {
@@ -90,6 +94,11 @@ public class CrudCompany implements ICrud<ICompany>{
 		}
 	}
 	
+	/**
+	 * Find companies using pagination from database
+	 * @param pOffset
+	 * @return
+	 */
 	public List<ICompany> findUsingPagination(int pOffset)
 	{
 		List<ICompany> companies = new ArrayList<>();
@@ -99,7 +108,7 @@ public class CrudCompany implements ICrud<ICompany>{
 			resultSet = preparedStatementPagination.executeQuery();
 			while(resultSet.next())
 			{
-				companies.add(recreate(resultSet));
+				companies.add(setToCompany(resultSet));
 			}
 			
 		} catch (SQLException e) {
@@ -112,7 +121,14 @@ public class CrudCompany implements ICrud<ICompany>{
 		return companies;
 	}
 	
-	public ICompany recreate(ResultSet resultSet) throws SQLException, Exception
+	/**
+	 * Allows to get a company from a ResultSet 
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public ICompany setToCompany(ResultSet resultSet) throws SQLException, Exception
 	{
 		ICompany company = new Company.CompanyBuilder(resultSet.getString("name")).build();
 		company.setId(resultSet.getInt("id"));

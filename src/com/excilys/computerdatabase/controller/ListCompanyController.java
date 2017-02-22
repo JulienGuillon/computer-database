@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.controler;
+package com.excilys.computerdatabase.controller;
 
 import java.util.List;
 
@@ -10,10 +10,15 @@ import com.excilys.computerdatabase.view.ListCompanyView;
  * @author Guillon Julien
  *
  * 21 févr. 2017
+ * 
+ * Controller for the ListCompanyView
+ * It is a singleton.
+ * Allows to catch event on view ListCompanyView and make validation.
+ * 
  */
-public class ListCompanyControler {
+public class ListCompanyController {
 
-	private static final ListCompanyControler LIST_COMPANY_CONTROLER = new ListCompanyControler();
+	private static final ListCompanyController LIST_COMPANY_CONTROLER = new ListCompanyController();
 
 	private ListCompanyView listCompanyView;
 	
@@ -21,28 +26,38 @@ public class ListCompanyControler {
 	
 	private int offset;
 
-	private ListCompanyControler()
+	private ListCompanyController()
 	{
-		offset = 0;
 		crudCompany = new CrudCompany();
 	}
 	
-	public static ListCompanyControler getInstance()
+	/**
+	 * 
+	 * @return an instance ListCompanyController
+	 */
+	public static ListCompanyController getInstance()
 	{
 		return LIST_COMPANY_CONTROLER;
 	}
 	
+	/**
+	 * Find all companies with pagination by using crud method
+	 * and call to update view 
+	 * @param pChoice
+	 */
 	public void findCompanies(String pChoice)
 	{
 		boolean quit = false;
 		switch(pChoice)
 		{
 			case "n":
-				offset = offset+Constante.PAGE_SIZE;
+				offset = offset+Constant.PAGE_SIZE;
 				break;
 			case "p":
 				break;
 			case "q":
+				offset = 0;
+				quit = true;
 				break;
 		}
 		if (!quit)

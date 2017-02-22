@@ -2,31 +2,36 @@ package com.excilys.computerdatabase.view;
 
 import java.util.Scanner;
 
-import com.excilys.computerdatabase.controler.DetailsComputerControler;
+import com.excilys.computerdatabase.controller.DetailsComputerController;
 import com.excilys.computerdatabase.interfaces.IComputer;
 
 /**
  * @author Guillon Julien
  *
  * 21 févr. 2017
+ * 
+ * View that display informations about one computer
+ * 
  */
 public class DetailsComputerView {
 
 	private static final DetailsComputerView DETAILS_COMPUTER_VIEW = new DetailsComputerView();
 	
-	private DetailsComputerControler detailsComputerControler;
+	private DetailsComputerController detailsComputerControler;
 
 	private int idComputer;
 	
-	private Scanner sc;
+	private Scanner sc = ScannerInstance.getInstance();
 	
 	private DetailsComputerView()
 	{
-		detailsComputerControler = DetailsComputerControler.getInstance();
+		detailsComputerControler = DetailsComputerController.getInstance();
 		detailsComputerControler.setDetailsComputerView(this);
-		sc = new Scanner(System.in);
 	}
 	
+	/**
+	 * @return an instance of DetailsComputerView
+	 */
 	public static DetailsComputerView getInstance()
 	{
 		return DETAILS_COMPUTER_VIEW;
@@ -43,6 +48,11 @@ public class DetailsComputerView {
 		detailsComputerControler.makeOperation(sc.next(), idComputer);
 	}
 	
+	/**
+	 * Display view to select computer's id
+	 * and use controller to get associated computer
+	 * @throws Exception
+	 */
 	public void displayUI() throws Exception
 	{
 		int choice;
@@ -54,9 +64,11 @@ public class DetailsComputerView {
 		while(choice <= 0);
 		detailsComputerControler.findComputerById(choice);
 		displayFooter();
+		IView.displayMainMenu();
 	}
 
 	/**
+	 * Display details of a computer
 	 * @param pComputer
 	 */
 	public void displayDetails(IComputer pComputer) {
@@ -69,7 +81,7 @@ public class DetailsComputerView {
 	}
 
 	/**
-	 * 
+	 * Display a message to confirm deletion of a computer
 	 */
 	public void displayDeletion(int pId) {
 		System.out.println("Computer with ID: " + pId + " was deleted");

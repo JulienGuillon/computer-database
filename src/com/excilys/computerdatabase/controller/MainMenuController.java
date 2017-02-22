@@ -1,6 +1,5 @@
-package com.excilys.computerdatabase.controler;
+package com.excilys.computerdatabase.controller;
 
-import com.excilys.computerdatabase.dao.CrudComputer;
 import com.excilys.computerdatabase.validation.ICheck;
 import com.excilys.computerdatabase.view.IView;
 import com.excilys.computerdatabase.view.MainMenuView;
@@ -9,22 +8,32 @@ import com.excilys.computerdatabase.view.MainMenuView;
  * @author Guillon Julien
  *
  * 21 févr. 2017
+ * 
+ * Controller for the MainMenuView
+ * It is a singleton.
+ * Allows to catch event on view MainMenuView and make validation.
+ * 
  */
-public class MainMenuControler {
+public class MainMenuController {
 
-	private static final MainMenuControler MAIN_MENU_CONTROLER = new MainMenuControler();
+	private static final MainMenuController MAIN_MENU_CONTROLER = new MainMenuController();
 	private MainMenuView mainMenuView;
 	
-	private MainMenuControler()
+	private MainMenuController()
 	{
 	}
 	
-	public static MainMenuControler getInstance()
+	/**
+	 * @return an instance MainMenuController
+	 */
+	public static MainMenuController getInstance()
 	{
 		return MAIN_MENU_CONTROLER;
 	}
 
 	/**
+	 * Control user entry and call the good view to display
+	 * 
 	 * @param choice
 	 * @throws Exception 
 	 */
@@ -34,7 +43,6 @@ public class MainMenuControler {
 		{
 		case "1":
 			IView.displayComputers();
-			//mainMenuView.displayComputers();
 			break;
 		case "2":
 			IView.displayCompanies();
@@ -43,9 +51,9 @@ public class MainMenuControler {
 			IView.displayComputerDetails();
 			break;
 		case "4":
-			IView.displayComputerUpdate();
 			break;
 		case "5":
+			IView.displayComputerUpdate();
 			break;
 		case "6":
 			break;

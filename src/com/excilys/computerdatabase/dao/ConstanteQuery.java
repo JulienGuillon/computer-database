@@ -4,6 +4,8 @@ package com.excilys.computerdatabase.dao;
  * @author Guillon Julien
  *
  * 20 févr. 2017
+ * 
+ * Contains all queries for prepared statement that concern computer and company
  */
 public class ConstanteQuery {
 	public static final String SELECT_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name cname from computer left join company on company.id = computer.company_id;";

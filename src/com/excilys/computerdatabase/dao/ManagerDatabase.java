@@ -7,6 +7,10 @@ import java.sql.SQLException;
  * @author Guillon Julien
  *
  * 20 févr. 2017
+ * 
+ * Singleton that consist to manage all operations concerning
+ * database connection
+ * 
  */
 public class ManagerDatabase {
 	
@@ -14,6 +18,10 @@ public class ManagerDatabase {
 
 	private static final ManagerDatabase MANAGER_DATABASE = new ManagerDatabase();
 	
+	/**
+	 * 
+	 * @return an instance of ManagerDatabase
+	 */
 	public static ManagerDatabase getInstance()
 	{
 		return MANAGER_DATABASE;

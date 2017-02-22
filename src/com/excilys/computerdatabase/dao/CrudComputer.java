@@ -16,6 +16,8 @@ import com.excilys.computerdatabase.interfaces.IComputer;
  * @author Guillon Julien
  *
  * 20 févr. 2017
+ * 
+ * Allows to make all the crud operation on entity computer
  */
 public class CrudComputer implements ICrud<IComputer>{
 
@@ -57,7 +59,7 @@ public class CrudComputer implements ICrud<IComputer>{
 			preparedStatement.setInt(1, pId);
 			resultSet = preparedStatement.executeQuery();
 			resultSet.next();
-			computer = recreate(resultSet);
+			computer = setToComputer(resultSet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,6 +84,10 @@ public class CrudComputer implements ICrud<IComputer>{
 		return resultSet;
 	}
 	
+	/**
+	 * Delete a computer on database
+	 * @param pId
+	 */
 	public void delete(int pId)
 	{
 		try {
@@ -93,6 +99,11 @@ public class CrudComputer implements ICrud<IComputer>{
 		}
 	}
 	
+	/**
+	 * Update a computer on database
+	 * @param pComputer
+	 * @param pId
+	 */
 	public void update(IComputer pComputer, int pId)
 	{
 		try {
@@ -108,6 +119,10 @@ public class CrudComputer implements ICrud<IComputer>{
 		}
 	}
 	
+	/**
+	 * Persist a computer on database
+	 * @param pComputer
+	 */
 	public void create(IComputer pComputer)
 	{
 		try {
@@ -123,6 +138,11 @@ public class CrudComputer implements ICrud<IComputer>{
 		}
 	}
 	
+	/**
+	 * Find computers using pagination on database
+	 * @param pOffset
+	 * @return
+	 */
 	public List<IComputer> findUsingPagination(int pOffset)
 	{
 		List<IComputer> computers = new ArrayList<>();
@@ -132,7 +152,7 @@ public class CrudComputer implements ICrud<IComputer>{
 			resultSet = preparedStatementPagination.executeQuery();
 			while(resultSet.next())
 			{
-				computers.add(recreate(resultSet));
+				computers.add(setToComputer(resultSet));
 			}
 			
 		} catch (SQLException e) {
@@ -145,14 +165,20 @@ public class CrudComputer implements ICrud<IComputer>{
 		return computers;
 	}
 
-	public IComputer recreate(ResultSet resultSet) throws SQLException, Exception
+	/**
+ 	 * Allows to get a computer from a ResultSet
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public IComputer setToComputer(ResultSet resultSet) throws SQLException, Exception
 	{
 		IComputer computer = new Computer.ComputerBuilder(resultSet.getString("name")).build();
 		computer.setId(resultSet.getInt("id"));
 		computer.setIntroduced((Date) resultSet.getObject("introduced"));
 		computer.setDiscontinued((Date) resultSet.getObject("introduced"));
 		int idCompany = resultSet.getInt("company_id");
-		// TODO int validation
 		if(idCompany != 0)
 			computer.setManufacturer(new CrudCompany().find(idCompany));
 		return computer;

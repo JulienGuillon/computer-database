@@ -4,6 +4,8 @@ package com.excilys.computerdatabase.dao;
  * @author Guillon Julien
  *
  * 20 févr. 2017
+ *
+ * Contains all constants to access to database
  */
 public class ConstanteDatabase {
 	
