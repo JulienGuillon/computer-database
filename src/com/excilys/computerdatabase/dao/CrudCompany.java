@@ -8,8 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.excilys.computerdatabase.dao.mapper.MapperCompany;
 import com.excilys.computerdatabase.entities.Company;
-import com.excilys.computerdatabase.interfaces.ICompany;
 
 /**
  * @author Guillon Julien
@@ -18,14 +18,17 @@ import com.excilys.computerdatabase.interfaces.ICompany;
  * 
  * Allows to make all the crud operation on entity company
  */
-public class CrudCompany implements ICrud<ICompany>{
-
+public class CrudCompany implements ICrud<Company>{
 	
-	private Connection connection = ManagerDatabase.getInstance().getConnection();
+	private static final int PAGE = 10;
+	private static final String SELECT_COMPANIES = "select * from company;";
+	private static final String SELECT_COMPANY_BY_ID = "select * from company where id= ?;";
+	private static final String PAGINATION_COMPANIES = "select * from company limit ? offset ?;";
+	
+	private Connection connection = DatabaseManager.INSTANCE.getConnection();
 	private Statement statement;
 	private ResultSet resultSet;
 	private PreparedStatement preparedStatement;
-	private PreparedStatement preparedStatementInsert;
 	private PreparedStatement preparedStatementPagination;
 
 	
@@ -33,9 +36,8 @@ public class CrudCompany implements ICrud<ICompany>{
 	{
 		try {
 			statement = connection.createStatement();
-			preparedStatement = connection.prepareStatement(ConstanteQuery.SELECT_COMPANY_BY_ID);
-			preparedStatementInsert = connection.prepareStatement(ConstanteQuery.INSERT_COMPANY);
-			preparedStatementPagination = connection.prepareStatement(ConstanteQuery.PAGINATION_COMPANIES);
+			preparedStatement = connection.prepareStatement(SELECT_COMPANY_BY_ID);
+			preparedStatementPagination = connection.prepareStatement(PAGINATION_COMPANIES);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -47,14 +49,14 @@ public class CrudCompany implements ICrud<ICompany>{
 	 * @see com.excilys.computerdatabase.dao.ICrud#find(java.lang.String, int)
 	 */
 	@Override
-	public ICompany find(int pId) {
-		ICompany company = null;
+	public Company find(int id) {
+		Company company = null;
 		// TODO Auto-generated method stub
 		try {
-			preparedStatement.setString(1, String.valueOf(pId));
+			preparedStatement.setString(1, String.valueOf(id));
 			resultSet = preparedStatement.executeQuery();
 			resultSet.next();
-			company = setToCompany(resultSet);
+			company = MapperCompany.setToCompany(resultSet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,7 +73,7 @@ public class CrudCompany implements ICrud<ICompany>{
 	@Override
 	public ResultSet findAll() {
 		try {
-			resultSet = statement.executeQuery(ConstanteQuery.SELECT_COMPANIES);
+			resultSet = statement.executeQuery(SELECT_COMPANIES);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,36 +81,22 @@ public class CrudCompany implements ICrud<ICompany>{
 		return resultSet;
 	}
 	
-	/**
-	 * Persist a company on database
-	 * @param pCompany
-	 */
-	public void create(ICompany pCompany)
-	{
-		try {
-			preparedStatementInsert.setString(1, pCompany.getName());
-			preparedStatementInsert.execute();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
 	/**
 	 * Find companies using pagination from database
-	 * @param pOffset
+	 * @param offset
 	 * @return
 	 */
-	public List<ICompany> findUsingPagination(int pOffset)
+	public List<Company> findUsingPagination(int offset)
 	{
-		List<ICompany> companies = new ArrayList<>();
+		List<Company> companies = new ArrayList<>();
 		try {
-			preparedStatementPagination.setInt(1,  ConstanteQuery.PAGE);
-			preparedStatementPagination.setInt(2, pOffset);
+			preparedStatementPagination.setInt(1,  PAGE);
+			preparedStatementPagination.setInt(2, offset);
 			resultSet = preparedStatementPagination.executeQuery();
 			while(resultSet.next())
 			{
-				companies.add(setToCompany(resultSet));
+				companies.add(MapperCompany.setToCompany(resultSet));
 			}
 			
 		} catch (SQLException e) {
@@ -121,18 +109,4 @@ public class CrudCompany implements ICrud<ICompany>{
 		return companies;
 	}
 	
-	/**
-	 * Allows to get a company from a ResultSet 
-	 * @param resultSet
-	 * @return
-	 * @throws SQLException
-	 * @throws Exception
-	 */
-	public ICompany setToCompany(ResultSet resultSet) throws SQLException, Exception
-	{
-		ICompany company = new Company.CompanyBuilder(resultSet.getString("name")).build();
-		company.setId(resultSet.getInt("id"));
-		return company;
-	}
-
 }

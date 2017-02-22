@@ -1,6 +1,6 @@
 package com.excilys.computerdatabase.validation;
 
-import com.excilys.computerdatabase.interfaces.IComputer;
+import com.excilys.computerdatabase.entities.Computer;
 
 /**
  * @author Guillon Julien
@@ -10,10 +10,10 @@ import com.excilys.computerdatabase.interfaces.IComputer;
  *  Allows to make all verifications on computer
  */
 public interface IComputerValidation {
-	public static void check(IComputer pComputer) throws Exception
+	public static void check(Computer computer) throws Exception
 	{
-		ICheck.isNull(pComputer.getName());
-		StringCheck.isNotEmpty(pComputer.getName());
-		DateCheck.isBefore(pComputer.getIntroduced(), pComputer.getDiscontinued());
+		ICheck.isNull(computer.getName());
+		StringCheck.isNotEmpty(computer.getName());
+		DateCheck.isBefore(computer.getIntroduced(), computer.getDiscontinued());
 	}
 }

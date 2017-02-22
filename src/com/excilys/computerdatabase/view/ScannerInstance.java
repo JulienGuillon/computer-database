@@ -8,16 +8,18 @@ import java.util.Scanner;
  * 2017-02-21
  * 
  */
-public class ScannerInstance {
-	private static final Scanner SCANNER = new Scanner(System.in);
+public enum ScannerInstance {
+	INSTANCE;
 	
-	public static Scanner getInstance()
+	private Scanner scanner;
+	
+	private ScannerInstance()
 	{
-		return SCANNER;
+		scanner = new Scanner(System.in);
 	}
 	
-	public static void close()
+	public Scanner getScanner()
 	{
-		SCANNER.close();
+		return scanner;
 	}
 }

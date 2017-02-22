@@ -12,22 +12,12 @@ import java.sql.SQLException;
  * database connection
  * 
  */
-public class ManagerDatabase {
+public enum DatabaseManager {
+	INSTANCE;
 	
 	private Connection connection;
-
-	private static final ManagerDatabase MANAGER_DATABASE = new ManagerDatabase();
 	
-	/**
-	 * 
-	 * @return an instance of ManagerDatabase
-	 */
-	public static ManagerDatabase getInstance()
-	{
-		return MANAGER_DATABASE;
-	}
-	
-	private ManagerDatabase()
+	private DatabaseManager()
 	{
 		try {
 			Class.forName(ConstanteDatabase.CLASS_NAME);
@@ -48,16 +38,4 @@ public class ManagerDatabase {
 		return connection;
 	}
 
-	public void closeConnection()
-	{
-		if(connection != null)
-		{
-			try {
-				connection.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
 }

@@ -18,6 +18,4 @@ public interface ICrud<T> {
 	
 	public List<T> findUsingPagination(int pOffset);
 	
-	public void create(T pObject);
-	
 }

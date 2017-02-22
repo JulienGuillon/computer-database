@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.UpdateComputerController;
-import com.excilys.computerdatabase.interfaces.IComputer;
+import com.excilys.computerdatabase.entities.Computer;
 
 /**
  * @author Guillon Julien
@@ -15,13 +15,12 @@ import com.excilys.computerdatabase.interfaces.IComputer;
  * View that allows to select a computer by an id 
  * and modify it to make an update
  */
-public class UpdateComputerView {
-	
-	private static final UpdateComputerView UPDATE_COMPUTER_VIEW = new UpdateComputerView();
-	
+public enum UpdateComputerView {
+	INSTANCE;
+		
 	private UpdateComputerController updateComputerControler;
 	
-	private Scanner sc = ScannerInstance.getInstance();
+	private Scanner sc = ScannerInstance.INSTANCE.getScanner();
 	
 	private UpdateComputerView()
 	{
@@ -29,10 +28,6 @@ public class UpdateComputerView {
 		updateComputerControler.setUpdateComputerView(this);
 	}
 	
-	public static UpdateComputerView getInstance()
-	{
-		return UPDATE_COMPUTER_VIEW;
-	}
 	
 	public void displayHeader()
 	{
@@ -53,26 +48,26 @@ public class UpdateComputerView {
 	}
 
 	/**
-	 * @param pComputer
+	 * @param computer
 	 * @throws Exception 
 	 */
-	public void displayDetailsToUpdate(IComputer pComputer) throws Exception {
+	public void displayDetailsToUpdate(Computer computer) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		System.out.println("ID (" + pComputer.getId() + ")");
+		System.out.println("ID (" + computer.getId() + ")");
 		String name = "";
 		Date introduced = null;
 		Date discontinued = null;
 		String s = null;
 		sc.nextLine();
-		System.out.print("NAME (" + pComputer.getName() + "): ");
+		System.out.print("NAME (" + computer.getName() + "): ");
 		name = sc.nextLine();
 		if(name.equals(""))
 		{
-			name = pComputer.getName();
+			name = computer.getName();
 		}
 
 
-		System.out.print("INTRODUCED (" + pComputer.getIntroduced() + "): ");
+		System.out.print("INTRODUCED (" + computer.getIntroduced() + "): ");
 		s = sc.nextLine();
 		if (s.matches("\\d{4}-\\d{2}-\\d{2}"))
 		{
@@ -80,11 +75,11 @@ public class UpdateComputerView {
 		}
 		else
 		{
-			introduced = pComputer.getIntroduced();
+			introduced = computer.getIntroduced();
 		}
 		
 		s = "";
-		System.out.print("DISCONTINUED (" + pComputer.getDiscontinued() + "): ");
+		System.out.print("DISCONTINUED (" + computer.getDiscontinued() + "): ");
 		s = sc.nextLine();
 		if (s.matches("\\d{4}-\\d{2}-\\d{2}"))
 		{
@@ -92,21 +87,21 @@ public class UpdateComputerView {
 		}
 		else
 		{
-			discontinued = pComputer.getDiscontinued();
+			discontinued = computer.getDiscontinued();
 		}
 		System.out.println(discontinued);
-		pComputer.setIntroduced(introduced);
-		pComputer.setDiscontinued(discontinued);
-		pComputer.setName(name);
-		updateComputerControler.update(pComputer, pComputer.getId());
+		computer.setIntroduced(introduced);
+		computer.setDiscontinued(discontinued);
+		computer.setName(name);
+		updateComputerControler.update(computer, computer.getId());
 	}
 
 	/**
-	 * @param pComputer
+	 * @param computer
 	 * @throws Exception 
 	 */
-	public void displayInfoComputer(IComputer pComputer) throws Exception {
-		System.out.println("Computer with ID: " + pComputer.getId() + " was update");
+	public void displayInfoComputer(Computer computer) throws Exception {
+		System.out.println("Computer with ID: " + computer.getId() + " was update");
 		IView.displayMainMenu();
 	}
 	

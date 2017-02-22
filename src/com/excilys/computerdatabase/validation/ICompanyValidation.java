@@ -1,6 +1,6 @@
 package com.excilys.computerdatabase.validation;
 
-import com.excilys.computerdatabase.interfaces.ICompany;
+import com.excilys.computerdatabase.entities.Company;
 
 /**
  * @author Guillon Julien
@@ -10,9 +10,9 @@ import com.excilys.computerdatabase.interfaces.ICompany;
  * Allows to make all verifications on computer 
  */
 public interface ICompanyValidation {
-	public static void check(ICompany pCompany) throws Exception
+	public static void check(Company company) throws Exception
 	{
-		ICheck.isNull(pCompany.getName());
-		StringCheck.isNotEmpty(pCompany.getName());
+		ICheck.isNull(company.getName());
+		StringCheck.isNotEmpty(company.getName());
 	}
 }

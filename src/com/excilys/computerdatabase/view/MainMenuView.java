@@ -12,15 +12,14 @@ import com.excilys.computerdatabase.controller.MainMenuController;
  * View that display main menu 
  * 
  */
-public class MainMenuView {
-	
-	private static final MainMenuView MAIN_MENU_VIEW = new MainMenuView();
+public enum MainMenuView {
+	INSTANCE;
 	
 	private MainMenuController mainMenuControler;
 
 	private String choice;
 	
-	private	Scanner sc = ScannerInstance.getInstance();
+	private	Scanner sc = ScannerInstance.INSTANCE.getScanner();
 	
 	private MainMenuView()
 	{
@@ -28,14 +27,6 @@ public class MainMenuView {
 		mainMenuControler.setMainMenuView(this);
 	}
 	
-	/**
-	 * 
-	 * @return an instance of MainMenuView
-	 */
-	public static MainMenuView getInstance()
-	{
-		return MAIN_MENU_VIEW;
-	}
 	
 	/**
      * Display menu that propose different options 

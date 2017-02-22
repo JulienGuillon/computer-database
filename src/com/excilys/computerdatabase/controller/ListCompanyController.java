@@ -3,7 +3,7 @@ package com.excilys.computerdatabase.controller;
 import java.util.List;
 
 import com.excilys.computerdatabase.dao.CrudCompany;
-import com.excilys.computerdatabase.interfaces.ICompany;
+import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.view.ListCompanyView;
 
 /**
@@ -62,7 +62,7 @@ public class ListCompanyController {
 		}
 		if (!quit)
 		{
-			List<ICompany> companies = crudCompany.findUsingPagination(offset);
+			List<Company> companies = crudCompany.findUsingPagination(offset);
 			listCompanyView.displayCompanies(companies);
 		}
 	}

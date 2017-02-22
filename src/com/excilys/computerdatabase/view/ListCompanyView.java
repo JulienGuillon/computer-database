@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.ListCompanyController;
-import com.excilys.computerdatabase.interfaces.ICompany;
+import com.excilys.computerdatabase.entities.Company;
 
 /**
  * @author Guillon Julien
@@ -14,27 +14,18 @@ import com.excilys.computerdatabase.interfaces.ICompany;
  *  View that display list of companies 
  *  
  */
-public class ListCompanyView {
-	
-	private static final ListCompanyView LIST_COMPANY_VIEW = new ListCompanyView();
-	
+public enum ListCompanyView {
+	INSTANCE;
+		
 	private ListCompanyController listCompanyControler;
 	
-	private Scanner sc = ScannerInstance.getInstance();
+	private Scanner sc = ScannerInstance.INSTANCE.getScanner();
 	
 	private ListCompanyView() {
 		listCompanyControler = ListCompanyController.getInstance();
 		listCompanyControler.setListCompanyView(this);
 	}
 	
-	/**
-	 * 
-	 * @return an instance of ListCompanyView
-	 */
-	public static ListCompanyView getInstance()
-	{
-		return LIST_COMPANY_VIEW;
-	}
 	
 	public void displayHeader()
 	{
@@ -68,11 +59,11 @@ public class ListCompanyView {
 
 	/**
 	 * Display view that show list of companies 
-	 * @param pCompanies
+	 * @param companies
 	 */
-	public void displayCompanies(List<ICompany> pCompanies) {
+	public void displayCompanies(List<Company> companies) {
 		displayHeader();
-		for(ICompany c : pCompanies)
+		for(Company c : companies)
 		{
 			System.out.format(ConstanteView.FORMAT_COMPANY, c.getId(), c.getName());
 		}

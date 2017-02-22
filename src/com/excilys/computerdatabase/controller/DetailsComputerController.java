@@ -52,7 +52,7 @@ public class DetailsComputerController {
 	/**
 	 * @param pOperation
 	 */
-	public void makeOperation(String pOperation, int pId) {
+	public void makeOperation(String pOperation, long pId) {
 		switch (pOperation)
 		{
 			case "d":

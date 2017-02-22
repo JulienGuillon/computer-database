@@ -6,11 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import com.excilys.computerdatabase.dao.mapper.MapperComputer;
 import com.excilys.computerdatabase.entities.Computer;
-import com.excilys.computerdatabase.interfaces.IComputer;
 
 /**
  * @author Guillon Julien
@@ -19,10 +18,17 @@ import com.excilys.computerdatabase.interfaces.IComputer;
  * 
  * Allows to make all the crud operation on entity computer
  */
-public class CrudComputer implements ICrud<IComputer>{
+public class CrudComputer implements ICrud<Computer>{
 
+	private static final int PAGE = 10;
+	private static final String SELECT_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name cname from computer left join company on company.id = computer.company_id;";
+	private static final String SELECT_COMPUTER_BY_ID = "select computer.id, computer.name, introduced, discontinued, company_id, company.name cname from computer left join company on company.id = computer.company_id where computer.id= ?;";
+	private static final String PAGINATION_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name cname from computer left join company on company.id = computer.company_id limit ? offset ?;";
+	private static final String DELETE_COMPUTER_BY_ID = "delete from computer where id = ? ";
+	private static final String UPDATE_COMPUTER_BY_ID = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
+	private static final String INSERT_COMPUTER = "insert into computer(name, introduced, discontinued, company_id) values (?, ?, ?, ?)";
 	
-	private Connection connection = ManagerDatabase.getInstance().getConnection();
+	private Connection connection = DatabaseManager.INSTANCE.getConnection();
 	private Statement statement;
 	private ResultSet resultSet;
 	private PreparedStatement preparedStatement;
@@ -35,11 +41,11 @@ public class CrudComputer implements ICrud<IComputer>{
 	{
 		try {
 			statement = connection.createStatement();
-			preparedStatement = connection.prepareStatement(ConstanteQuery.SELECT_COMPUTER_BY_ID);
-			preparedStatementDelete = connection.prepareStatement(ConstanteQuery.DELETE_COMPUTER_BY_ID);
-			preparedStatementUpdate = connection.prepareStatement(ConstanteQuery.UPDATE_COMPUTER_BY_ID);
-			preparedStatementInsert = connection.prepareStatement(ConstanteQuery.INSERT_COMPUTER);
-			preparedStatementPagination = connection.prepareStatement(ConstanteQuery.PAGINATION_COMPUTERS);
+			preparedStatement = connection.prepareStatement(SELECT_COMPUTER_BY_ID);
+			preparedStatementDelete = connection.prepareStatement(DELETE_COMPUTER_BY_ID);
+			preparedStatementUpdate = connection.prepareStatement(UPDATE_COMPUTER_BY_ID);
+			preparedStatementInsert = connection.prepareStatement(INSERT_COMPUTER);
+			preparedStatementPagination = connection.prepareStatement(PAGINATION_COMPUTERS);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,14 +58,14 @@ public class CrudComputer implements ICrud<IComputer>{
 	 * @see com.excilys.computerdatabase.dao.ICrud#find(java.lang.String, int)
 	 */
 	@Override
-	public IComputer find(int pId) {
-		IComputer computer = null;
+	public Computer find(int id) {
+		Computer computer = null;
 		// TODO Auto-generated method stub
 		try {
-			preparedStatement.setInt(1, pId);
+			preparedStatement.setInt(1, id);
 			resultSet = preparedStatement.executeQuery();
 			resultSet.next();
-			computer = setToComputer(resultSet);
+			computer = MapperComputer.setToComputer(resultSet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -76,7 +82,7 @@ public class CrudComputer implements ICrud<IComputer>{
 	@Override
 	public ResultSet findAll() {
 		try {
-			resultSet = statement.executeQuery(ConstanteQuery.SELECT_COMPUTERS);
+			resultSet = statement.executeQuery(SELECT_COMPUTERS);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,12 +92,12 @@ public class CrudComputer implements ICrud<IComputer>{
 	
 	/**
 	 * Delete a computer on database
-	 * @param pId
+	 * @param id
 	 */
-	public void delete(int pId)
+	public void delete(long id)
 	{
 		try {
-			preparedStatementDelete.setInt(1, pId);
+			preparedStatementDelete.setLong(1, id);
 			preparedStatementDelete.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -101,17 +107,17 @@ public class CrudComputer implements ICrud<IComputer>{
 	
 	/**
 	 * Update a computer on database
-	 * @param pComputer
-	 * @param pId
+	 * @param computer
+	 * @param id
 	 */
-	public void update(IComputer pComputer, int pId)
+	public void update(Computer computer, long id)
 	{
 		try {
-			preparedStatementUpdate.setString(1, pComputer.getName());
-			preparedStatementUpdate.setObject(2, pComputer.getIntroduced());
-			preparedStatementUpdate.setObject(3, pComputer.getDiscontinued());
-			preparedStatementUpdate.setInt(4, pComputer.getManufacturer().getId());
-			preparedStatementUpdate.setInt(5, pId);
+			preparedStatementUpdate.setString(1, computer.getName());
+			preparedStatementUpdate.setObject(2, computer.getIntroduced());
+			preparedStatementUpdate.setObject(3, computer.getDiscontinued());
+			preparedStatementUpdate.setLong(4, computer.getManufacturer().getId());
+			preparedStatementUpdate.setLong(5, id);
 			preparedStatementUpdate.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -121,15 +127,15 @@ public class CrudComputer implements ICrud<IComputer>{
 	
 	/**
 	 * Persist a computer on database
-	 * @param pComputer
+	 * @param computer
 	 */
-	public void create(IComputer pComputer)
+	public void create(Computer computer)
 	{
 		try {
-			preparedStatementInsert.setString(1, pComputer.getName());
-			preparedStatementInsert.setObject(2, pComputer.getIntroduced());
-			preparedStatementInsert.setObject(3, pComputer.getDiscontinued());
-			preparedStatementInsert.setInt(4, pComputer.getManufacturer().getId());
+			preparedStatementInsert.setString(1, computer.getName());
+			preparedStatementInsert.setObject(2, computer.getIntroduced());
+			preparedStatementInsert.setObject(3, computer.getDiscontinued());
+			preparedStatementInsert.setLong(4, computer.getManufacturer().getId());
 			preparedStatementInsert.execute();
 
 		} catch (SQLException e) {
@@ -140,19 +146,19 @@ public class CrudComputer implements ICrud<IComputer>{
 	
 	/**
 	 * Find computers using pagination on database
-	 * @param pOffset
+	 * @param offset
 	 * @return
 	 */
-	public List<IComputer> findUsingPagination(int pOffset)
+	public List<Computer> findUsingPagination(int offset)
 	{
-		List<IComputer> computers = new ArrayList<>();
+		List<Computer> computers = new ArrayList<>();
 		try {
-			preparedStatementPagination.setInt(1,  ConstanteQuery.PAGE);
-			preparedStatementPagination.setInt(2, pOffset);
+			preparedStatementPagination.setInt(1,  PAGE);
+			preparedStatementPagination.setInt(2, offset);
 			resultSet = preparedStatementPagination.executeQuery();
 			while(resultSet.next())
 			{
-				computers.add(setToComputer(resultSet));
+				computers.add(MapperComputer.setToComputer(resultSet));
 			}
 			
 		} catch (SQLException e) {
@@ -165,22 +171,4 @@ public class CrudComputer implements ICrud<IComputer>{
 		return computers;
 	}
 
-	/**
- 	 * Allows to get a computer from a ResultSet
-	 * @param resultSet
-	 * @return
-	 * @throws SQLException
-	 * @throws Exception
-	 */
-	public IComputer setToComputer(ResultSet resultSet) throws SQLException, Exception
-	{
-		IComputer computer = new Computer.ComputerBuilder(resultSet.getString("name")).build();
-		computer.setId(resultSet.getInt("id"));
-		computer.setIntroduced((Date) resultSet.getObject("introduced"));
-		computer.setDiscontinued((Date) resultSet.getObject("introduced"));
-		int idCompany = resultSet.getInt("company_id");
-		if(idCompany != 0)
-			computer.setManufacturer(new CrudCompany().find(idCompany));
-		return computer;
-	}
 }

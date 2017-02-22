@@ -12,27 +12,27 @@ package com.excilys.computerdatabase.view;
 public interface IView {
 	public static void displayMainMenu() throws Exception
 	{
-		MainMenuView.getInstance().displayUI();
+		MainMenuView.INSTANCE.displayUI();
 	}
 	
 	public static void displayComputers() throws Exception
 	{
-		ListComputerView.getInstance().displayUI();
+		ListComputerView.INSTANCE.displayUI();
 	}
 	
 	public static void displayCompanies() throws Exception
 	{
-		ListCompanyView.getInstance().displayUI();
+		ListCompanyView.INSTANCE.displayUI();
 	}
 	
 	public static void displayComputerDetails() throws Exception
 	{
-		DetailsComputerView.getInstance().displayUI();
+		DetailsComputerView.INSTANCE.displayUI();
 	}
 	
 	public static void displayComputerUpdate() throws Exception
 	{
-		UpdateComputerView.getInstance().displayUI();
+		UpdateComputerView.INSTANCE.displayUI();
 	}
 
 }

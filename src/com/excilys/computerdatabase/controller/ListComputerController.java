@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.excilys.computerdatabase.dao.CrudComputer;
-import com.excilys.computerdatabase.interfaces.IComputer;
+import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.view.ListComputerView;
 
 /**
@@ -48,9 +48,9 @@ public class ListComputerController {
 	 * @throws SQLException 
 	 * 
 	 */
-	public void findComputers(String pChoice) throws SQLException {
+	public void findComputers(String choice) throws SQLException {
 		boolean quit = false;
-		switch(pChoice)
+		switch(choice)
 		{
 		case "n":
 			offset = offset+Constant.PAGE_SIZE;
@@ -65,16 +65,16 @@ public class ListComputerController {
 		}
 		if (!quit)
 		{
-			List<IComputer> computers = crudComputer.findUsingPagination(offset);
+			List<Computer> computers = crudComputer.findUsingPagination(offset);
 			listComputerView.displayComputers(computers);
 		}
 	}
 	
 	/**
-	 * @param pListComputerView the listComputerView to set
+	 * @param listComputerView the listComputerView to set
 	 */
-	public void setListComputerView(ListComputerView pListComputerView) {
-		this.listComputerView = pListComputerView;
+	public void setListComputerView(ListComputerView listComputerView) {
+		this.listComputerView = listComputerView;
 	}
 	
 }

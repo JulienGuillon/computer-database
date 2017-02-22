@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.ListComputerController;
-import com.excilys.computerdatabase.interfaces.IComputer;
+import com.excilys.computerdatabase.entities.Computer;
 
 /**
  * @author Guillon Julien
@@ -15,23 +15,18 @@ import com.excilys.computerdatabase.interfaces.IComputer;
  * View that display list of computers
  * 
  */
-public class ListComputerView {
-	
-	private static final ListComputerView LIST_COMPUTER_VIEW = new ListComputerView();
+public enum ListComputerView {
+	INSTANCE;
 		
 	private ListComputerController listComputerControler;
 	
-	private Scanner sc = ScannerInstance.getInstance();
+	private Scanner sc = ScannerInstance.INSTANCE.getScanner();
 	
 	private ListComputerView() {
 		listComputerControler = ListComputerController.getInstance();
 		listComputerControler.setListComputerView(this);
 	}
 	
-	public static ListComputerView getInstance()
-	{
-		return LIST_COMPUTER_VIEW;
-	}
 	
 	public void displayHeader()
 	{
@@ -67,8 +62,8 @@ public class ListComputerView {
 	 * @param pComputers
 	 * @throws SQLException 
 	 */
-	public void displayComputers(List<IComputer> pComputers) throws SQLException {
-		for(IComputer c : pComputers)
+	public void displayComputers(List<Computer> computers) throws SQLException {
+		for(Computer c : computers)
 		{
 			System.out.format(ConstanteView.FORMAT_COMPUTER, c.getId(), c.getName(),
 					(c.getIntroduced()== null) ? "" : c.getIntroduced(),

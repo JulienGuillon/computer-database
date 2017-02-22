@@ -1,7 +1,7 @@
 package com.excilys.computerdatabase.controller;
 
 import com.excilys.computerdatabase.dao.CrudComputer;
-import com.excilys.computerdatabase.interfaces.IComputer;
+import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.view.UpdateComputerView;
 
 /**
@@ -54,12 +54,12 @@ public class UpdateComputerController {
 	/**
 	 * Update a computer by using crud method
 	 * and call to update view to display MainMenu 
-	 * @param pComputer
+	 * @param computer
 	 * @throws Exception 
 	 */
-	public void update(IComputer pComputer, int pId) throws Exception {
-		crudComputer.update(pComputer, pId);
-		updateComputerView.displayInfoComputer(pComputer);
+	public void update(Computer computer, long id) throws Exception {
+		crudComputer.update(computer, id);
+		updateComputerView.displayInfoComputer(computer);
 	}
 
 }

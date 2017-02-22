@@ -3,7 +3,7 @@ package com.excilys.computerdatabase.view;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.DetailsComputerController;
-import com.excilys.computerdatabase.interfaces.IComputer;
+import com.excilys.computerdatabase.entities.Computer;
 
 /**
  * @author Guillon Julien
@@ -13,15 +13,14 @@ import com.excilys.computerdatabase.interfaces.IComputer;
  * View that display informations about one computer
  * 
  */
-public class DetailsComputerView {
-
-	private static final DetailsComputerView DETAILS_COMPUTER_VIEW = new DetailsComputerView();
+public enum DetailsComputerView {
+	INSTANCE;
 	
 	private DetailsComputerController detailsComputerControler;
 
-	private int idComputer;
+	private long idComputer;
 	
-	private Scanner sc = ScannerInstance.getInstance();
+	private Scanner sc = ScannerInstance.INSTANCE.getScanner();
 	
 	private DetailsComputerView()
 	{
@@ -29,13 +28,6 @@ public class DetailsComputerView {
 		detailsComputerControler.setDetailsComputerView(this);
 	}
 	
-	/**
-	 * @return an instance of DetailsComputerView
-	 */
-	public static DetailsComputerView getInstance()
-	{
-		return DETAILS_COMPUTER_VIEW;
-	}
 	
 	public void displayHeader()
 	{
@@ -69,21 +61,21 @@ public class DetailsComputerView {
 
 	/**
 	 * Display details of a computer
-	 * @param pComputer
+	 * @param computer
 	 */
-	public void displayDetails(IComputer pComputer) {
+	public void displayDetails(Computer computer) {
 		System.out.format(ConstanteView.FORMAT_COMPUTER, "ID", "NOM", "INTRODUCED", "DISCONTINUED", "COMPANY");
-		System.out.format(ConstanteView.FORMAT_COMPUTER, pComputer.getId(), pComputer.getName(),
-				(pComputer.getIntroduced()== null) ? "" : pComputer.getIntroduced(),
-				(pComputer.getDiscontinued()== null) ? "" : pComputer.getDiscontinued(),
-				(pComputer.getManufacturer() == null) ? "" : pComputer.getManufacturer().getName());
-		idComputer = pComputer.getId();
+		System.out.format(ConstanteView.FORMAT_COMPUTER, computer.getId(), computer.getName(),
+				(computer.getIntroduced()== null) ? "" : computer.getIntroduced(),
+				(computer.getDiscontinued()== null) ? "" : computer.getDiscontinued(),
+				(computer.getManufacturer() == null) ? "" : computer.getManufacturer().getName());
+		idComputer = computer.getId();
 	}
 
 	/**
 	 * Display a message to confirm deletion of a computer
 	 */
-	public void displayDeletion(int pId) {
-		System.out.println("Computer with ID: " + pId + " was deleted");
+	public void displayDeletion(long id) {
+		System.out.println("Computer with ID: " + id + " was deleted");
 	}
 }
