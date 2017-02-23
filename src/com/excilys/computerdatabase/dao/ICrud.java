@@ -2,6 +2,7 @@ package com.excilys.computerdatabase.dao;
 
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Guillon Julien
@@ -12,10 +13,10 @@ import java.util.List;
  */
 public interface ICrud<T> {
 	
-	public T find(int pId);
+	public Optional<T> find(long id);
 	
-	public ResultSet findAll();
+	public Optional<ResultSet> findAll();
 	
-	public List<T> findUsingPagination(int pOffset);
+	public Optional<List<Optional<T>>> findUsingPagination(int offset);
 	
 }

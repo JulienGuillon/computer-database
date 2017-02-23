@@ -2,6 +2,7 @@ package com.excilys.computerdatabase.dao.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import com.excilys.computerdatabase.entities.Company;
 
@@ -22,11 +23,17 @@ public class MapperCompany {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public static Company setToCompany(ResultSet resultSet) throws SQLException, Exception
+	public static Optional<Company> resultSetToCompany(ResultSet resultSet)
 	{
-		Company.Builder companyBuilder = new Company.Builder()
-				.withId(resultSet.getLong(COLUMN_ID))
-				.withName(resultSet.getString(COLUMN_NAME));
-		return companyBuilder.build();
+		Company.Builder companyBuilder = null;
+		try {
+			companyBuilder = new Company.Builder()
+					.withId(resultSet.getLong(COLUMN_ID))
+					.withName(resultSet.getString(COLUMN_NAME));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return Optional.of(companyBuilder.build());
 	}
 }

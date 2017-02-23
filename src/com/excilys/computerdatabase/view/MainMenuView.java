@@ -3,6 +3,7 @@ package com.excilys.computerdatabase.view;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.MainMenuController;
+import com.excilys.computerdatabase.view.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien
@@ -23,17 +24,11 @@ public enum MainMenuView {
 	
 	private MainMenuView()
 	{
-		mainMenuControler = MainMenuController.getInstance();
+		mainMenuControler = MainMenuController.INSTANCE;
 		mainMenuControler.setMainMenuView(this);
 	}
 	
-	
-	/**
-     * Display menu that propose different options 
-     * and catch user selection
-	 * @throws Exception
-	 */
-	public void displayUI() throws Exception
+	public void displayMenu()
 	{
 		System.out.println("\t\t SELECT OPTION \t\t");
 		System.out.println("[1] List computers");
@@ -42,26 +37,28 @@ public enum MainMenuView {
 		System.out.println("[4] Create a computer");
 		System.out.println("[5] Update a computer");
 		System.out.println("[6] Delete a computer");
-		takeUserChoice();
 	}
 	
 	/**
-	 * @throws Exception
+     * Display menu that propose different options 
+     * and catch user selection
 	 */
-	public void takeUserChoice() throws Exception
+	public void displayUI()
+	{
+		displayMenu();
+		takeUserChoice();
+	}
+	
+
+	public void takeUserChoice()
 	{
 		choice = sc.next();
+		while (!SelectionValidation.userSelectionIsValid(choice))
+		{	
+			choice = sc.next();
+			displayMenu();
+		}
 		mainMenuControler.controlUserChoice(choice);
-	}
-
-	/**
-	 * @param pChoice
-	 * @throws Exception 
-	 */
-	public void displayError(String pChoice) throws Exception {
-		System.out.println("Your selection "+ pChoice +" is not a valid option.");
-		displayUI();
-		takeUserChoice();
 	}
 
 }

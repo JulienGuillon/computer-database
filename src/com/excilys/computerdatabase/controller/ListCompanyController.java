@@ -1,8 +1,9 @@
 package com.excilys.computerdatabase.controller;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.excilys.computerdatabase.dao.CrudCompany;
+import com.excilys.computerdatabase.dao.impl.CrudCompany;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.view.ListCompanyView;
 
@@ -16,10 +17,9 @@ import com.excilys.computerdatabase.view.ListCompanyView;
  * Allows to catch event on view ListCompanyView and make validation.
  * 
  */
-public class ListCompanyController {
-
-	private static final ListCompanyController LIST_COMPANY_CONTROLER = new ListCompanyController();
-
+public enum ListCompanyController {
+	INSTANCE;
+	
 	private ListCompanyView listCompanyView;
 	
 	private CrudCompany crudCompany;
@@ -30,25 +30,16 @@ public class ListCompanyController {
 	{
 		crudCompany = new CrudCompany();
 	}
-	
-	/**
-	 * 
-	 * @return an instance ListCompanyController
-	 */
-	public static ListCompanyController getInstance()
-	{
-		return LIST_COMPANY_CONTROLER;
-	}
-	
+		
 	/**
 	 * Find all companies with pagination by using crud method
 	 * and call to update view 
-	 * @param pChoice
+	 * @param choice
 	 */
-	public void findCompanies(String pChoice)
+	public void findCompanies(String choice)
 	{
 		boolean quit = false;
-		switch(pChoice)
+		switch(choice)
 		{
 			case "n":
 				offset = offset+Constant.PAGE_SIZE;
@@ -62,15 +53,19 @@ public class ListCompanyController {
 		}
 		if (!quit)
 		{
-			List<Company> companies = crudCompany.findUsingPagination(offset);
-			listCompanyView.displayCompanies(companies);
+			Optional<List<Optional<Company>>> optionalCompanies = crudCompany.findUsingPagination(offset);
+			if (optionalCompanies.isPresent())
+			{
+				List<Optional<Company>> companies = optionalCompanies.get();
+				listCompanyView.displayCompanies(companies);
+			}
 		}
 	}
 	
 	/**
-	 * @param pListCompanyView the listCompanyView to set
+	 * @param listCompanyView the listCompanyView to set
 	 */
-	public void setListCompanyView(ListCompanyView pListCompanyView) {
-		this.listCompanyView = pListCompanyView;
+	public void setListCompanyView(ListCompanyView listCompanyView) {
+		this.listCompanyView = listCompanyView;
 	}
 }

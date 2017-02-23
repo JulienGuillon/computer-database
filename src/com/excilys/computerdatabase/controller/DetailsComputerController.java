@@ -1,6 +1,9 @@
 package com.excilys.computerdatabase.controller;
 
-import com.excilys.computerdatabase.dao.CrudComputer;
+import java.util.Optional;
+
+import com.excilys.computerdatabase.dao.impl.CrudComputer;
+import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.view.DetailsComputerView;
 
 /**
@@ -13,10 +16,9 @@ import com.excilys.computerdatabase.view.DetailsComputerView;
  * Allows to catch event on view DetailsComputerView and make validation.
  * 
  */
-public class DetailsComputerController {
-
-	private static final DetailsComputerController DETAILS_COMPUTER_CONTROLER = new DetailsComputerController();
-	
+public enum DetailsComputerController {
+	INSTANCE;
+		
 	private DetailsComputerView detailsComputerView;
 	
 	private CrudComputer crudComputer;
@@ -26,38 +28,34 @@ public class DetailsComputerController {
 		crudComputer = new CrudComputer();
 	}
 	
+
 	/**
-	 * 
-	 * @return an instance of DetailsComputerController
+	 * @param detailsComputerView
 	 */
-	public static DetailsComputerController getInstance()
-	{
-		return DETAILS_COMPUTER_CONTROLER;
+	public void setDetailsComputerView(DetailsComputerView detailsComputerView) {
+		this.detailsComputerView = detailsComputerView;
 	}
 
 	/**
-	 * @param pDetailsComputerView
+	 * @param choice
 	 */
-	public void setDetailsComputerView(DetailsComputerView pDetailsComputerView) {
-		this.detailsComputerView = pDetailsComputerView;
+	public void findComputerById(int choice) {
+		Optional<Computer> computer = crudComputer.find(choice);
+		if(computer.isPresent())
+		{
+			detailsComputerView.displayDetails(computer.get());
+		}
 	}
 
 	/**
-	 * @param pChoice
+	 * @param operation
 	 */
-	public void findComputerById(int pChoice) {
-		detailsComputerView.displayDetails(crudComputer.find(pChoice));
-	}
-
-	/**
-	 * @param pOperation
-	 */
-	public void makeOperation(String pOperation, long pId) {
-		switch (pOperation)
+	public void makeOperation(String operation, long id) {
+		switch (operation)
 		{
 			case "d":
-				crudComputer.delete(pId);
-				detailsComputerView.displayDeletion(pId);
+				crudComputer.delete(id);
+				detailsComputerView.displayDeletion(id);
 				break;
 			case "u":
 				break;

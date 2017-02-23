@@ -1,6 +1,5 @@
 package com.excilys.computerdatabase.controller;
 
-import com.excilys.computerdatabase.validation.ICheck;
 import com.excilys.computerdatabase.view.IView;
 import com.excilys.computerdatabase.view.MainMenuView;
 
@@ -14,21 +13,13 @@ import com.excilys.computerdatabase.view.MainMenuView;
  * Allows to catch event on view MainMenuView and make validation.
  * 
  */
-public class MainMenuController {
-
-	private static final MainMenuController MAIN_MENU_CONTROLER = new MainMenuController();
+public enum MainMenuController {
+	INSTANCE;
+	
 	private MainMenuView mainMenuView;
 	
 	private MainMenuController()
 	{
-	}
-	
-	/**
-	 * @return an instance MainMenuController
-	 */
-	public static MainMenuController getInstance()
-	{
-		return MAIN_MENU_CONTROLER;
 	}
 
 	/**
@@ -37,8 +28,8 @@ public class MainMenuController {
 	 * @param choice
 	 * @throws Exception 
 	 */
-	public void controlUserChoice(String choice) throws Exception {
-		ICheck.isNull(choice);
+	public void controlUserChoice(String choice)
+	{
 		switch (choice)
 		{
 		case "1":
@@ -58,7 +49,6 @@ public class MainMenuController {
 		case "6":
 			break;
 		default:
-			mainMenuView.displayError(choice);
 			break;
 		}
 	}

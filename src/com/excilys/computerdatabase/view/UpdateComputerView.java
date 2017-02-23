@@ -1,11 +1,14 @@
 package com.excilys.computerdatabase.view;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.UpdateComputerController;
 import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.view.validation.DateValidation;
+import com.excilys.computerdatabase.view.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien
@@ -24,7 +27,7 @@ public enum UpdateComputerView {
 	
 	private UpdateComputerView()
 	{
-		updateComputerControler = UpdateComputerController.getInstance();
+		updateComputerControler = UpdateComputerController.INSTANCE;
 		updateComputerControler.setUpdateComputerView(this);
 	}
 	
@@ -34,29 +37,27 @@ public enum UpdateComputerView {
 		System.out.println("\t\t UPDATE COMPUTER \t\t");
 	}
 	
-	public void displayUI() throws Exception
+	public void displayUI()
 	{
-		int choice;
+		String id;
 		displayHeader();
 		do {
 			System.out.print("Select computer's id to modify it: ");
-			choice = sc.nextInt();
+			id = sc.next();
 		}
-		while(choice <= 0);
-		updateComputerControler.findComputerById(choice);
+		while(!SelectionValidation.idIsValid(id));
+		updateComputerControler.findComputerById(Integer.parseInt(id));
 
 	}
 
 	/**
 	 * @param computer
-	 * @throws Exception 
 	 */
-	public void displayDetailsToUpdate(Computer computer) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	public void displayDetailsToUpdate(Computer computer) {
 		System.out.println("ID (" + computer.getId() + ")");
 		String name = "";
-		Date introduced = null;
-		Date discontinued = null;
+		LocalDate introduced = null;
+		LocalDate discontinued = null;
 		String s = null;
 		sc.nextLine();
 		System.out.print("NAME (" + computer.getName() + "): ");
@@ -65,13 +66,12 @@ public enum UpdateComputerView {
 		{
 			name = computer.getName();
 		}
-
-
 		System.out.print("INTRODUCED (" + computer.getIntroduced() + "): ");
 		s = sc.nextLine();
-		if (s.matches("\\d{4}-\\d{2}-\\d{2}"))
+		if (DateValidation.formatIsValid(s))
 		{
-			introduced = sdf.parse(s);
+			System.out.println(introduced);
+			introduced = LocalDate.parse(s);
 		}
 		else
 		{
@@ -81,9 +81,11 @@ public enum UpdateComputerView {
 		s = "";
 		System.out.print("DISCONTINUED (" + computer.getDiscontinued() + "): ");
 		s = sc.nextLine();
-		if (s.matches("\\d{4}-\\d{2}-\\d{2}"))
+		if (DateValidation.formatIsValid(s))
 		{
-			discontinued = sdf.parse(s);
+			System.out.println(discontinued);
+
+			discontinued = LocalDate.parse(s);
 		}
 		else
 		{
@@ -94,13 +96,14 @@ public enum UpdateComputerView {
 		computer.setDiscontinued(discontinued);
 		computer.setName(name);
 		updateComputerControler.update(computer, computer.getId());
+
 	}
 
 	/**
 	 * @param computer
-	 * @throws Exception 
 	 */
-	public void displayInfoComputer(Computer computer) throws Exception {
+	public void displayInfoComputer(Computer computer)
+	{
 		System.out.println("Computer with ID: " + computer.getId() + " was update");
 		IView.displayMainMenu();
 	}

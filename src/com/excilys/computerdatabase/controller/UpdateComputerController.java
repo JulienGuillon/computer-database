@@ -1,6 +1,8 @@
 package com.excilys.computerdatabase.controller;
 
-import com.excilys.computerdatabase.dao.CrudComputer;
+import java.util.Optional;
+
+import com.excilys.computerdatabase.dao.impl.CrudComputer;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.view.UpdateComputerView;
 
@@ -14,10 +16,9 @@ import com.excilys.computerdatabase.view.UpdateComputerView;
  * Allows to catch event on view UpdateComputerView and make validation.
  *
  */
-public class UpdateComputerController {
-
-	private static final UpdateComputerController UPDATE_COMPUTER_CONTROLER = new UpdateComputerController();
-	
+public enum UpdateComputerController {
+	INSTANCE;
+		
 	private UpdateComputerView updateComputerView;
 	
 	private CrudComputer crudComputer;
@@ -25,13 +26,6 @@ public class UpdateComputerController {
 	private UpdateComputerController()
 	{
 		crudComputer = new CrudComputer();
-	}
-	
-	/**
-	 * @return an instance of UpdateComputerController
-	 */
-	public static UpdateComputerController getInstance() {
-		return UPDATE_COMPUTER_CONTROLER;
 	}
 
 	/**
@@ -44,11 +38,15 @@ public class UpdateComputerController {
 	/**
 	 * Find a computer by id by using crud method
 	 * and call to update view to display details of computer
-	 * @param pChoice
+	 * @param choice
 	 * @throws Exception 
 	 */
-	public void findComputerById(int pChoice) throws Exception {
-		updateComputerView.displayDetailsToUpdate(crudComputer.find(pChoice));		
+	public void findComputerById(int choice) {
+		Optional<Computer> computer = crudComputer.find(choice);
+		if(computer.isPresent())
+		{
+			updateComputerView.displayDetailsToUpdate(computer.get());		
+		}
 	}
 
 	/**
@@ -57,7 +55,7 @@ public class UpdateComputerController {
 	 * @param computer
 	 * @throws Exception 
 	 */
-	public void update(Computer computer, long id) throws Exception {
+	public void update(Computer computer, long id) {
 		crudComputer.update(computer, id);
 		updateComputerView.displayInfoComputer(computer);
 	}

@@ -1,6 +1,5 @@
 package com.excilys.computerdatabase.entities;
 
-import com.excilys.computerdatabase.validation.ICheck;
 
 /**
  * @author Guillon Julien
@@ -21,7 +20,6 @@ public class Company {
 	}
 
 	public void setName(String name) throws Exception {
-		ICheck.isNull(name);
 		this.name = name;
 	}
 	

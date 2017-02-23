@@ -1,10 +1,12 @@
 package com.excilys.computerdatabase.view;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.ListCompanyController;
 import com.excilys.computerdatabase.entities.Company;
+import com.excilys.computerdatabase.view.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien
@@ -22,7 +24,7 @@ public enum ListCompanyView {
 	private Scanner sc = ScannerInstance.INSTANCE.getScanner();
 	
 	private ListCompanyView() {
-		listCompanyControler = ListCompanyController.getInstance();
+		listCompanyControler = ListCompanyController.INSTANCE;
 		listCompanyControler.setListCompanyView(this);
 	}
 	
@@ -36,12 +38,17 @@ public enum ListCompanyView {
 	 * Display footer that able to select next page or previous page
 	 * @throws Exception
 	 */
-	public void displayFooter() throws Exception
+	public void displayFooter()
 	{
 		String choice;
 		do {
 			System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
 			choice = sc.next();
+			while (!SelectionValidation.userChoiceIsValid(choice))
+			{	
+				choice = sc.next();
+				System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
+			}
 			listCompanyControler.findCompanies(choice);
 		}
 		while(!choice.equals("q"));
@@ -51,7 +58,7 @@ public enum ListCompanyView {
 	/**
 	 * @throws Exception
 	 */
-	public void displayUI() throws Exception
+	public void displayUI()
 	{
 		listCompanyControler.findCompanies("");
 		displayFooter();
@@ -59,13 +66,18 @@ public enum ListCompanyView {
 
 	/**
 	 * Display view that show list of companies 
-	 * @param companies
+	 * @param optionalCompanies
 	 */
-	public void displayCompanies(List<Company> companies) {
+	public void displayCompanies(List<Optional<Company>> optionalCompanies) {
 		displayHeader();
-		for(Company c : companies)
+		Company company;
+		for(Optional<Company> optionalCompany : optionalCompanies)
 		{
-			System.out.format(ConstanteView.FORMAT_COMPANY, c.getId(), c.getName());
+			if(optionalCompany.isPresent())
+			{
+				company = optionalCompany.get();
+				System.out.format(ConstanteView.FORMAT_COMPANY, company.getId(), company.getName());
+			}
 		}
 	}
 

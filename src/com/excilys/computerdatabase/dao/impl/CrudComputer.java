@@ -1,13 +1,17 @@
-package com.excilys.computerdatabase.dao;
+package com.excilys.computerdatabase.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.excilys.computerdatabase.dao.DatabaseManager;
+import com.excilys.computerdatabase.dao.ICrud;
 import com.excilys.computerdatabase.dao.mapper.MapperComputer;
 import com.excilys.computerdatabase.entities.Computer;
 
@@ -21,9 +25,9 @@ import com.excilys.computerdatabase.entities.Computer;
 public class CrudComputer implements ICrud<Computer>{
 
 	private static final int PAGE = 10;
-	private static final String SELECT_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name cname from computer left join company on company.id = computer.company_id;";
-	private static final String SELECT_COMPUTER_BY_ID = "select computer.id, computer.name, introduced, discontinued, company_id, company.name cname from computer left join company on company.id = computer.company_id where computer.id= ?;";
-	private static final String PAGINATION_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name cname from computer left join company on company.id = computer.company_id limit ? offset ?;";
+	private static final String SELECT_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id;";
+	private static final String SELECT_COMPUTER_BY_ID = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id where computer.id= ?;";
+	private static final String PAGINATION_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id limit ? offset ?;";
 	private static final String DELETE_COMPUTER_BY_ID = "delete from computer where id = ? ";
 	private static final String UPDATE_COMPUTER_BY_ID = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
 	private static final String INSERT_COMPUTER = "insert into computer(name, introduced, discontinued, company_id) values (?, ?, ?, ?)";
@@ -58,14 +62,14 @@ public class CrudComputer implements ICrud<Computer>{
 	 * @see com.excilys.computerdatabase.dao.ICrud#find(java.lang.String, int)
 	 */
 	@Override
-	public Computer find(int id) {
-		Computer computer = null;
+	public Optional<Computer> find(long id) {
+		Optional<Computer> computer = null;
 		// TODO Auto-generated method stub
 		try {
-			preparedStatement.setInt(1, id);
+			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
 			resultSet.next();
-			computer = MapperComputer.setToComputer(resultSet);
+			computer = MapperComputer.resultSetToComputer(resultSet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -80,14 +84,15 @@ public class CrudComputer implements ICrud<Computer>{
 	 * @see com.excilys.computerdatabase.dao.ICrud#findAll(java.lang.String)
 	 */
 	@Override
-	public ResultSet findAll() {
+	public Optional<ResultSet> findAll() {
+		ResultSet resultSet = null;
 		try {
 			resultSet = statement.executeQuery(SELECT_COMPUTERS);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return resultSet;
+		return Optional.of(resultSet);
 	}
 	
 	/**
@@ -114,8 +119,8 @@ public class CrudComputer implements ICrud<Computer>{
 	{
 		try {
 			preparedStatementUpdate.setString(1, computer.getName());
-			preparedStatementUpdate.setObject(2, computer.getIntroduced());
-			preparedStatementUpdate.setObject(3, computer.getDiscontinued());
+			preparedStatementUpdate.setDate(2, computer.getIntroduced() != null ? Date.valueOf(computer.getIntroduced()) : null);
+			preparedStatementUpdate.setDate(3, computer.getDiscontinued() != null ? Date.valueOf(computer.getDiscontinued()) : null);
 			preparedStatementUpdate.setLong(4, computer.getManufacturer().getId());
 			preparedStatementUpdate.setLong(5, id);
 			preparedStatementUpdate.execute();
@@ -131,14 +136,16 @@ public class CrudComputer implements ICrud<Computer>{
 	 */
 	public void create(Computer computer)
 	{
-		try {
+		try
+		{
 			preparedStatementInsert.setString(1, computer.getName());
 			preparedStatementInsert.setObject(2, computer.getIntroduced());
 			preparedStatementInsert.setObject(3, computer.getDiscontinued());
 			preparedStatementInsert.setLong(4, computer.getManufacturer().getId());
 			preparedStatementInsert.execute();
 
-		} catch (SQLException e) {
+		} catch (SQLException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -149,26 +156,32 @@ public class CrudComputer implements ICrud<Computer>{
 	 * @param offset
 	 * @return
 	 */
-	public List<Computer> findUsingPagination(int offset)
+	public Optional<List<Optional<Computer>>> findUsingPagination(int offset)
 	{
-		List<Computer> computers = new ArrayList<>();
-		try {
+		List<Optional<Computer>> computers = new ArrayList<>();
+		try
+		{
 			preparedStatementPagination.setInt(1,  PAGE);
 			preparedStatementPagination.setInt(2, offset);
 			resultSet = preparedStatementPagination.executeQuery();
 			while(resultSet.next())
 			{
-				computers.add(MapperComputer.setToComputer(resultSet));
+				if(MapperComputer.resultSetToComputer(resultSet).isPresent())
+				{
+					computers.add(MapperComputer.resultSetToComputer(resultSet));
+				}
 			}
 			
-		} catch (SQLException e) {
+		} catch (SQLException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (Exception e) {
+		} catch (Exception e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return computers;
+		return Optional.of(computers);
 	}
 
 }

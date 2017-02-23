@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.dao;
+package com.excilys.computerdatabase.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import com.excilys.computerdatabase.dao.DatabaseManager;
+import com.excilys.computerdatabase.dao.ICrud;
 import com.excilys.computerdatabase.dao.mapper.MapperCompany;
 import com.excilys.computerdatabase.entities.Company;
 
@@ -49,14 +52,14 @@ public class CrudCompany implements ICrud<Company>{
 	 * @see com.excilys.computerdatabase.dao.ICrud#find(java.lang.String, int)
 	 */
 	@Override
-	public Company find(int id) {
-		Company company = null;
+	public Optional<Company> find(long id) {
+		Optional<Company> company = null;
 		// TODO Auto-generated method stub
 		try {
-			preparedStatement.setString(1, String.valueOf(id));
+			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
 			resultSet.next();
-			company = MapperCompany.setToCompany(resultSet);
+			company = MapperCompany.resultSetToCompany(resultSet);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,14 +74,14 @@ public class CrudCompany implements ICrud<Company>{
 	 * @see com.excilys.computerdatabase.dao.ICrud#findAll(java.lang.String)
 	 */
 	@Override
-	public ResultSet findAll() {
+	public Optional<ResultSet> findAll() {
 		try {
 			resultSet = statement.executeQuery(SELECT_COMPANIES);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return resultSet;
+		return Optional.of(resultSet);
 	}
 	
 	
@@ -87,16 +90,20 @@ public class CrudCompany implements ICrud<Company>{
 	 * @param offset
 	 * @return
 	 */
-	public List<Company> findUsingPagination(int offset)
+	public Optional<List<Optional<Company>>> findUsingPagination(int offset)
 	{
-		List<Company> companies = new ArrayList<>();
+		List<Optional<Company>> companies = new ArrayList<>();
 		try {
 			preparedStatementPagination.setInt(1,  PAGE);
 			preparedStatementPagination.setInt(2, offset);
 			resultSet = preparedStatementPagination.executeQuery();
 			while(resultSet.next())
 			{
-				companies.add(MapperCompany.setToCompany(resultSet));
+				
+				if(MapperCompany.resultSetToCompany(resultSet).isPresent())
+				{
+					companies.add(MapperCompany.resultSetToCompany(resultSet));
+				}
 			}
 			
 		} catch (SQLException e) {
@@ -106,7 +113,7 @@ public class CrudCompany implements ICrud<Company>{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return companies;
+		return Optional.of(companies);
 	}
 	
 }

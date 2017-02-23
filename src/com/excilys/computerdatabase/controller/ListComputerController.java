@@ -2,8 +2,9 @@ package com.excilys.computerdatabase.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
-import com.excilys.computerdatabase.dao.CrudComputer;
+import com.excilys.computerdatabase.dao.impl.CrudComputer;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.view.ListComputerView;
 
@@ -17,10 +18,9 @@ import com.excilys.computerdatabase.view.ListComputerView;
  * Allows to catch event on view ListComputerView and make validation,
  * 
  */
-public class ListComputerController {
+public enum ListComputerController {
+	INSTANCE;
 	
-	private static final ListComputerController LIST_COMPUTER_CONTROLER = new ListComputerController();
-
 	private ListComputerView listComputerView;
 	
 	private CrudComputer crudComputer;
@@ -31,15 +31,6 @@ public class ListComputerController {
 	{
 		crudComputer = new CrudComputer();
 	}
-	
-	/**
-	 * 
-	 * @return an instance of ListComputerController
-	 */
-	public static ListComputerController getInstance()
-	{	
-		return LIST_COMPUTER_CONTROLER;
-	}
 
 	/**
 	 * Find all computers with pagination by using crud method
@@ -48,7 +39,7 @@ public class ListComputerController {
 	 * @throws SQLException 
 	 * 
 	 */
-	public void findComputers(String choice) throws SQLException {
+	public void findComputers(String choice) {
 		boolean quit = false;
 		switch(choice)
 		{
@@ -65,8 +56,12 @@ public class ListComputerController {
 		}
 		if (!quit)
 		{
-			List<Computer> computers = crudComputer.findUsingPagination(offset);
-			listComputerView.displayComputers(computers);
+			Optional<List<Optional<Computer>>> optionalComputers = crudComputer.findUsingPagination(offset);
+			if (optionalComputers.isPresent())
+			{
+				List<Optional<Computer>> computers = optionalComputers.get();
+				listComputerView.displayComputers(computers);
+			}
 		}
 	}
 	

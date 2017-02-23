@@ -24,7 +24,7 @@ public enum DetailsComputerView {
 	
 	private DetailsComputerView()
 	{
-		detailsComputerControler = DetailsComputerController.getInstance();
+		detailsComputerControler = DetailsComputerController.INSTANCE;
 		detailsComputerControler.setDetailsComputerView(this);
 	}
 	
@@ -45,7 +45,7 @@ public enum DetailsComputerView {
 	 * and use controller to get associated computer
 	 * @throws Exception
 	 */
-	public void displayUI() throws Exception
+	public void displayUI()
 	{
 		int choice;
 		displayHeader();

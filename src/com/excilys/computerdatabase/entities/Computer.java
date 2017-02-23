@@ -1,6 +1,6 @@
 package com.excilys.computerdatabase.entities;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author Guillon Julien
@@ -10,8 +10,8 @@ import java.util.Date;
 public class Computer {
 	private long id;
 	private String name;
-	private Date introduced;
-	private Date discontinued;
+	private LocalDate introduced;
+	private LocalDate discontinued;
 	private Company manufacturer;
 	
 	
@@ -19,11 +19,11 @@ public class Computer {
 		return name;
 	}
 
-	public Date getIntroduced() {
+	public LocalDate getIntroduced() {
 		return introduced;
 	}
 	
-	public Date getDiscontinued() {
+	public LocalDate getDiscontinued() {
 		return discontinued;
 	}
 
@@ -35,11 +35,11 @@ public class Computer {
 		this.name = name;
 	}
 	
-	public void setIntroduced(Date introduced) {
+	public void setIntroduced(LocalDate introduced) {
 		this.introduced = introduced;
 	}
 	
-	public void setDiscontinued(Date discontinued) {
+	public void setDiscontinued(LocalDate discontinued) {
 		this.discontinued = discontinued;
 	}
 	
@@ -136,13 +136,13 @@ public class Computer {
 			return this;
 		}
 		
-		public Builder withIntroduced(Date introduced)
+		public Builder withIntroduced(LocalDate introduced)
 		{
 			this.computer.introduced = introduced;
 			return this;
 		}
 		
-		public Builder withDiscontinued(Date discontinued)
+		public Builder withDiscontinued(LocalDate discontinued)
 		{
 			this.computer.discontinued = discontinued;
 			return this;
