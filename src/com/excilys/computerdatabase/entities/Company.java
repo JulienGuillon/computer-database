@@ -1,5 +1,6 @@
 package com.excilys.computerdatabase.entities;
 
+import com.excilys.computerdatabase.validation.EntityValidation;
 
 /**
  * @author Guillon Julien
@@ -85,7 +86,10 @@ public class Company {
 		
 		public Builder withName(String name)
 		{
-			this.company.name = name;
+			if(EntityValidation.nameIsValid(name))
+			{
+				this.company.name = name;
+			}
 			return this;
 		}
 		

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.excilys.computerdatabase.dao.DatabaseManager;
-import com.excilys.computerdatabase.dao.ICrud;
+import com.excilys.computerdatabase.dao.CrudComputer;
 import com.excilys.computerdatabase.dao.mapper.MapperComputer;
 import com.excilys.computerdatabase.entities.Computer;
 
@@ -22,7 +22,8 @@ import com.excilys.computerdatabase.entities.Computer;
  * 
  * Allows to make all the crud operation on entity computer
  */
-public class CrudComputer implements ICrud<Computer>{
+
+public class CrudComputerImpl implements CrudComputer {
 
 	private static final int PAGE = 10;
 	private static final String SELECT_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id;";
@@ -32,28 +33,13 @@ public class CrudComputer implements ICrud<Computer>{
 	private static final String UPDATE_COMPUTER_BY_ID = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
 	private static final String INSERT_COMPUTER = "insert into computer(name, introduced, discontinued, company_id) values (?, ?, ?, ?)";
 	
-	private Connection connection = DatabaseManager.INSTANCE.getConnection();
-	private Statement statement;
+	private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
+	private Connection connection;
 	private ResultSet resultSet;
-	private PreparedStatement preparedStatement;
-	private PreparedStatement preparedStatementDelete;
-	private PreparedStatement preparedStatementUpdate;
-	private PreparedStatement preparedStatementInsert;
-	private PreparedStatement preparedStatementPagination;
 	
-	public CrudComputer()
+	public CrudComputerImpl()
 	{
-		try {
-			statement = connection.createStatement();
-			preparedStatement = connection.prepareStatement(SELECT_COMPUTER_BY_ID);
-			preparedStatementDelete = connection.prepareStatement(DELETE_COMPUTER_BY_ID);
-			preparedStatementUpdate = connection.prepareStatement(UPDATE_COMPUTER_BY_ID);
-			preparedStatementInsert = connection.prepareStatement(INSERT_COMPUTER);
-			preparedStatementPagination = connection.prepareStatement(PAGINATION_COMPUTERS);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 	
 	
@@ -61,11 +47,11 @@ public class CrudComputer implements ICrud<Computer>{
 	/* (non-Javadoc)
 	 * @see com.excilys.computerdatabase.dao.ICrud#find(java.lang.String, int)
 	 */
-	@Override
 	public Optional<Computer> find(long id) {
 		Optional<Computer> computer = null;
-		// TODO Auto-generated method stub
+		connection = databaseManager.getConnection();
 		try {
+			PreparedStatement preparedStatement = connection.prepareStatement(SELECT_COMPUTER_BY_ID);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
 			resultSet.next();
@@ -73,9 +59,9 @@ public class CrudComputer implements ICrud<Computer>{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} finally
+		{
+			databaseManager.closeConnection();
 		}
 		return computer;
 	}
@@ -83,14 +69,18 @@ public class CrudComputer implements ICrud<Computer>{
 	/* (non-Javadoc)
 	 * @see com.excilys.computerdatabase.dao.ICrud#findAll(java.lang.String)
 	 */
-	@Override
 	public Optional<ResultSet> findAll() {
+		connection = databaseManager.getConnection();
 		ResultSet resultSet = null;
 		try {
+			Statement statement = connection.createStatement();
 			resultSet = statement.executeQuery(SELECT_COMPUTERS);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally
+		{
+			databaseManager.closeConnection();
 		}
 		return Optional.of(resultSet);
 	}
@@ -101,12 +91,18 @@ public class CrudComputer implements ICrud<Computer>{
 	 */
 	public void delete(long id)
 	{
+		
+		connection = databaseManager.getConnection();
 		try {
+			PreparedStatement preparedStatementDelete = connection.prepareStatement(DELETE_COMPUTER_BY_ID);
 			preparedStatementDelete.setLong(1, id);
 			preparedStatementDelete.execute();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally
+		{
+			databaseManager.closeConnection();
 		}
 	}
 	
@@ -117,7 +113,9 @@ public class CrudComputer implements ICrud<Computer>{
 	 */
 	public void update(Computer computer, long id)
 	{
+		connection = databaseManager.getConnection();
 		try {
+			PreparedStatement preparedStatementUpdate = connection.prepareStatement(UPDATE_COMPUTER_BY_ID);
 			preparedStatementUpdate.setString(1, computer.getName());
 			preparedStatementUpdate.setDate(2, computer.getIntroduced() != null ? Date.valueOf(computer.getIntroduced()) : null);
 			preparedStatementUpdate.setDate(3, computer.getDiscontinued() != null ? Date.valueOf(computer.getDiscontinued()) : null);
@@ -127,6 +125,9 @@ public class CrudComputer implements ICrud<Computer>{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally
+		{
+			databaseManager.closeConnection();
 		}
 	}
 	
@@ -136,8 +137,10 @@ public class CrudComputer implements ICrud<Computer>{
 	 */
 	public void create(Computer computer)
 	{
+		connection = databaseManager.getConnection();
 		try
 		{
+			PreparedStatement preparedStatementInsert = connection.prepareStatement(INSERT_COMPUTER);
 			preparedStatementInsert.setString(1, computer.getName());
 			preparedStatementInsert.setObject(2, computer.getIntroduced());
 			preparedStatementInsert.setObject(3, computer.getDiscontinued());
@@ -148,6 +151,9 @@ public class CrudComputer implements ICrud<Computer>{
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally
+		{
+			databaseManager.closeConnection();
 		}
 	}
 	
@@ -159,8 +165,10 @@ public class CrudComputer implements ICrud<Computer>{
 	public Optional<List<Optional<Computer>>> findUsingPagination(int offset)
 	{
 		List<Optional<Computer>> computers = new ArrayList<>();
+		connection = databaseManager.getConnection();
 		try
 		{
+			PreparedStatement preparedStatementPagination = connection.prepareStatement(PAGINATION_COMPUTERS);
 			preparedStatementPagination.setInt(1,  PAGE);
 			preparedStatementPagination.setInt(2, offset);
 			resultSet = preparedStatementPagination.executeQuery();
@@ -180,6 +188,9 @@ public class CrudComputer implements ICrud<Computer>{
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally
+		{
+			databaseManager.closeConnection();
 		}
 		return Optional.of(computers);
 	}

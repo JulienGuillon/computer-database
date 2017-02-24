@@ -3,7 +3,7 @@ package com.excilys.computerdatabase.controller;
 import java.util.List;
 import java.util.Optional;
 
-import com.excilys.computerdatabase.dao.impl.CrudCompany;
+import com.excilys.computerdatabase.dao.impl.CrudCompanyImpl;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.view.ListCompanyView;
 
@@ -22,13 +22,13 @@ public enum ListCompanyController {
 	
 	private ListCompanyView listCompanyView;
 	
-	private CrudCompany crudCompany;
+	private CrudCompanyImpl crudCompany;
 	
 	private int offset;
 
 	private ListCompanyController()
 	{
-		crudCompany = new CrudCompany();
+		crudCompany = new CrudCompanyImpl();
 	}
 		
 	/**

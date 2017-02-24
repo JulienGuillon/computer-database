@@ -1,6 +1,6 @@
 
+import com.excilys.computerdatabase.validation.SelectionValidation;
 import com.excilys.computerdatabase.view.IView;
-import com.excilys.computerdatabase.view.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien
@@ -15,8 +15,7 @@ public class App {
 	 */
 	public static void main(String[] args)
 	{
-		SelectionValidation.userChoiceIsValid("n");
-		SelectionValidation.nameIsValid("N_");		
+		SelectionValidation.userChoiceIsValid("n");		
 		IView.displayMainMenu();
 	}
 }

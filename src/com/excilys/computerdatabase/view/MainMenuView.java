@@ -3,7 +3,7 @@ package com.excilys.computerdatabase.view;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.MainMenuController;
-import com.excilys.computerdatabase.view.validation.SelectionValidation;
+import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien

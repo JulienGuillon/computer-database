@@ -11,7 +11,7 @@ import java.util.Optional;
  * 
  * Contains definition of crud operation
  */
-public interface ICrud<T> {
+public interface Crud<T> {
 	
 	public Optional<T> find(long id);
 	

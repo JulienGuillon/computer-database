@@ -2,6 +2,8 @@ package com.excilys.computerdatabase.entities;
 
 import java.time.LocalDate;
 
+import com.excilys.computerdatabase.validation.EntityValidation;
+
 /**
  * @author Guillon Julien
  *
@@ -132,7 +134,10 @@ public class Computer {
 		
 		public Builder withName(String name)
 		{
-			this.computer.name = name;
+			if(EntityValidation.nameIsValid(name))
+			{
+				this.computer.name = name;
+			}
 			return this;
 		}
 		

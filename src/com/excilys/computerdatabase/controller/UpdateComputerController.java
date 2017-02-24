@@ -2,7 +2,7 @@ package com.excilys.computerdatabase.controller;
 
 import java.util.Optional;
 
-import com.excilys.computerdatabase.dao.impl.CrudComputer;
+import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.view.UpdateComputerView;
 
@@ -21,11 +21,11 @@ public enum UpdateComputerController {
 		
 	private UpdateComputerView updateComputerView;
 	
-	private CrudComputer crudComputer;
+	private CrudComputerImpl crudComputer;
 	
 	private UpdateComputerController()
 	{
-		crudComputer = new CrudComputer();
+		crudComputer = new CrudComputerImpl();
 	}
 
 	/**

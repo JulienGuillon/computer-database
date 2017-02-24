@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.ListComputerController;
 import com.excilys.computerdatabase.entities.Computer;
-import com.excilys.computerdatabase.view.validation.SelectionValidation;
+import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien

@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.view.validation;
+package com.excilys.computerdatabase.validation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +22,7 @@ public class SelectionValidation {
 		LOGGER.info("Choice is not valid !");
 		return false;
 	}
-	
-	public static boolean nameIsValid(String name)
-	{
-		if (name.matches("[\\w-]*"))
-		{
-			return true;
-		}
-		LOGGER.info("Name is not valid, contains characters not permitted!");
-		return false;
-	}
-	
+		
 	public static boolean userSelectionIsValid(String selection)
 	{
 		if (selection.matches("[1-6qQ]"))

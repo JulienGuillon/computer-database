@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import com.excilys.computerdatabase.dao.impl.CrudComputer;
+import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.view.ListComputerView;
 
@@ -23,13 +23,13 @@ public enum ListComputerController {
 	
 	private ListComputerView listComputerView;
 	
-	private CrudComputer crudComputer;
+	private CrudComputerImpl crudComputer;
 	
 	private  int offset;
 
 	private ListComputerController()
 	{
-		crudComputer = new CrudComputer();
+		crudComputer = new CrudComputerImpl();
 	}
 
 	/**

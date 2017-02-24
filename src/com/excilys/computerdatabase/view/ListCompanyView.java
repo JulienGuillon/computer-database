@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.ListCompanyController;
 import com.excilys.computerdatabase.entities.Company;
-import com.excilys.computerdatabase.view.validation.SelectionValidation;
+import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien

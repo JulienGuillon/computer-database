@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.view.validation;
+package com.excilys.computerdatabase.validation;
 
 import java.time.LocalDate;
 

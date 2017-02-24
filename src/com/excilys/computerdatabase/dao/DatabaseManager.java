@@ -5,6 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdatabase.utils.LoadProperties;
 
 /**
@@ -19,6 +22,8 @@ import com.excilys.computerdatabase.utils.LoadProperties;
 
 public enum DatabaseManager {
 	INSTANCE;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManager.class);
 	
 	private Connection connection;
 	
@@ -37,10 +42,7 @@ public enum DatabaseManager {
 	
 		try {
 			Class.forName(properties.getProperty(DRIVER));
-			connection = DriverManager.getConnection(properties.getProperty(URL), properties.getProperty(USER), properties.getProperty(PASSWORD));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//connection = DriverManager.getConnection(properties.getProperty(URL), properties.getProperty(USER), properties.getProperty(PASSWORD));
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,7 +53,23 @@ public enum DatabaseManager {
 	 * @return the connect
 	 */
 	public Connection getConnection() {
+		try {
+			connection = DriverManager.getConnection(properties.getProperty(URL), properties.getProperty(USER), properties.getProperty(PASSWORD));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return connection;
+	}
+	
+	public void closeConnection()
+	{
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			LOGGER.error("Error on close database connection " + e);
+			e.printStackTrace();
+		}
 	}
 
 }

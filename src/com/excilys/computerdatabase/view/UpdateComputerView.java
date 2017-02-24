@@ -1,14 +1,15 @@
 package com.excilys.computerdatabase.view;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.excilys.computerdatabase.controller.UpdateComputerController;
 import com.excilys.computerdatabase.entities.Computer;
-import com.excilys.computerdatabase.view.validation.DateValidation;
-import com.excilys.computerdatabase.view.validation.SelectionValidation;
+import com.excilys.computerdatabase.validation.DateValidation;
+import com.excilys.computerdatabase.validation.EntityValidation;
+import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien
@@ -47,7 +48,6 @@ public enum UpdateComputerView {
 		}
 		while(!SelectionValidation.idIsValid(id));
 		updateComputerControler.findComputerById(Integer.parseInt(id));
-
 	}
 
 	/**
@@ -62,7 +62,7 @@ public enum UpdateComputerView {
 		sc.nextLine();
 		System.out.print("NAME (" + computer.getName() + "): ");
 		name = sc.nextLine();
-		if(name.equals(""))
+		if(StringUtils.isBlank(name) || EntityValidation.nameIsValid(name))
 		{
 			name = computer.getName();
 		}
@@ -70,7 +70,6 @@ public enum UpdateComputerView {
 		s = sc.nextLine();
 		if (DateValidation.formatIsValid(s))
 		{
-			System.out.println(introduced);
 			introduced = LocalDate.parse(s);
 		}
 		else
@@ -81,22 +80,18 @@ public enum UpdateComputerView {
 		s = "";
 		System.out.print("DISCONTINUED (" + computer.getDiscontinued() + "): ");
 		s = sc.nextLine();
-		if (DateValidation.formatIsValid(s))
+		if (DateValidation.formatIsValid(s) && DateValidation.dateIsValid(introduced, discontinued))
 		{
-			System.out.println(discontinued);
-
 			discontinued = LocalDate.parse(s);
 		}
 		else
 		{
 			discontinued = computer.getDiscontinued();
 		}
-		System.out.println(discontinued);
 		computer.setIntroduced(introduced);
 		computer.setDiscontinued(discontinued);
 		computer.setName(name);
 		updateComputerControler.update(computer, computer.getId());
-
 	}
 
 	/**
