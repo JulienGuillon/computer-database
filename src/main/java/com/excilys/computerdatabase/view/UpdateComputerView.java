@@ -1,6 +1,7 @@
 package com.excilys.computerdatabase.view;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Scanner;
 
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +69,7 @@ public enum UpdateComputerView {
 		}
 		System.out.print("INTRODUCED (" + computer.getIntroduced() + "): ");
 		s = sc.nextLine();
-		if (DateValidation.formatIsValid(s))
+		if (DateValidation.formatIsValid(Optional.of(s)))
 		{
 			introduced = LocalDate.parse(s);
 		}
@@ -80,7 +81,7 @@ public enum UpdateComputerView {
 		s = "";
 		System.out.print("DISCONTINUED (" + computer.getDiscontinued() + "): ");
 		s = sc.nextLine();
-		if (DateValidation.formatIsValid(s) && DateValidation.dateIsValid(introduced, discontinued))
+		if (DateValidation.formatIsValid(Optional.of(s)) && DateValidation.dateIsValid(Optional.ofNullable(introduced), Optional.ofNullable(discontinued)))
 		{
 			discontinued = LocalDate.parse(s);
 		}

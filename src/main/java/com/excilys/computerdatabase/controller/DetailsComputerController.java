@@ -10,14 +10,14 @@ import com.excilys.computerdatabase.view.DetailsComputerView;
  * @author Guillon Julien
  *
  * 21 févr. 2017
- * 
+ *
  * Controller for the DetailsComputerView
  * It is a singleton.
  * Allows to catch event on view DetailsComputerView and make validation.
- * 
+ *
  */
 public enum DetailsComputerController {
-	INSTANCE;
+    INSTANCE;
 		
 	private DetailsComputerView detailsComputerView;
 	

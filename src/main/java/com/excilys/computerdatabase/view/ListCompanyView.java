@@ -11,13 +11,12 @@ import com.excilys.computerdatabase.validation.SelectionValidation;
 /**
  * @author Guillon Julien
  *
- * 21 févr. 2017
- * 
- *  View that display list of companies 
- *  
+ ** 21 févr. 2017
+ * View that display list of companies
+ *
  */
 public enum ListCompanyView {
-	INSTANCE;
+    INSTANCE;
 		
 	private ListCompanyController listCompanyControler;
 	

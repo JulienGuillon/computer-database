@@ -1,5 +1,4 @@
 
-import com.excilys.computerdatabase.validation.SelectionValidation;
 import com.excilys.computerdatabase.view.IView;
 
 /**
@@ -15,7 +14,6 @@ public class App {
 	 */
 	public static void main(String[] args)
 	{
-		SelectionValidation.userChoiceIsValid("n");		
 		IView.displayMainMenu();
 	}
 }
