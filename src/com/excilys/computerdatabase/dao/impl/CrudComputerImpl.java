@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -110,7 +111,9 @@ public class CrudComputerImpl implements CrudComputer {
 			{
 				LOGGER.info("This id doesn't match any computer in database");
 			}
+			databaseManager.commit();
 		} catch (SQLException e) {
+			databaseManager.rollback();
 			throw new PersistenceException(e);
 		} finally
 		{
@@ -131,17 +134,24 @@ public class CrudComputerImpl implements CrudComputer {
 			Computer computer = optionalComputer.get();
 			connection = databaseManager.getConnection();
 			try {
+				System.out.println(computer.getManufacturer() != null);
 				PreparedStatement preparedStatementUpdate = connection.prepareStatement(UPDATE_COMPUTER_BY_ID);
 				preparedStatementUpdate.setString(1, computer.getName());
 				preparedStatementUpdate.setDate(2, computer.getIntroduced() != null ? Date.valueOf(computer.getIntroduced()) : null);
 				preparedStatementUpdate.setDate(3, computer.getDiscontinued() != null ? Date.valueOf(computer.getDiscontinued()) : null);
-				preparedStatementUpdate.setLong(4, computer.getManufacturer().getId());
+				if(computer.getManufacturer() != null) {
+					preparedStatementUpdate.setLong(4, computer.getManufacturer().getId());
+				} else {
+					preparedStatementUpdate.setNull(4,Types.BIGINT);
+				}
 				preparedStatementUpdate.setLong(5, id);
 				preparedStatementUpdate.execute();
+				databaseManager.commit();
 			} catch (SQLException e) {
 				throw new PersistenceException(e);
 			} finally
 			{
+				databaseManager.rollback();
 				databaseManager.closeConnection();
 			}
 		}
@@ -166,9 +176,10 @@ public class CrudComputerImpl implements CrudComputer {
 				preparedStatementInsert.setObject(3, computer.getDiscontinued());
 				preparedStatementInsert.setLong(4, computer.getManufacturer().getId());
 				preparedStatementInsert.execute();
-	
+				databaseManager.commit();
 			} catch (SQLException e)
 			{
+				databaseManager.rollback();
 				throw new PersistenceException(e);
 			} finally
 			{

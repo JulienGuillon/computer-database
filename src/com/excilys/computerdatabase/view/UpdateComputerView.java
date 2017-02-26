@@ -7,6 +7,7 @@ import java.util.Scanner;
 import org.apache.commons.lang3.StringUtils;
 
 import com.excilys.computerdatabase.controller.UpdateComputerController;
+import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.validation.DateValidation;
@@ -96,6 +97,7 @@ public enum UpdateComputerView {
 			computer.setIntroduced(introduced);
 			computer.setDiscontinued(discontinued);
 			computer.setName(name);
+			computer.setManufacturer(null);
 			updateComputerControler.update(Optional.ofNullable(computer));
 		}
 	}
