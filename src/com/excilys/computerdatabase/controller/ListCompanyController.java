@@ -3,6 +3,9 @@ package com.excilys.computerdatabase.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdatabase.dao.impl.CrudCompanyImpl;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.exception.PersistenceException;
@@ -20,6 +23,8 @@ import com.excilys.computerdatabase.view.ListCompanyView;
  */
 public enum ListCompanyController {
 	INSTANCE;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ListCompanyController.class);
 	
 	private ListCompanyView listCompanyView;
 	
@@ -54,6 +59,9 @@ public enum ListCompanyController {
 				case "q":
 					offset = -1;
 					quit = true;
+					break;
+				default:
+					LOGGER.info("Choice is not valid !");
 					break;
 			}
 			if (!quit && offset >= 0)

@@ -4,6 +4,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
@@ -22,6 +25,7 @@ import com.excilys.computerdatabase.view.ListComputerView;
 public enum ListComputerController {
 	INSTANCE;
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ListComputerController.class);
 	private ListComputerView listComputerView;
 	
 	private CrudComputerImpl crudComputer;
@@ -56,6 +60,9 @@ public enum ListComputerController {
 			case "q":
 				offset = -1;
 				quit = true;
+				break;
+			default:
+				LOGGER.info("Choice is not valid !");
 				break;
 			}
 			if (!quit && offset >= 0)

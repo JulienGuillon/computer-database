@@ -2,6 +2,9 @@ package com.excilys.computerdatabase.controller;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
@@ -19,6 +22,8 @@ import com.excilys.computerdatabase.view.DetailsComputerView;
  */
 public enum DetailsComputerController {
 	INSTANCE;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(DetailsComputerController.class);
 		
 	private DetailsComputerView detailsComputerView;
 	
@@ -67,6 +72,7 @@ public enum DetailsComputerController {
 				case "u":
 					break;
 				default:
+					LOGGER.info("Choice is not valid !");
 					break;
 			}
 		}

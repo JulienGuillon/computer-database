@@ -2,6 +2,9 @@ package com.excilys.computerdatabase.controller;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.IView;
 import com.excilys.computerdatabase.view.MainMenuView;
@@ -19,6 +22,8 @@ import com.excilys.computerdatabase.view.MainMenuView;
 public enum MainMenuController {
 	INSTANCE;
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenuController.class);
+
 	private MainMenuView mainMenuView;
 	
 	private MainMenuController()
@@ -55,6 +60,7 @@ public enum MainMenuController {
 			case "6":
 				break;
 			default:
+				LOGGER.info("Selection is not valid, should be number 1-6 or q !");
 				break;
 			}
 		}
