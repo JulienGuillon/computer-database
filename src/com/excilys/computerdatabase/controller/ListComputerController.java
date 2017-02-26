@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
 import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.ListComputerView;
 
 /**
@@ -36,31 +37,35 @@ public enum ListComputerController {
 	 * Find all computers with pagination by using crud method
 	 * and call to update view 
 	 * @param pChoice: could be "n" or "p" to switch of page 
+	 * @throws PersistenceException 
 	 * @throws SQLException 
 	 * 
 	 */
-	public void findComputers(String choice) {
-		boolean quit = false;
-		switch(choice)
-		{
-		case "n":
-			offset = offset+Constant.PAGE_SIZE;
-			break;
-		case "p":
-			offset = (offset-Constant.PAGE_SIZE >= 0) ? offset-Constant.PAGE_SIZE : 0;
-			break;
-		case "q":
-			offset = 0;
-			quit = true;
-			break;
-		}
-		if (!quit)
-		{
-			Optional<List<Optional<Computer>>> optionalComputers = crudComputer.findUsingPagination(offset);
-			if (optionalComputers.isPresent())
+	public void findComputers(Optional<String> optionalChoice) throws PersistenceException {
+		if(optionalChoice.isPresent()) {
+			boolean quit = false;
+			String choice = optionalChoice.get();
+			switch(choice)
 			{
-				List<Optional<Computer>> computers = optionalComputers.get();
-				listComputerView.displayComputers(computers);
+			case "n":
+				offset = offset+Constant.PAGE_SIZE;
+				break;
+			case "p":
+				offset = (offset-Constant.PAGE_SIZE >= 0) ? offset-Constant.PAGE_SIZE : -1;
+				break;
+			case "q":
+				offset = 0;
+				quit = true;
+				break;
+			}
+			if (!quit || offset >= 0)
+			{
+				Optional<List<Optional<Computer>>> optionalComputers = crudComputer.findUsingPagination(offset);
+				if (optionalComputers.isPresent())
+				{
+					List<Optional<Computer>> computers = optionalComputers.get();
+					listComputerView.displayComputers(computers);
+				}
 			}
 		}
 	}
@@ -68,8 +73,10 @@ public enum ListComputerController {
 	/**
 	 * @param listComputerView the listComputerView to set
 	 */
-	public void setListComputerView(ListComputerView listComputerView) {
-		this.listComputerView = listComputerView;
+	public void setListComputerView(Optional<ListComputerView> optionalListComputerView) {
+		if (optionalListComputerView.isPresent()) {
+			this.listComputerView = optionalListComputerView.get();
+		}
 	}
 	
 }

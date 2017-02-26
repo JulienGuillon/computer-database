@@ -1,5 +1,7 @@
 package com.excilys.computerdatabase.entities;
 
+import java.util.Optional;
+
 import com.excilys.computerdatabase.validation.EntityValidation;
 
 /**
@@ -86,7 +88,7 @@ public class Company {
 		
 		public Builder withName(String name)
 		{
-			if(EntityValidation.nameIsValid(name))
+			if(EntityValidation.nameIsValid(Optional.ofNullable(name)))
 			{
 				this.company.name = name;
 			}

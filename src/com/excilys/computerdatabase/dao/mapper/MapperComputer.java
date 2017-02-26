@@ -6,6 +6,8 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.entities.Computer;
 
@@ -30,37 +32,44 @@ public class MapperComputer {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public static Optional<Computer> resultSetToComputer(ResultSet resultSet)
+	public static Optional<Computer> resultSetToComputer(Optional<ResultSet> optionalResultSet)
 	{
 		Computer.Builder computerBuilder = null;
-		try {
-			computerBuilder = Computer.builder()
-					.withId(resultSet.getLong(COLUMN_ID))
-					.withName(resultSet.getString(COLUMN_NAME));
-			Object dateIntroduced = resultSet.getObject(COLUMN_INTRODUCED);
-			if (dateIntroduced != null)
-			{	
-				dateIntroduced = ((Timestamp)dateIntroduced).toLocalDateTime().toLocalDate();
-				computerBuilder.withIntroduced((LocalDate)dateIntroduced);
-			}
-			Object dateDiscontinued = resultSet.getObject(COLUMN_DISCONTINUED);
-			if (dateDiscontinued != null)
-			{
-				dateDiscontinued=  ((Timestamp)dateDiscontinued).toLocalDateTime().toLocalDate();
-				computerBuilder.withDiscontinued((LocalDate)dateDiscontinued);
-			}
-			Long companyId = resultSet.getLong(COLUMN_COMPANY_ID);
-			if (companyId != null)
-			{
+		if (optionalResultSet.isPresent())
+		{
+			ResultSet resultSet = optionalResultSet.get(); 
+			try {
+				computerBuilder = new Computer.Builder()
+						.withId(resultSet.getLong(COLUMN_ID))
+						.withName(resultSet.getString(COLUMN_NAME));
+				Object dateIntroduced = resultSet.getObject(COLUMN_INTRODUCED);
+				if (dateIntroduced != null)
+				{	
+					dateIntroduced = ((Timestamp)dateIntroduced).toLocalDateTime().toLocalDate();
+					computerBuilder.withIntroduced((LocalDate)dateIntroduced);
+				}
+				Object dateDiscontinued = resultSet.getObject(COLUMN_DISCONTINUED);
+				if (dateDiscontinued != null)
+				{
+					dateDiscontinued=  ((Timestamp)dateDiscontinued).toLocalDateTime().toLocalDate();
+					computerBuilder.withDiscontinued((LocalDate)dateDiscontinued);
+				}
+				Long companyId = resultSet.getLong(COLUMN_COMPANY_ID);
+				Company.Builder companyBuilder = null;
+				if (companyId != null)
+				{
+					companyBuilder = new Company.Builder().withId(companyId);
+				}
 				String companyName = resultSet.getString(COLUMN_COMPANY_NAME);
-				computerBuilder.withManufacturer(new Company.Builder()
-												.withId(companyId)
-												.withName(companyName)
-												.build());
+				if(StringUtils.isNotBlank(companyName))
+				{
+					companyBuilder = companyBuilder.withName(companyName);
+				}
+				computerBuilder.withManufacturer(companyBuilder.build());
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return Optional.of(computerBuilder.build());
 	}

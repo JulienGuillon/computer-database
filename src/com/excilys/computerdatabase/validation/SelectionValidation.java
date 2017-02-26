@@ -1,5 +1,7 @@
 package com.excilys.computerdatabase.validation;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,33 +15,45 @@ public class SelectionValidation {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectionValidation.class);
 
 	
-	public static boolean userChoiceIsValid(String choice)
+	public static boolean userChoiceIsValid(Optional<String> optionalChoice)
 	{
-		if (choice.matches("[npqduNPQDU]"))
+		if (optionalChoice.isPresent())
 		{
-			return true;
+			String choice = optionalChoice.get();
+			if (choice.matches("[npqduNPQDU]"))
+			{
+				return true;
+			}
+			LOGGER.info("Choice is not valid !");
 		}
-		LOGGER.info("Choice is not valid !");
 		return false;
 	}
 		
-	public static boolean userSelectionIsValid(String selection)
+	public static boolean userSelectionIsValid(Optional<String> optionalSelection)
 	{
-		if (selection.matches("[1-6qQ]"))
+		if (optionalSelection.isPresent())
 		{
-			return true;
+			String selection = optionalSelection.get();
+			if (selection.matches("[1-6qQ]"))
+			{
+				return true;
+			}
+			LOGGER.info("Selection is not valid, should be number 1-6 or q !");
 		}
-		LOGGER.info("Selection is not valid, should be number 1-6 or q !");
 		return false;
 	}
 	
-	public static boolean idIsValid(String id)
+	public static boolean idIsValid(Optional<String> optionalId)
 	{
-		if (id.matches("[\\d]*"))
+		if (optionalId.isPresent())
 		{
-			return true;
+			String id = optionalId.get();
+			if (id.matches("[\\d]*"))
+			{
+				return true;
+			}
+			LOGGER.info("Id is not valid, should be number !");
 		}
-		LOGGER.info("Id is not valid, should be number !");
 		return false;
 	}
 }

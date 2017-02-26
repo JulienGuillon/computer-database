@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.utils.LoadProperties;
 
 /**
@@ -51,14 +52,15 @@ public enum DatabaseManager {
 	
 	/**
 	 * @return the connect
+	 * @throws PersistenceException 
 	 */
-	public Connection getConnection() {
+	public Connection getConnection() throws PersistenceException {
 		try {
 			connection = DriverManager.getConnection(properties.getProperty(URL), properties.getProperty(USER), properties.getProperty(PASSWORD));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException("Error on openning connection to database", e);
 		}
+		LOGGER.info("Connection to database successfully effectued");
 		return connection;
 	}
 	

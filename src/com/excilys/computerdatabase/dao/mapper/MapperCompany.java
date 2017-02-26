@@ -23,16 +23,20 @@ public class MapperCompany {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public static Optional<Company> resultSetToCompany(ResultSet resultSet)
+	public static Optional<Company> resultSetToCompany(Optional<ResultSet> optionalResultSet)
 	{
 		Company.Builder companyBuilder = null;
-		try {
-			companyBuilder = new Company.Builder()
-					.withId(resultSet.getLong(COLUMN_ID))
-					.withName(resultSet.getString(COLUMN_NAME));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if( optionalResultSet.isPresent())
+		{
+			ResultSet resultSet = optionalResultSet.get();
+			try {
+				companyBuilder = new Company.Builder()
+						.withId(resultSet.getLong(COLUMN_ID))
+						.withName(resultSet.getString(COLUMN_NAME));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return Optional.of(companyBuilder.build());
 	}

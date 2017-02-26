@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.ListComputerController;
 import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
@@ -26,7 +27,7 @@ public enum ListComputerView {
 	
 	private ListComputerView() {
 		listComputerControler = ListComputerController.INSTANCE;
-		listComputerControler.setListComputerView(this);
+		listComputerControler.setListComputerView(Optional.ofNullable(this));
 	}
 	
 	
@@ -38,29 +39,30 @@ public enum ListComputerView {
 
 	 /**
 	  * Display footer that able to select next page or previous page
+	 * @throws PersistenceException 
 	  * @throws Exception
 	  */
-	 public void displayFooter()
+	 public void displayFooter() throws PersistenceException
 	 {
 		String choice;
 		do {
 			System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
 			choice = sc.next();
-			while (!SelectionValidation.userChoiceIsValid(choice))
+			while (!SelectionValidation.userChoiceIsValid(Optional.ofNullable(choice)))
 			{	
 				choice = sc.next();
 				System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
 			}
-			listComputerControler.findComputers(choice);
+			listComputerControler.findComputers(Optional.ofNullable(choice));
 		}
 		while(!choice.equals("q"));
 		IView.displayMainMenu();
 	}
 	
-	public void displayUI()
+	public void displayUI() throws PersistenceException
 	{
 		displayHeader();
-		listComputerControler.findComputers("");
+		listComputerControler.findComputers(Optional.ofNullable(""));
 		displayFooter();
 	}
 

@@ -1,6 +1,7 @@
 package com.excilys.computerdatabase.validation;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,23 +15,32 @@ public class DateValidation {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DateValidation.class);
 	
-	public static boolean formatIsValid(String date)
+	public static boolean formatIsValid(Optional<String> optionalDate)
 	{
-		if (date.matches("\\d{4}-\\d{2}-\\d{2}"))
-		{
-			return true;
+		if(optionalDate.isPresent()) {
+			String date = optionalDate.get();
+			if (date.matches("\\d{4}-\\d{2}-\\d{2}"))
+			{
+				return true;
+			}
+			LOGGER.info("Date format is not valid !");
 		}
-		LOGGER.info("Date format is not valid !");
 		return false;
 	}
 
-	public static boolean dateIsValid(LocalDate dateBefore, LocalDate dateAfter)
+	public static boolean dateIsValid(Optional<LocalDate> optionalDateBefore, Optional<LocalDate> optionalDateAfter)
 	{
-		if (dateBefore.isBefore(dateAfter))
+		if(optionalDateBefore.isPresent() && optionalDateAfter.isPresent())
 		{
-			return true;
+			LocalDate dateBefore = optionalDateBefore.get();
+			LocalDate dateAfter = optionalDateAfter.get();
+				
+			if (dateBefore.isBefore(dateAfter))
+			{
+				return true;
+			}
+			LOGGER.info("Introducing date can't be after discontinuing date !");
 		}
-		LOGGER.info("Introducing date can't be after discontinuing date !");
 		return false;
 	}
 }

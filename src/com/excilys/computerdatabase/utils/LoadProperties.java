@@ -14,7 +14,7 @@ public enum LoadProperties {
 	
 	private Properties properties;
 	
-	private static final String PATH_DATABASE_PROPERTIES = "/home/excilys/Computer_database/database.properties";
+	private static final String PATH_DATABASE_PROPERTIES = "/home/jlng/computer-database-refacto/database.properties";
 	
 	private LoadProperties()
 	{

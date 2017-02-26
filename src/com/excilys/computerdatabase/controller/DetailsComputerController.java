@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
 import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.DetailsComputerView;
 
 /**
@@ -30,37 +31,44 @@ public enum DetailsComputerController {
 	
 
 	/**
-	 * @param detailsComputerView
+	 * @param optionalDetailsComputerView
 	 */
-	public void setDetailsComputerView(DetailsComputerView detailsComputerView) {
-		this.detailsComputerView = detailsComputerView;
+	public void setDetailsComputerView(Optional<DetailsComputerView> optionalDetailsComputerView) {
+		if(optionalDetailsComputerView.isPresent()) {
+			this.detailsComputerView = optionalDetailsComputerView.get();
+		}
 	}
 
 	/**
 	 * @param choice
+	 * @throws PersistenceException 
 	 */
-	public void findComputerById(int choice) {
+	public void findComputerById(int choice) throws PersistenceException {
 		Optional<Computer> computer = crudComputer.find(choice);
 		if(computer.isPresent())
 		{
-			detailsComputerView.displayDetails(computer.get());
+			detailsComputerView.displayDetails(computer);
 		}
 	}
 
 	/**
 	 * @param operation
+	 * @throws PersistenceException 
 	 */
-	public void makeOperation(String operation, long id) {
-		switch (operation)
-		{
-			case "d":
-				crudComputer.delete(id);
-				detailsComputerView.displayDeletion(id);
-				break;
-			case "u":
-				break;
-			default:
-				break;
+	public void makeOperation(Optional<String> optionalOperation, long id) throws PersistenceException {
+		if(optionalOperation.isPresent()) {
+			String operation = optionalOperation.get();
+			switch (operation)
+			{
+				case "d":
+					crudComputer.delete(id);
+					detailsComputerView.displayDeletion(id);
+					break;
+				case "u":
+					break;
+				default:
+					break;
+			}
 		}
 	}
 

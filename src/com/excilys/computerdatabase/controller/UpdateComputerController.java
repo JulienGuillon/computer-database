@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
 import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.UpdateComputerView;
 
 /**
@@ -29,23 +30,26 @@ public enum UpdateComputerController {
 	}
 
 	/**
-	 * @param pUpdateComputerView
+	 * @param optionalUpdateComputerView
 	 */
-	public void setUpdateComputerView(UpdateComputerView pUpdateComputerView) {
-		this.updateComputerView = pUpdateComputerView;
+	public void setUpdateComputerView(Optional<UpdateComputerView> optionalUpdateComputerView) {
+		if (optionalUpdateComputerView.isPresent()) {
+			this.updateComputerView = optionalUpdateComputerView.get();
+		}
 	}
 
 	/**
 	 * Find a computer by id by using crud method
 	 * and call to update view to display details of computer
 	 * @param choice
+	 * @throws PersistenceException 
 	 * @throws Exception 
 	 */
-	public void findComputerById(int choice) {
+	public void findComputerById(int choice) throws PersistenceException {
 		Optional<Computer> computer = crudComputer.find(choice);
 		if(computer.isPresent())
 		{
-			updateComputerView.displayDetailsToUpdate(computer.get());		
+			updateComputerView.displayDetailsToUpdate(computer);		
 		}
 	}
 
@@ -53,11 +57,15 @@ public enum UpdateComputerController {
 	 * Update a computer by using crud method
 	 * and call to update view to display MainMenu 
 	 * @param computer
+	 * @throws PersistenceException 
 	 * @throws Exception 
 	 */
-	public void update(Computer computer, long id) {
-		crudComputer.update(computer, id);
-		updateComputerView.displayInfoComputer(computer);
+	public void update(Optional<Computer> optionalComputer) throws PersistenceException {
+		if (optionalComputer.isPresent()) {
+			Computer computer = optionalComputer.get();
+			crudComputer.update(Optional.ofNullable(computer), computer.getId());
+			updateComputerView.displayInfoComputer(Optional.ofNullable(computer));
+		}
 	}
 
 }

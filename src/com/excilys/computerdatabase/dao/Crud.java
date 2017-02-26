@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
+import com.excilys.computerdatabase.exception.PersistenceException;
+
 /**
  * @author Guillon Julien
  *
@@ -13,10 +15,11 @@ import java.util.Optional;
  */
 public interface Crud<T> {
 	
-	public Optional<T> find(long id);
+	public Optional<T> find(long id) throws PersistenceException;
 	
-	public Optional<ResultSet> findAll();
+	public Optional<ResultSet> findAll() throws PersistenceException;
 	
-	public Optional<List<Optional<T>>> findUsingPagination(int offset);
+	public Optional<List<Optional<T>>> findUsingPagination(int offset) throws PersistenceException;
 	
+	public Optional<List<Optional<T>>> findUsingPagination(int offset, int size) throws PersistenceException;
 }

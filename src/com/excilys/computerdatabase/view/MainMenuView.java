@@ -1,8 +1,10 @@
 package com.excilys.computerdatabase.view;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.MainMenuController;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
@@ -25,7 +27,7 @@ public enum MainMenuView {
 	private MainMenuView()
 	{
 		mainMenuControler = MainMenuController.INSTANCE;
-		mainMenuControler.setMainMenuView(this);
+		mainMenuControler.setMainMenuView(Optional.ofNullable(this));
 	}
 	
 	public void displayMenu()
@@ -42,23 +44,24 @@ public enum MainMenuView {
 	/**
      * Display menu that propose different options 
      * and catch user selection
+	 * @throws PersistenceException 
 	 */
-	public void displayUI()
+	public void displayUI() throws PersistenceException
 	{
 		displayMenu();
 		takeUserChoice();
 	}
 	
 
-	public void takeUserChoice()
+	public void takeUserChoice() throws PersistenceException
 	{
 		choice = sc.next();
-		while (!SelectionValidation.userSelectionIsValid(choice))
+		while (!SelectionValidation.userSelectionIsValid(Optional.ofNullable(choice)))
 		{	
 			choice = sc.next();
 			displayMenu();
 		}
-		mainMenuControler.controlUserChoice(choice);
+		mainMenuControler.controlUserChoice(Optional.ofNullable(choice));
 	}
 
 }

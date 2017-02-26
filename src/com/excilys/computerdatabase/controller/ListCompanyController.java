@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.excilys.computerdatabase.dao.impl.CrudCompanyImpl;
 import com.excilys.computerdatabase.entities.Company;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.ListCompanyView;
 
 /**
@@ -35,29 +36,33 @@ public enum ListCompanyController {
 	 * Find all companies with pagination by using crud method
 	 * and call to update view 
 	 * @param choice
+	 * @throws PersistenceException 
 	 */
-	public void findCompanies(String choice)
+	public void findCompanies(Optional<String> optionalChoice) throws PersistenceException
 	{
-		boolean quit = false;
-		switch(choice)
-		{
-			case "n":
-				offset = offset+Constant.PAGE_SIZE;
-				break;
-			case "p":
-				break;
-			case "q":
-				offset = 0;
-				quit = true;
-				break;
-		}
-		if (!quit)
-		{
-			Optional<List<Optional<Company>>> optionalCompanies = crudCompany.findUsingPagination(offset);
-			if (optionalCompanies.isPresent())
+		if(optionalChoice.isPresent()) {
+			String choice = optionalChoice.get();
+			boolean quit = false;
+			switch(choice)
 			{
-				List<Optional<Company>> companies = optionalCompanies.get();
-				listCompanyView.displayCompanies(companies);
+				case "n":
+					offset = offset+Constant.PAGE_SIZE;
+					break;
+				case "p":
+					offset = offset-Constant.PAGE_SIZE > 0 ? offset-Constant.PAGE_SIZE : -1;
+					break;
+				case "q":
+					offset = -1;
+					quit = true;
+					break;
+			}
+			if (!quit || offset >= 0)
+			{
+				Optional<List<Optional<Company>>> optionalCompanies = crudCompany.findUsingPagination(offset);
+				if (optionalCompanies.isPresent())
+				{
+					listCompanyView.displayCompanies(optionalCompanies);
+				}
 			}
 		}
 	}
@@ -65,7 +70,9 @@ public enum ListCompanyController {
 	/**
 	 * @param listCompanyView the listCompanyView to set
 	 */
-	public void setListCompanyView(ListCompanyView listCompanyView) {
-		this.listCompanyView = listCompanyView;
+	public void setListCompanyView(Optional<ListCompanyView> optionalListCompanyView) {
+		if (optionalListCompanyView.isPresent()) {
+			this.listCompanyView = optionalListCompanyView.get();
+		}
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.ListCompanyController;
 import com.excilys.computerdatabase.entities.Company;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
@@ -25,7 +26,7 @@ public enum ListCompanyView {
 	
 	private ListCompanyView() {
 		listCompanyControler = ListCompanyController.INSTANCE;
-		listCompanyControler.setListCompanyView(this);
+		listCompanyControler.setListCompanyView(Optional.ofNullable(this));
 	}
 	
 	
@@ -36,31 +37,34 @@ public enum ListCompanyView {
 	
 	/**
 	 * Display footer that able to select next page or previous page
+	 * @throws PersistenceException 
 	 * @throws Exception
 	 */
-	public void displayFooter()
+	public void displayFooter() throws PersistenceException
 	{
 		String choice;
 		do {
 			System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
 			choice = sc.next();
-			while (!SelectionValidation.userChoiceIsValid(choice))
+			while (!SelectionValidation.userChoiceIsValid(Optional.ofNullable(choice)))
 			{	
 				choice = sc.next();
 				System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
 			}
-			listCompanyControler.findCompanies(choice);
+			listCompanyControler.findCompanies(Optional.ofNullable(choice));
 		}
 		while(!choice.equals("q"));
 		IView.displayMainMenu();
 	}
 	
 	/**
+	 * @throws PersistenceException 
 	 * @throws Exception
 	 */
-	public void displayUI()
+	public void displayUI() throws PersistenceException
 	{
-		listCompanyControler.findCompanies("");
+		System.out.print("Choose size of page: ");
+		listCompanyControler.findCompanies(Optional.ofNullable(""));
 		displayFooter();
 	}
 
@@ -68,15 +72,17 @@ public enum ListCompanyView {
 	 * Display view that show list of companies 
 	 * @param optionalCompanies
 	 */
-	public void displayCompanies(List<Optional<Company>> optionalCompanies) {
+	public void displayCompanies(Optional<List<Optional<Company>>> optionalCompanies) {
 		displayHeader();
-		Company company;
-		for(Optional<Company> optionalCompany : optionalCompanies)
-		{
-			if(optionalCompany.isPresent())
+		if(optionalCompanies.isPresent()) {
+			Company company;
+			for(Optional<Company> optionalCompany : optionalCompanies.get())
 			{
-				company = optionalCompany.get();
-				System.out.format(ConstanteView.FORMAT_COMPANY, company.getId(), company.getName());
+				if(optionalCompany.isPresent())
+				{
+					company = optionalCompany.get();
+					System.out.format(ConstanteView.FORMAT_COMPANY, company.getId(), company.getName());
+				}
 			}
 		}
 	}
