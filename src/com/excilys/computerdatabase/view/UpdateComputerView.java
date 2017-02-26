@@ -7,6 +7,7 @@ import java.util.Scanner;
 import org.apache.commons.lang3.StringUtils;
 
 import com.excilys.computerdatabase.controller.UpdateComputerController;
+import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.validation.DateValidation;
@@ -40,8 +41,7 @@ public enum UpdateComputerView {
 		System.out.println("\t\t UPDATE COMPUTER \t\t");
 	}
 	
-	public void displayUI() throws PersistenceException
-	{
+	public void displayUI()	{
 		String id;
 		displayHeader();
 		do {
@@ -56,7 +56,7 @@ public enum UpdateComputerView {
 	 * @param computer
 	 * @throws PersistenceException 
 	 */
-	public void displayDetailsToUpdate(Optional<Computer> optionalComputer) throws PersistenceException {
+	public void displayDetailsToUpdate(Optional<Computer> optionalComputer) {
 		if(optionalComputer.isPresent()) {
 			Computer computer = optionalComputer.get();
 			System.out.println("ID (" + computer.getId() + ")");
@@ -85,7 +85,7 @@ public enum UpdateComputerView {
 			s = "";
 			System.out.print("DISCONTINUED (" + computer.getDiscontinued() + "): ");
 			s = sc.nextLine();
-			if (DateValidation.formatIsValid(Optional.ofNullable(s)) && DateValidation.dateIsValid(Optional.ofNullable(introduced), Optional.ofNullable(discontinued)))
+			if (DateValidation.formatIsValid(Optional.ofNullable(s)) && DateValidation.dateIsValid(Optional.ofNullable(introduced), Optional.ofNullable(LocalDate.parse(s))))
 			{
 				discontinued = LocalDate.parse(s);
 			}
@@ -96,6 +96,7 @@ public enum UpdateComputerView {
 			computer.setIntroduced(introduced);
 			computer.setDiscontinued(discontinued);
 			computer.setName(name);
+			computer.setManufacturer(null);
 			updateComputerControler.update(Optional.ofNullable(computer));
 		}
 	}
@@ -104,8 +105,7 @@ public enum UpdateComputerView {
 	 * @param computer
 	 * @throws PersistenceException 
 	 */
-	public void displayInfoComputer(Optional<Computer> optionalComputer) throws PersistenceException
-	{
+	public void displayInfoComputer(Optional<Computer> optionalComputer) {
 		if(optionalComputer.isPresent()) {
 			Computer computer = optionalComputer.get();
 			System.out.println("Computer with ID: " + computer.getId() + " was update");

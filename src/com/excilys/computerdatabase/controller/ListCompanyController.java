@@ -3,6 +3,9 @@ package com.excilys.computerdatabase.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdatabase.dao.impl.CrudCompanyImpl;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.exception.PersistenceException;
@@ -21,6 +24,8 @@ import com.excilys.computerdatabase.view.ListCompanyView;
 public enum ListCompanyController {
 	INSTANCE;
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ListCompanyController.class);
+	
 	private ListCompanyView listCompanyView;
 	
 	private CrudCompanyImpl crudCompany;
@@ -38,27 +43,29 @@ public enum ListCompanyController {
 	 * @param choice
 	 * @throws PersistenceException 
 	 */
-	public void findCompanies(Optional<String> optionalChoice) throws PersistenceException
-	{
+	public void findCompanies(Optional<String> optionalChoice) {
 		if(optionalChoice.isPresent()) {
 			String choice = optionalChoice.get();
 			boolean quit = false;
 			switch(choice)
 			{
 				case "n":
-					offset = offset+Constant.PAGE_SIZE;
+					offset = offset+1;
 					break;
 				case "p":
-					offset = offset-Constant.PAGE_SIZE > 0 ? offset-Constant.PAGE_SIZE : -1;
+					offset = offset-1 >= 0 ? offset-1 : -1;
 					break;
 				case "q":
 					offset = -1;
 					quit = true;
 					break;
+				default:
+					LOGGER.info("Choice is not valid !");
+					break;
 			}
-			if (!quit || offset >= 0)
+			if (!quit && offset >= 0)
 			{
-				Optional<List<Optional<Company>>> optionalCompanies = crudCompany.findUsingPagination(offset);
+				Optional<List<Optional<Company>>> optionalCompanies = crudCompany.findUsingPagination(offset*Constant.PAGE_SIZE);
 				if (optionalCompanies.isPresent())
 				{
 					listCompanyView.displayCompanies(optionalCompanies);

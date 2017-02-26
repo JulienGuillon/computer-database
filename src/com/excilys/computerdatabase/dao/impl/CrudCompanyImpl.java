@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.excilys.computerdatabase.dao.DatabaseManager;
 import com.excilys.computerdatabase.dao.CrudCompany;
 import com.excilys.computerdatabase.dao.mapper.MapperCompany;
+import com.excilys.computerdatabase.dao.mapper.MapperComputer;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.exception.PersistenceException;
 
@@ -47,18 +48,24 @@ public class CrudCompanyImpl implements CrudCompany {
 	/* (non-Javadoc)
 	 * @see com.excilys.computerdatabase.dao.ICrud#find(java.lang.String, int)
 	 */
-	public Optional<Company> find(long id) throws PersistenceException {
+	public Optional<Company> find(long id) {
 		Optional<Company> company = null;
 		connection = databaseManager.getConnection();
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(SELECT_COMPANY_BY_ID);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
+			if(resultSet.next()) {
+				company = MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet));
+			}
+			else
+			{
+				LOGGER.info("Id doesn't match any company in database");
+			}		
 			resultSet.next();
 			company = MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,14 +78,13 @@ public class CrudCompanyImpl implements CrudCompany {
 	/* (non-Javadoc)
 	 * @see com.excilys.computerdatabase.dao.ICrud#findAll(java.lang.String)
 	 */
-	public Optional<ResultSet> findAll() throws PersistenceException {
+	public Optional<ResultSet> findAll() {
 		connection = databaseManager.getConnection();
 		try {
 			Statement statement = connection.createStatement();
 			resultSet = statement.executeQuery(SELECT_COMPANIES);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} finally {
 			databaseManager.closeConnection();
 		}
@@ -92,8 +98,7 @@ public class CrudCompanyImpl implements CrudCompany {
 	 * @return
 	 * @throws PersistenceException 
 	 */
-	public Optional<List<Optional<Company>>> findUsingPagination(int offset) throws PersistenceException
-	{
+	public Optional<List<Optional<Company>>> findUsingPagination(int offset) {
 		connection = databaseManager.getConnection();
 		List<Optional<Company>> companies = new ArrayList<>();
 		try {
@@ -109,8 +114,7 @@ public class CrudCompanyImpl implements CrudCompany {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -125,7 +129,7 @@ public class CrudCompanyImpl implements CrudCompany {
 	 * @see com.excilys.computerdatabase.dao.Crud#findUsingPagination(int, int)
 	 */
 	@Override
-	public Optional<List<Optional<Company>>> findUsingPagination(int offset, int size) throws PersistenceException {
+	public Optional<List<Optional<Company>>> findUsingPagination(int offset, int size) {
 		if(size <= 10)
 		{
 			LOGGER.info("Size of page is not valid, default size is used !");

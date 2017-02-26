@@ -40,8 +40,7 @@ public enum ListCompanyView {
 	 * @throws PersistenceException 
 	 * @throws Exception
 	 */
-	public void displayFooter() throws PersistenceException
-	{
+	public void displayFooter()	{
 		String choice;
 		do {
 			System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
@@ -61,8 +60,7 @@ public enum ListCompanyView {
 	 * @throws PersistenceException 
 	 * @throws Exception
 	 */
-	public void displayUI() throws PersistenceException
-	{
+	public void displayUI()	{
 		System.out.print("Choose size of page: ");
 		listCompanyControler.findCompanies(Optional.ofNullable(""));
 		displayFooter();

@@ -3,6 +3,7 @@ package com.excilys.computerdatabase.view;
 import java.util.Optional;
 import java.util.Scanner;
 
+
 import com.excilys.computerdatabase.controller.MainMenuController;
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.validation.SelectionValidation;
@@ -18,6 +19,7 @@ import com.excilys.computerdatabase.validation.SelectionValidation;
 public enum MainMenuView {
 	INSTANCE;
 	
+
 	private MainMenuController mainMenuControler;
 
 	private String choice;
@@ -46,15 +48,13 @@ public enum MainMenuView {
      * and catch user selection
 	 * @throws PersistenceException 
 	 */
-	public void displayUI() throws PersistenceException
-	{
+	public void displayUI() {
 		displayMenu();
 		takeUserChoice();
 	}
 	
 
-	public void takeUserChoice() throws PersistenceException
-	{
+	public void takeUserChoice() {
 		choice = sc.next();
 		while (!SelectionValidation.userSelectionIsValid(Optional.ofNullable(choice)))
 		{	

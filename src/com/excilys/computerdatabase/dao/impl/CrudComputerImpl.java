@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,18 +54,22 @@ public class CrudComputerImpl implements CrudComputer {
 	/* (non-Javadoc)
 	 * @see com.excilys.computerdatabase.dao.ICrud#find(java.lang.String, int)
 	 */
-	public Optional<Computer> find(long id) throws PersistenceException {
-		Optional<Computer> computer = null;
+	public Optional<Computer> find(long id) {
+		Optional<Computer> computer = Optional.empty();
 		connection = databaseManager.getConnection();
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(SELECT_COMPUTER_BY_ID);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
-			resultSet.next();
-			computer = MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet));
+			if(resultSet.next()) {
+				computer = MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet));
+			}
+			else
+			{
+				LOGGER.info("Id doesn't match any computer in database");
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} finally
 		{
 			databaseManager.closeConnection();
@@ -75,15 +80,14 @@ public class CrudComputerImpl implements CrudComputer {
 	/* (non-Javadoc)
 	 * @see com.excilys.computerdatabase.dao.ICrud#findAll(java.lang.String)
 	 */
-	public Optional<ResultSet> findAll() throws PersistenceException {
+	public Optional<ResultSet> findAll() {
 		connection = databaseManager.getConnection();
 		ResultSet resultSet = null;
 		try {
 			Statement statement = connection.createStatement();
 			resultSet = statement.executeQuery(SELECT_COMPUTERS);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} finally
 		{
 			databaseManager.closeConnection();
@@ -96,17 +100,20 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @param id
 	 * @throws PersistenceException 
 	 */
-	public void delete(long id) throws PersistenceException
-	{
+	public void delete(long id)	{
 		
 		connection = databaseManager.getConnection();
 		try {
 			PreparedStatement preparedStatementDelete = connection.prepareStatement(DELETE_COMPUTER_BY_ID);
 			preparedStatementDelete.setLong(1, id);
-			preparedStatementDelete.execute();
+			if(preparedStatementDelete.executeUpdate() == 0)
+			{
+				LOGGER.info("This id doesn't match any computer in database");
+			}
+			databaseManager.commit();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			databaseManager.rollback();
+			throw new PersistenceException(e);
 		} finally
 		{
 			databaseManager.closeConnection();
@@ -119,25 +126,30 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @param id
 	 * @throws PersistenceException 
 	 */
-	public void update(Optional<Computer> optionalComputer, long id) throws PersistenceException
-	{
+	public void update(Optional<Computer> optionalComputer, long id) {
 		if(optionalComputer.isPresent())
 		{
 			Computer computer = optionalComputer.get();
 			connection = databaseManager.getConnection();
 			try {
+				System.out.println(computer.getManufacturer() != null);
 				PreparedStatement preparedStatementUpdate = connection.prepareStatement(UPDATE_COMPUTER_BY_ID);
 				preparedStatementUpdate.setString(1, computer.getName());
 				preparedStatementUpdate.setDate(2, computer.getIntroduced() != null ? Date.valueOf(computer.getIntroduced()) : null);
 				preparedStatementUpdate.setDate(3, computer.getDiscontinued() != null ? Date.valueOf(computer.getDiscontinued()) : null);
-				preparedStatementUpdate.setLong(4, computer.getManufacturer().getId());
+				if(computer.getManufacturer() != null) {
+					preparedStatementUpdate.setLong(4, computer.getManufacturer().getId());
+				} else {
+					preparedStatementUpdate.setNull(4,Types.BIGINT);
+				}
 				preparedStatementUpdate.setLong(5, id);
 				preparedStatementUpdate.execute();
+				databaseManager.commit();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new PersistenceException(e);
 			} finally
 			{
+				databaseManager.rollback();
 				databaseManager.closeConnection();
 			}
 		}
@@ -148,8 +160,7 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @param computer
 	 * @throws PersistenceException 
 	 */
-	public void create(Optional<Computer> optionalComputer) throws PersistenceException
-	{
+	public void create(Optional<Computer> optionalComputer)	{
 		if(optionalComputer.isPresent())
 		{
 			Computer computer = optionalComputer.get();
@@ -162,11 +173,11 @@ public class CrudComputerImpl implements CrudComputer {
 				preparedStatementInsert.setObject(3, computer.getDiscontinued());
 				preparedStatementInsert.setLong(4, computer.getManufacturer().getId());
 				preparedStatementInsert.execute();
-	
+				databaseManager.commit();
 			} catch (SQLException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				databaseManager.rollback();
+				throw new PersistenceException(e);
 			} finally
 			{
 				databaseManager.closeConnection();
@@ -180,8 +191,7 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @return
 	 * @throws PersistenceException 
 	 */
-	public Optional<List<Optional<Computer>>> findUsingPagination(int offset) throws PersistenceException
-	{
+	public Optional<List<Optional<Computer>>> findUsingPagination(int offset) {
 		List<Optional<Computer>> computers = new ArrayList<>();
 		connection = databaseManager.getConnection();
 		try
@@ -200,8 +210,7 @@ public class CrudComputerImpl implements CrudComputer {
 			
 		} catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block
@@ -219,7 +228,7 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @see com.excilys.computerdatabase.dao.Crud#findUsingPagination(int, int)
 	 */
 	@Override
-	public Optional<List<Optional<Computer>>> findUsingPagination(int offset, int size) throws PersistenceException {
+	public Optional<List<Optional<Computer>>> findUsingPagination(int offset, int size) {
 		if(size <= 10)
 		{
 			LOGGER.info("Size of page is not valid, default size is used !");

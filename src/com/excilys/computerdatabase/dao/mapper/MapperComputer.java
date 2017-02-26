@@ -29,8 +29,6 @@ public class MapperComputer {
  	 * Allows to get a computer from a ResultSet
 	 * @param resultSet
 	 * @return
-	 * @throws SQLException
-	 * @throws Exception
 	 */
 	public static Optional<Computer> resultSetToComputer(Optional<ResultSet> optionalResultSet)
 	{
@@ -71,6 +69,6 @@ public class MapperComputer {
 				e.printStackTrace();
 			}
 		}
-		return Optional.of(computerBuilder.build());
+		return Optional.ofNullable(computerBuilder.build());
 	}
 }

@@ -20,8 +20,6 @@ public class MapperCompany {
 	 * Allows to get a company from a ResultSet 
 	 * @param resultSet
 	 * @return
-	 * @throws SQLException
-	 * @throws Exception
 	 */
 	public static Optional<Company> resultSetToCompany(Optional<ResultSet> optionalResultSet)
 	{
