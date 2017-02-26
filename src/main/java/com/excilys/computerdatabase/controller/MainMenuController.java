@@ -1,5 +1,11 @@
 package com.excilys.computerdatabase.controller;
 
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.IView;
 import com.excilys.computerdatabase.view.MainMenuView;
 
@@ -16,6 +22,8 @@ import com.excilys.computerdatabase.view.MainMenuView;
 public enum MainMenuController {
 	INSTANCE;
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MainMenuController.class);
+
 	private MainMenuView mainMenuView;
 	
 	private MainMenuController()
@@ -26,38 +34,44 @@ public enum MainMenuController {
 	 * Control user entry and call the good view to display
 	 * 
 	 * @param choice
+	 * @throws PersistenceException 
 	 * @throws Exception 
 	 */
-	public void controlUserChoice(String choice)
-	{
-		switch (choice)
-		{
-		case "1":
-			IView.displayComputers();
-			break;
-		case "2":
-			IView.displayCompanies();
-			break;
-		case "3":
-			IView.displayComputerDetails();
-			break;
-		case "4":
-			break;
-		case "5":
-			IView.displayComputerUpdate();
-			break;
-		case "6":
-			break;
-		default:
-			break;
+	public void controlUserChoice(Optional<String> optionalChoice) {	
+		if(optionalChoice.isPresent()) {
+			String choice = optionalChoice.get();
+			switch (choice)
+			{
+			case "1":
+				IView.displayComputers();
+				break;
+			case "2":
+				IView.displayCompanies();
+				break;
+			case "3":
+				IView.displayComputerDetails();
+				break;
+			case "4":
+				break;
+			case "5":
+				IView.displayComputerUpdate();
+				break;
+			case "6":
+				break;
+			default:
+				LOGGER.info("Selection is not valid, should be number 1-6 or q !");
+				break;
+			}
 		}
 	}
 	
 	/**
 	 * @param mainMenuView the mainMenuView to set
 	 */
-	public void setMainMenuView(MainMenuView pMainMenuView) {
-		this.mainMenuView = pMainMenuView;
+	public void setMainMenuView(Optional<MainMenuView> optionalMainMenuView) {
+		if(optionalMainMenuView.isPresent()) {
+			this.mainMenuView = optionalMainMenuView.get();
+		}
 	}
 	
 }

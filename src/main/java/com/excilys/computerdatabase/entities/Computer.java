@@ -1,6 +1,7 @@
 package com.excilys.computerdatabase.entities;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import com.excilys.computerdatabase.validation.EntityValidation;
 
@@ -134,7 +135,7 @@ public class Computer {
 		
 		public Builder withName(String name)
 		{
-			if(EntityValidation.nameIsValid(name))
+			if(EntityValidation.nameIsValid(Optional.ofNullable(name)))
 			{
 				this.computer.name = name;
 			}

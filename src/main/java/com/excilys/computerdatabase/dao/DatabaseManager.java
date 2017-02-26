@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.utils.LoadProperties;
 
 /**
@@ -51,24 +52,40 @@ public enum DatabaseManager {
 	
 	/**
 	 * @return the connect
+	 * @throws PersistenceException 
 	 */
 	public Connection getConnection() {
 		try {
 			connection = DriverManager.getConnection(properties.getProperty(URL), properties.getProperty(USER), properties.getProperty(PASSWORD));
+		    connection.setAutoCommit(false);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException("Error on openning connection to database", e);
 		}
+		LOGGER.info("Connection to database successfully effectued");
 		return connection;
 	}
 	
-	public void closeConnection()
-	{
+	public void closeConnection() {
 		try {
 			connection.close();
 		} catch (SQLException e) {
-			LOGGER.error("Error on close database connection " + e);
-			e.printStackTrace();
+			throw new PersistenceException("Error on close database connection " + e);
+		}
+	}
+	
+	public void commit() {
+		try {
+			connection.commit();
+		} catch (SQLException e) {
+			throw new PersistenceException("Error on commit on database " + e);
+		}
+	}
+	
+	public void rollback() {
+		try {
+			connection.rollback();
+		} catch (SQLException e) {
+			throw new PersistenceException("Error for rollback on database " + e);
 		}
 	}
 

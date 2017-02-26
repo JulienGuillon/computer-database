@@ -9,10 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdatabase.dao.DatabaseManager;
 import com.excilys.computerdatabase.dao.CrudCompany;
 import com.excilys.computerdatabase.dao.mapper.MapperCompany;
+import com.excilys.computerdatabase.dao.mapper.MapperComputer;
 import com.excilys.computerdatabase.entities.Company;
+import com.excilys.computerdatabase.exception.PersistenceException;
 
 /**
  * @author Guillon Julien
@@ -23,7 +28,9 @@ import com.excilys.computerdatabase.entities.Company;
  */
 public class CrudCompanyImpl implements CrudCompany {
 	
-	private static final int PAGE = 10;
+	private static final Logger LOGGER = LoggerFactory.getLogger(CrudCompanyImpl.class);
+			
+	private static int PAGE = 10;
 	private static final String SELECT_COMPANIES = "select * from company;";
 	private static final String SELECT_COMPANY_BY_ID = "select * from company where id= ?;";
 	private static final String PAGINATION_COMPANIES = "select * from company limit ? offset ?;";
@@ -48,11 +55,17 @@ public class CrudCompanyImpl implements CrudCompany {
 			PreparedStatement preparedStatement = connection.prepareStatement(SELECT_COMPANY_BY_ID);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
+			if(resultSet.next()) {
+				company = MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet));
+			}
+			else
+			{
+				LOGGER.info("Id doesn't match any company in database");
+			}		
 			resultSet.next();
-			company = MapperCompany.resultSetToCompany(resultSet);
+			company = MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -71,8 +84,7 @@ public class CrudCompanyImpl implements CrudCompany {
 			Statement statement = connection.createStatement();
 			resultSet = statement.executeQuery(SELECT_COMPANIES);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} finally {
 			databaseManager.closeConnection();
 		}
@@ -84,9 +96,9 @@ public class CrudCompanyImpl implements CrudCompany {
 	 * Find companies using pagination from database
 	 * @param offset
 	 * @return
+	 * @throws PersistenceException 
 	 */
-	public Optional<List<Optional<Company>>> findUsingPagination(int offset)
-	{
+	public Optional<List<Optional<Company>>> findUsingPagination(int offset) {
 		connection = databaseManager.getConnection();
 		List<Optional<Company>> companies = new ArrayList<>();
 		try {
@@ -96,14 +108,13 @@ public class CrudCompanyImpl implements CrudCompany {
 			resultSet = preparedStatementPagination.executeQuery();
 			while(resultSet.next())
 			{
-				if(MapperCompany.resultSetToCompany(resultSet).isPresent())
+				if(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent())
 				{
-					companies.add(MapperCompany.resultSetToCompany(resultSet));
+					companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)));
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -111,6 +122,23 @@ public class CrudCompanyImpl implements CrudCompany {
 			databaseManager.closeConnection();
 		}
 		return Optional.of(companies);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.excilys.computerdatabase.dao.Crud#findUsingPagination(int, int)
+	 */
+	@Override
+	public Optional<List<Optional<Company>>> findUsingPagination(int offset, int size) {
+		if(size <= 10)
+		{
+			LOGGER.info("Size of page is not valid, default size is used !");
+			PAGE = 10;
+		}
+		else {
+			PAGE = size;
+		}
+		return findUsingPagination(offset);
 	}
 	
 }

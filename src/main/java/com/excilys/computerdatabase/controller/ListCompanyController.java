@@ -3,8 +3,12 @@ package com.excilys.computerdatabase.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdatabase.dao.impl.CrudCompanyImpl;
 import com.excilys.computerdatabase.entities.Company;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.ListCompanyView;
 
 /**
@@ -19,6 +23,8 @@ import com.excilys.computerdatabase.view.ListCompanyView;
  */
 public enum ListCompanyController {
 	INSTANCE;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ListCompanyController.class);
 	
 	private ListCompanyView listCompanyView;
 	
@@ -35,29 +41,35 @@ public enum ListCompanyController {
 	 * Find all companies with pagination by using crud method
 	 * and call to update view 
 	 * @param choice
+	 * @throws PersistenceException 
 	 */
-	public void findCompanies(String choice)
-	{
-		boolean quit = false;
-		switch(choice)
-		{
-			case "n":
-				offset = offset+Constant.PAGE_SIZE;
-				break;
-			case "p":
-				break;
-			case "q":
-				offset = 0;
-				quit = true;
-				break;
-		}
-		if (!quit)
-		{
-			Optional<List<Optional<Company>>> optionalCompanies = crudCompany.findUsingPagination(offset);
-			if (optionalCompanies.isPresent())
+	public void findCompanies(Optional<String> optionalChoice) {
+		if(optionalChoice.isPresent()) {
+			String choice = optionalChoice.get();
+			boolean quit = false;
+			switch(choice)
 			{
-				List<Optional<Company>> companies = optionalCompanies.get();
-				listCompanyView.displayCompanies(companies);
+				case "n":
+					offset = offset+1;
+					break;
+				case "p":
+					offset = offset-1 >= 0 ? offset-1 : -1;
+					break;
+				case "q":
+					offset = -1;
+					quit = true;
+					break;
+				default:
+					LOGGER.info("Choice is not valid !");
+					break;
+			}
+			if (!quit && offset >= 0)
+			{
+				Optional<List<Optional<Company>>> optionalCompanies = crudCompany.findUsingPagination(offset*Constant.PAGE_SIZE);
+				if (optionalCompanies.isPresent())
+				{
+					listCompanyView.displayCompanies(optionalCompanies);
+				}
 			}
 		}
 	}
@@ -65,7 +77,9 @@ public enum ListCompanyController {
 	/**
 	 * @param listCompanyView the listCompanyView to set
 	 */
-	public void setListCompanyView(ListCompanyView listCompanyView) {
-		this.listCompanyView = listCompanyView;
+	public void setListCompanyView(Optional<ListCompanyView> optionalListCompanyView) {
+		if (optionalListCompanyView.isPresent()) {
+			this.listCompanyView = optionalListCompanyView.get();
+		}
 	}
 }

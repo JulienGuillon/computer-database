@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
+import com.excilys.computerdatabase.exception.PersistenceException;
+
 /**
  * @author Guillon Julien
  *
@@ -19,4 +21,5 @@ public interface Crud<T> {
 	
 	public Optional<List<Optional<T>>> findUsingPagination(int offset);
 	
+	public Optional<List<Optional<T>>> findUsingPagination(int offset, int size);
 }

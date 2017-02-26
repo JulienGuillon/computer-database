@@ -1,9 +1,11 @@
 package com.excilys.computerdatabase.view;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.DetailsComputerController;
 import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
 
 /**
  * @author Guillon Julien
@@ -25,7 +27,7 @@ public enum DetailsComputerView {
 	private DetailsComputerView()
 	{
 		detailsComputerControler = DetailsComputerController.INSTANCE;
-		detailsComputerControler.setDetailsComputerView(this);
+		detailsComputerControler.setDetailsComputerView(Optional.ofNullable(this));
 	}
 	
 	
@@ -34,19 +36,18 @@ public enum DetailsComputerView {
 		System.out.println("\t\t SHOW COMPUTER DETAIL \t\t");
 	}
 	
-	public void displayFooter()
-	{
+	public void displayFooter()	{
 		System.out.println("\t\t delete(d) \t\t update(u) \t\t");
-		detailsComputerControler.makeOperation(sc.next(), idComputer);
+		detailsComputerControler.makeOperation(Optional.ofNullable(sc.next()), idComputer);
 	}
 	
 	/**
 	 * Display view to select computer's id
 	 * and use controller to get associated computer
+	 * @throws PersistenceException 
 	 * @throws Exception
 	 */
-	public void displayUI()
-	{
+	public void displayUI()	{
 		int choice;
 		displayHeader();
 		do {
@@ -63,13 +64,16 @@ public enum DetailsComputerView {
 	 * Display details of a computer
 	 * @param computer
 	 */
-	public void displayDetails(Computer computer) {
-		System.out.format(ConstanteView.FORMAT_COMPUTER, "ID", "NOM", "INTRODUCED", "DISCONTINUED", "COMPANY");
-		System.out.format(ConstanteView.FORMAT_COMPUTER, computer.getId(), computer.getName(),
-				(computer.getIntroduced()== null) ? "" : computer.getIntroduced(),
-				(computer.getDiscontinued()== null) ? "" : computer.getDiscontinued(),
-				(computer.getManufacturer() == null) ? "" : computer.getManufacturer().getName());
-		idComputer = computer.getId();
+	public void displayDetails(Optional<Computer> optionalComputer) {
+		if(optionalComputer.isPresent()) {
+			Computer computer = optionalComputer.get();
+			System.out.format(ConstanteView.FORMAT_COMPUTER, "ID", "NOM", "INTRODUCED", "DISCONTINUED", "COMPANY");
+			System.out.format(ConstanteView.FORMAT_COMPUTER, computer.getId(), computer.getName(),
+					(computer.getIntroduced()== null) ? "" : computer.getIntroduced(),
+					(computer.getDiscontinued()== null) ? "" : computer.getDiscontinued(),
+					(computer.getManufacturer() == null) ? "" : computer.getManufacturer().getName());
+			idComputer = computer.getId();
+		}
 	}
 
 	/**

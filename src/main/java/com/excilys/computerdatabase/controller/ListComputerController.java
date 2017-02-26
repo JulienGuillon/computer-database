@@ -4,8 +4,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
 import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.ListComputerView;
 
 /**
@@ -21,6 +25,7 @@ import com.excilys.computerdatabase.view.ListComputerView;
 public enum ListComputerController {
 	INSTANCE;
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ListComputerController.class);
 	private ListComputerView listComputerView;
 	
 	private CrudComputerImpl crudComputer;
@@ -36,31 +41,38 @@ public enum ListComputerController {
 	 * Find all computers with pagination by using crud method
 	 * and call to update view 
 	 * @param pChoice: could be "n" or "p" to switch of page 
+	 * @throws PersistenceException 
 	 * @throws SQLException 
 	 * 
 	 */
-	public void findComputers(String choice) {
-		boolean quit = false;
-		switch(choice)
-		{
-		case "n":
-			offset = offset+Constant.PAGE_SIZE;
-			break;
-		case "p":
-			offset = (offset-Constant.PAGE_SIZE >= 0) ? offset-Constant.PAGE_SIZE : 0;
-			break;
-		case "q":
-			offset = 0;
-			quit = true;
-			break;
-		}
-		if (!quit)
-		{
-			Optional<List<Optional<Computer>>> optionalComputers = crudComputer.findUsingPagination(offset);
-			if (optionalComputers.isPresent())
+	public void findComputers(Optional<String> optionalChoice) {
+		if(optionalChoice.isPresent()) {
+			boolean quit = false;
+			String choice = optionalChoice.get();
+			switch(choice)
 			{
-				List<Optional<Computer>> computers = optionalComputers.get();
-				listComputerView.displayComputers(computers);
+			case "n":
+				offset = (offset+1);
+				break;
+			case "p":
+				offset = ((offset-1) >= 0) ? (offset-1) : -1;
+				break;
+			case "q":
+				offset = -1;
+				quit = true;
+				break;
+			default:
+				LOGGER.info("Choice is not valid !");
+				break;
+			}
+			if (!quit && offset >= 0)
+			{
+				Optional<List<Optional<Computer>>> optionalComputers = crudComputer.findUsingPagination(offset*Constant.PAGE_SIZE);
+				if (optionalComputers.isPresent())
+				{
+					List<Optional<Computer>> computers = optionalComputers.get();
+					listComputerView.displayComputers(computers);
+				}
 			}
 		}
 	}
@@ -68,8 +80,10 @@ public enum ListComputerController {
 	/**
 	 * @param listComputerView the listComputerView to set
 	 */
-	public void setListComputerView(ListComputerView listComputerView) {
-		this.listComputerView = listComputerView;
+	public void setListComputerView(Optional<ListComputerView> optionalListComputerView) {
+		if (optionalListComputerView.isPresent()) {
+			this.listComputerView = optionalListComputerView.get();
+		}
 	}
 	
 }

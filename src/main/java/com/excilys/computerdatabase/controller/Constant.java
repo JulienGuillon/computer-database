@@ -5,7 +5,8 @@ package com.excilys.computerdatabase.controller;
  *
  * 21 févr. 2017
  */
-public final class Constant {
-    public static final int PAGE_SIZE = 10;
-    private Constant() { }
+public class Constant {
+	
+	public static final int PAGE_SIZE = 10;
+
 }
