@@ -46,19 +46,19 @@ public enum ListCompanyController {
 			switch(choice)
 			{
 				case "n":
-					offset = offset+Constant.PAGE_SIZE;
+					offset = offset+1;
 					break;
 				case "p":
-					offset = offset-Constant.PAGE_SIZE > 0 ? offset-Constant.PAGE_SIZE : -1;
+					offset = offset-1 >= 0 ? offset-1 : -1;
 					break;
 				case "q":
 					offset = -1;
 					quit = true;
 					break;
 			}
-			if (!quit || offset >= 0)
+			if (!quit && offset >= 0)
 			{
-				Optional<List<Optional<Company>>> optionalCompanies = crudCompany.findUsingPagination(offset);
+				Optional<List<Optional<Company>>> optionalCompanies = crudCompany.findUsingPagination(offset*Constant.PAGE_SIZE);
 				if (optionalCompanies.isPresent())
 				{
 					listCompanyView.displayCompanies(optionalCompanies);

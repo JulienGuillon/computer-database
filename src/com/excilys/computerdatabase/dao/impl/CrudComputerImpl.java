@@ -54,17 +54,21 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @see com.excilys.computerdatabase.dao.ICrud#find(java.lang.String, int)
 	 */
 	public Optional<Computer> find(long id) throws PersistenceException {
-		Optional<Computer> computer = null;
+		Optional<Computer> computer = Optional.empty();
 		connection = databaseManager.getConnection();
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(SELECT_COMPUTER_BY_ID);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
-			resultSet.next();
-			computer = MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet));
+			if(resultSet.next()) {
+				computer = MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet));
+			}
+			else
+			{
+				LOGGER.info("Id doesn't match any computer in database");
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} finally
 		{
 			databaseManager.closeConnection();
@@ -82,8 +86,7 @@ public class CrudComputerImpl implements CrudComputer {
 			Statement statement = connection.createStatement();
 			resultSet = statement.executeQuery(SELECT_COMPUTERS);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} finally
 		{
 			databaseManager.closeConnection();
@@ -103,10 +106,12 @@ public class CrudComputerImpl implements CrudComputer {
 		try {
 			PreparedStatement preparedStatementDelete = connection.prepareStatement(DELETE_COMPUTER_BY_ID);
 			preparedStatementDelete.setLong(1, id);
-			preparedStatementDelete.execute();
+			if(preparedStatementDelete.executeUpdate() == 0)
+			{
+				LOGGER.info("This id doesn't match any computer in database");
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} finally
 		{
 			databaseManager.closeConnection();
@@ -134,8 +139,7 @@ public class CrudComputerImpl implements CrudComputer {
 				preparedStatementUpdate.setLong(5, id);
 				preparedStatementUpdate.execute();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new PersistenceException(e);
 			} finally
 			{
 				databaseManager.closeConnection();
@@ -165,8 +169,7 @@ public class CrudComputerImpl implements CrudComputer {
 	
 			} catch (SQLException e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new PersistenceException(e);
 			} finally
 			{
 				databaseManager.closeConnection();
@@ -200,8 +203,7 @@ public class CrudComputerImpl implements CrudComputer {
 			
 		} catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block

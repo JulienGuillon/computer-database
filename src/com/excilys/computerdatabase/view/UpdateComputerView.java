@@ -85,7 +85,7 @@ public enum UpdateComputerView {
 			s = "";
 			System.out.print("DISCONTINUED (" + computer.getDiscontinued() + "): ");
 			s = sc.nextLine();
-			if (DateValidation.formatIsValid(Optional.ofNullable(s)) && DateValidation.dateIsValid(Optional.ofNullable(introduced), Optional.ofNullable(discontinued)))
+			if (DateValidation.formatIsValid(Optional.ofNullable(s)) && DateValidation.dateIsValid(Optional.ofNullable(introduced), Optional.ofNullable(LocalDate.parse(s))))
 			{
 				discontinued = LocalDate.parse(s);
 			}

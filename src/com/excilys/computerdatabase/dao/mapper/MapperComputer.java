@@ -71,6 +71,6 @@ public class MapperComputer {
 				e.printStackTrace();
 			}
 		}
-		return Optional.of(computerBuilder.build());
+		return Optional.ofNullable(computerBuilder.build());
 	}
 }

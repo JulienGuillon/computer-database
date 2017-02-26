@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.excilys.computerdatabase.dao.DatabaseManager;
 import com.excilys.computerdatabase.dao.CrudCompany;
 import com.excilys.computerdatabase.dao.mapper.MapperCompany;
+import com.excilys.computerdatabase.dao.mapper.MapperComputer;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.exception.PersistenceException;
 
@@ -54,11 +55,17 @@ public class CrudCompanyImpl implements CrudCompany {
 			PreparedStatement preparedStatement = connection.prepareStatement(SELECT_COMPANY_BY_ID);
 			preparedStatement.setLong(1, id);
 			resultSet = preparedStatement.executeQuery();
+			if(resultSet.next()) {
+				company = MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet));
+			}
+			else
+			{
+				LOGGER.info("Id doesn't match any company in database");
+			}		
 			resultSet.next();
 			company = MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,8 +84,7 @@ public class CrudCompanyImpl implements CrudCompany {
 			Statement statement = connection.createStatement();
 			resultSet = statement.executeQuery(SELECT_COMPANIES);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} finally {
 			databaseManager.closeConnection();
 		}
@@ -109,8 +115,7 @@ public class CrudCompanyImpl implements CrudCompany {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new PersistenceException(e);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
