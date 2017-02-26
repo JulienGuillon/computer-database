@@ -42,8 +42,7 @@ public enum ListComputerView {
 	 * @throws PersistenceException 
 	  * @throws Exception
 	  */
-	 public void displayFooter() throws PersistenceException
-	 {
+	 public void displayFooter() {
 		String choice;
 		do {
 			System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
@@ -59,8 +58,7 @@ public enum ListComputerView {
 		IView.displayMainMenu();
 	}
 	
-	public void displayUI() throws PersistenceException
-	{
+	public void displayUI() {
 		displayHeader();
 		listComputerControler.findComputers(Optional.ofNullable(""));
 		displayFooter();

@@ -11,10 +11,10 @@ import com.excilys.computerdatabase.exception.PersistenceException;
  * 24 févr. 2017
  */
 public interface CrudComputer extends Crud<Computer> {
-	public void create(Optional<Computer> computer) throws PersistenceException;
+	public void create(Optional<Computer> computer);
 	
-	public void delete(long id) throws PersistenceException;
+	public void delete(long id);
 
-	public void update(Optional<Computer> computer, long id) throws PersistenceException;
+	public void update(Optional<Computer> computer, long id);
 
 }

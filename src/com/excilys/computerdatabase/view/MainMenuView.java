@@ -48,15 +48,13 @@ public enum MainMenuView {
      * and catch user selection
 	 * @throws PersistenceException 
 	 */
-	public void displayUI() throws PersistenceException
-	{
+	public void displayUI() {
 		displayMenu();
 		takeUserChoice();
 	}
 	
 
-	public void takeUserChoice() throws PersistenceException
-	{
+	public void takeUserChoice() {
 		choice = sc.next();
 		while (!SelectionValidation.userSelectionIsValid(Optional.ofNullable(choice)))
 		{	

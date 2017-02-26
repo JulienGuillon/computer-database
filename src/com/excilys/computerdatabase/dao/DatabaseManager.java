@@ -54,7 +54,7 @@ public enum DatabaseManager {
 	 * @return the connect
 	 * @throws PersistenceException 
 	 */
-	public Connection getConnection() throws PersistenceException {
+	public Connection getConnection() {
 		try {
 			connection = DriverManager.getConnection(properties.getProperty(URL), properties.getProperty(USER), properties.getProperty(PASSWORD));
 		    connection.setAutoCommit(false);
@@ -65,8 +65,7 @@ public enum DatabaseManager {
 		return connection;
 	}
 	
-	public void closeConnection() throws PersistenceException
-	{
+	public void closeConnection() {
 		try {
 			connection.close();
 		} catch (SQLException e) {
@@ -74,8 +73,7 @@ public enum DatabaseManager {
 		}
 	}
 	
-	public void commit() throws PersistenceException
-	{
+	public void commit() {
 		try {
 			connection.commit();
 		} catch (SQLException e) {
@@ -83,8 +81,7 @@ public enum DatabaseManager {
 		}
 	}
 	
-	public void rollback() throws PersistenceException
-	{
+	public void rollback() {
 		try {
 			connection.rollback();
 		} catch (SQLException e) {

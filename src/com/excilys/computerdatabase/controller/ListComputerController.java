@@ -45,7 +45,7 @@ public enum ListComputerController {
 	 * @throws SQLException 
 	 * 
 	 */
-	public void findComputers(Optional<String> optionalChoice) throws PersistenceException {
+	public void findComputers(Optional<String> optionalChoice) {
 		if(optionalChoice.isPresent()) {
 			boolean quit = false;
 			String choice = optionalChoice.get();

@@ -37,8 +37,7 @@ public enum MainMenuController {
 	 * @throws PersistenceException 
 	 * @throws Exception 
 	 */
-	public void controlUserChoice(Optional<String> optionalChoice) throws PersistenceException
-	{	
+	public void controlUserChoice(Optional<String> optionalChoice) {	
 		if(optionalChoice.isPresent()) {
 			String choice = optionalChoice.get();
 			switch (choice)

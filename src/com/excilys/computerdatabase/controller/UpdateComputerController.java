@@ -45,7 +45,7 @@ public enum UpdateComputerController {
 	 * @throws PersistenceException 
 	 * @throws Exception 
 	 */
-	public void findComputerById(int choice) throws PersistenceException {
+	public void findComputerById(int choice) {
 		Optional<Computer> computer = crudComputer.find(choice);
 		if(computer.isPresent())
 		{
@@ -60,7 +60,7 @@ public enum UpdateComputerController {
 	 * @throws PersistenceException 
 	 * @throws Exception 
 	 */
-	public void update(Optional<Computer> optionalComputer) throws PersistenceException {
+	public void update(Optional<Computer> optionalComputer) {
 		if (optionalComputer.isPresent()) {
 			Computer computer = optionalComputer.get();
 			crudComputer.update(Optional.ofNullable(computer), computer.getId());

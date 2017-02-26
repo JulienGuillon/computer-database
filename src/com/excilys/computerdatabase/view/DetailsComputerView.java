@@ -36,8 +36,7 @@ public enum DetailsComputerView {
 		System.out.println("\t\t SHOW COMPUTER DETAIL \t\t");
 	}
 	
-	public void displayFooter() throws PersistenceException
-	{
+	public void displayFooter()	{
 		System.out.println("\t\t delete(d) \t\t update(u) \t\t");
 		detailsComputerControler.makeOperation(Optional.ofNullable(sc.next()), idComputer);
 	}
@@ -48,8 +47,7 @@ public enum DetailsComputerView {
 	 * @throws PersistenceException 
 	 * @throws Exception
 	 */
-	public void displayUI() throws PersistenceException
-	{
+	public void displayUI()	{
 		int choice;
 		displayHeader();
 		do {

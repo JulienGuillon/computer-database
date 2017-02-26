@@ -5,7 +5,7 @@ package com.excilys.computerdatabase.exception;
  *
  * 24 févr. 2017
  */
-public class PersistenceException extends Exception {
+public class PersistenceException extends RuntimeException {
 
 	public PersistenceException() {
 		super();

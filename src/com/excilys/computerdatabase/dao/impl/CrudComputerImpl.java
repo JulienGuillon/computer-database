@@ -54,7 +54,7 @@ public class CrudComputerImpl implements CrudComputer {
 	/* (non-Javadoc)
 	 * @see com.excilys.computerdatabase.dao.ICrud#find(java.lang.String, int)
 	 */
-	public Optional<Computer> find(long id) throws PersistenceException {
+	public Optional<Computer> find(long id) {
 		Optional<Computer> computer = Optional.empty();
 		connection = databaseManager.getConnection();
 		try {
@@ -80,7 +80,7 @@ public class CrudComputerImpl implements CrudComputer {
 	/* (non-Javadoc)
 	 * @see com.excilys.computerdatabase.dao.ICrud#findAll(java.lang.String)
 	 */
-	public Optional<ResultSet> findAll() throws PersistenceException {
+	public Optional<ResultSet> findAll() {
 		connection = databaseManager.getConnection();
 		ResultSet resultSet = null;
 		try {
@@ -100,8 +100,7 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @param id
 	 * @throws PersistenceException 
 	 */
-	public void delete(long id) throws PersistenceException
-	{
+	public void delete(long id)	{
 		
 		connection = databaseManager.getConnection();
 		try {
@@ -127,8 +126,7 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @param id
 	 * @throws PersistenceException 
 	 */
-	public void update(Optional<Computer> optionalComputer, long id) throws PersistenceException
-	{
+	public void update(Optional<Computer> optionalComputer, long id) {
 		if(optionalComputer.isPresent())
 		{
 			Computer computer = optionalComputer.get();
@@ -162,8 +160,7 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @param computer
 	 * @throws PersistenceException 
 	 */
-	public void create(Optional<Computer> optionalComputer) throws PersistenceException
-	{
+	public void create(Optional<Computer> optionalComputer)	{
 		if(optionalComputer.isPresent())
 		{
 			Computer computer = optionalComputer.get();
@@ -194,8 +191,7 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @return
 	 * @throws PersistenceException 
 	 */
-	public Optional<List<Optional<Computer>>> findUsingPagination(int offset) throws PersistenceException
-	{
+	public Optional<List<Optional<Computer>>> findUsingPagination(int offset) {
 		List<Optional<Computer>> computers = new ArrayList<>();
 		connection = databaseManager.getConnection();
 		try
@@ -232,7 +228,7 @@ public class CrudComputerImpl implements CrudComputer {
 	 * @see com.excilys.computerdatabase.dao.Crud#findUsingPagination(int, int)
 	 */
 	@Override
-	public Optional<List<Optional<Computer>>> findUsingPagination(int offset, int size) throws PersistenceException {
+	public Optional<List<Optional<Computer>>> findUsingPagination(int offset, int size) {
 		if(size <= 10)
 		{
 			LOGGER.info("Size of page is not valid, default size is used !");
