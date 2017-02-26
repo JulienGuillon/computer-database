@@ -1,6 +1,10 @@
 package com.excilys.computerdatabase.controller;
 
-import com.excilys.computerdatabase.dao.CrudComputer;
+import java.util.Optional;
+
+import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
+import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.DetailsComputerView;
 
 /**
@@ -13,56 +17,58 @@ import com.excilys.computerdatabase.view.DetailsComputerView;
  * Allows to catch event on view DetailsComputerView and make validation.
  * 
  */
-public class DetailsComputerController {
-
-	private static final DetailsComputerController DETAILS_COMPUTER_CONTROLER = new DetailsComputerController();
-	
+public enum DetailsComputerController {
+	INSTANCE;
+		
 	private DetailsComputerView detailsComputerView;
 	
-	private CrudComputer crudComputer;
+	private CrudComputerImpl crudComputer;
 
 	private DetailsComputerController()
 	{
-		crudComputer = new CrudComputer();
+		crudComputer = new CrudComputerImpl();
 	}
 	
+
 	/**
-	 * 
-	 * @return an instance of DetailsComputerController
+	 * @param optionalDetailsComputerView
 	 */
-	public static DetailsComputerController getInstance()
-	{
-		return DETAILS_COMPUTER_CONTROLER;
+	public void setDetailsComputerView(Optional<DetailsComputerView> optionalDetailsComputerView) {
+		if(optionalDetailsComputerView.isPresent()) {
+			this.detailsComputerView = optionalDetailsComputerView.get();
+		}
 	}
 
 	/**
-	 * @param pDetailsComputerView
+	 * @param choice
+	 * @throws PersistenceException 
 	 */
-	public void setDetailsComputerView(DetailsComputerView pDetailsComputerView) {
-		this.detailsComputerView = pDetailsComputerView;
-	}
-
-	/**
-	 * @param pChoice
-	 */
-	public void findComputerById(int pChoice) {
-		detailsComputerView.displayDetails(crudComputer.find(pChoice));
-	}
-
-	/**
-	 * @param pOperation
-	 */
-	public void makeOperation(String pOperation, int pId) {
-		switch (pOperation)
+	public void findComputerById(int choice) throws PersistenceException {
+		Optional<Computer> computer = crudComputer.find(choice);
+		if(computer.isPresent())
 		{
-			case "d":
-				crudComputer.delete(pId);
-				detailsComputerView.displayDeletion(pId);
-				break;
-			case "u":
-				break;
-			default:
-				break;
+			detailsComputerView.displayDetails(computer);
+		}
+	}
+
+	/**
+	 * @param operation
+	 * @throws PersistenceException 
+	 */
+	public void makeOperation(Optional<String> optionalOperation, long id) throws PersistenceException {
+		if(optionalOperation.isPresent()) {
+			String operation = optionalOperation.get();
+			switch (operation)
+			{
+				case "d":
+					crudComputer.delete(id);
+					detailsComputerView.displayDeletion(id);
+					break;
+				case "u":
+					break;
+				default:
+					break;
+			}
 		}
 	}
 

@@ -2,9 +2,11 @@ package com.excilys.computerdatabase.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
-import com.excilys.computerdatabase.dao.CrudComputer;
-import com.excilys.computerdatabase.interfaces.IComputer;
+import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
+import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.ListComputerView;
 
 /**
@@ -17,64 +19,64 @@ import com.excilys.computerdatabase.view.ListComputerView;
  * Allows to catch event on view ListComputerView and make validation,
  * 
  */
-public class ListComputerController {
+public enum ListComputerController {
+	INSTANCE;
 	
-	private static final ListComputerController LIST_COMPUTER_CONTROLER = new ListComputerController();
-
 	private ListComputerView listComputerView;
 	
-	private CrudComputer crudComputer;
+	private CrudComputerImpl crudComputer;
 	
 	private  int offset;
 
 	private ListComputerController()
 	{
-		crudComputer = new CrudComputer();
-	}
-	
-	/**
-	 * 
-	 * @return an instance of ListComputerController
-	 */
-	public static ListComputerController getInstance()
-	{	
-		return LIST_COMPUTER_CONTROLER;
+		crudComputer = new CrudComputerImpl();
 	}
 
 	/**
 	 * Find all computers with pagination by using crud method
 	 * and call to update view 
 	 * @param pChoice: could be "n" or "p" to switch of page 
+	 * @throws PersistenceException 
 	 * @throws SQLException 
 	 * 
 	 */
-	public void findComputers(String pChoice) throws SQLException {
-		boolean quit = false;
-		switch(pChoice)
-		{
-		case "n":
-			offset = offset+Constant.PAGE_SIZE;
-			break;
-		case "p":
-			offset = (offset-Constant.PAGE_SIZE >= 0) ? offset-Constant.PAGE_SIZE : 0;
-			break;
-		case "q":
-			offset = 0;
-			quit = true;
-			break;
-		}
-		if (!quit)
-		{
-			List<IComputer> computers = crudComputer.findUsingPagination(offset);
-			listComputerView.displayComputers(computers);
+	public void findComputers(Optional<String> optionalChoice) throws PersistenceException {
+		if(optionalChoice.isPresent()) {
+			boolean quit = false;
+			String choice = optionalChoice.get();
+			switch(choice)
+			{
+			case "n":
+				offset = offset+Constant.PAGE_SIZE;
+				break;
+			case "p":
+				offset = (offset-Constant.PAGE_SIZE >= 0) ? offset-Constant.PAGE_SIZE : -1;
+				break;
+			case "q":
+				offset = 0;
+				quit = true;
+				break;
+			}
+			if (!quit || offset >= 0)
+			{
+				Optional<List<Optional<Computer>>> optionalComputers = crudComputer.findUsingPagination(offset);
+				if (optionalComputers.isPresent())
+				{
+					List<Optional<Computer>> computers = optionalComputers.get();
+					listComputerView.displayComputers(computers);
+				}
+			}
 		}
 	}
 	
 	/**
-	 * @param pListComputerView the listComputerView to set
+	 * @param listComputerView the listComputerView to set
 	 */
-	public void setListComputerView(ListComputerView pListComputerView) {
-		this.listComputerView = pListComputerView;
+	public void setListComputerView(Optional<ListComputerView> optionalListComputerView) {
+		if (optionalListComputerView.isPresent()) {
+			this.listComputerView = optionalListComputerView.get();
+		}
 	}
 	
 }

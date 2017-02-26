@@ -1,9 +1,11 @@
 package com.excilys.computerdatabase.controller;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.excilys.computerdatabase.dao.CrudCompany;
-import com.excilys.computerdatabase.interfaces.ICompany;
+import com.excilys.computerdatabase.dao.impl.CrudCompanyImpl;
+import com.excilys.computerdatabase.entities.Company;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.ListCompanyView;
 
 /**
@@ -16,61 +18,61 @@ import com.excilys.computerdatabase.view.ListCompanyView;
  * Allows to catch event on view ListCompanyView and make validation.
  * 
  */
-public class ListCompanyController {
-
-	private static final ListCompanyController LIST_COMPANY_CONTROLER = new ListCompanyController();
-
+public enum ListCompanyController {
+	INSTANCE;
+	
 	private ListCompanyView listCompanyView;
 	
-	private CrudCompany crudCompany;
+	private CrudCompanyImpl crudCompany;
 	
 	private int offset;
 
 	private ListCompanyController()
 	{
-		crudCompany = new CrudCompany();
+		crudCompany = new CrudCompanyImpl();
 	}
-	
-	/**
-	 * 
-	 * @return an instance ListCompanyController
-	 */
-	public static ListCompanyController getInstance()
-	{
-		return LIST_COMPANY_CONTROLER;
-	}
-	
+		
 	/**
 	 * Find all companies with pagination by using crud method
 	 * and call to update view 
-	 * @param pChoice
+	 * @param choice
+	 * @throws PersistenceException 
 	 */
-	public void findCompanies(String pChoice)
+	public void findCompanies(Optional<String> optionalChoice) throws PersistenceException
 	{
-		boolean quit = false;
-		switch(pChoice)
-		{
-			case "n":
-				offset = offset+Constant.PAGE_SIZE;
-				break;
-			case "p":
-				break;
-			case "q":
-				offset = 0;
-				quit = true;
-				break;
-		}
-		if (!quit)
-		{
-			List<ICompany> companies = crudCompany.findUsingPagination(offset);
-			listCompanyView.displayCompanies(companies);
+		if(optionalChoice.isPresent()) {
+			String choice = optionalChoice.get();
+			boolean quit = false;
+			switch(choice)
+			{
+				case "n":
+					offset = offset+Constant.PAGE_SIZE;
+					break;
+				case "p":
+					offset = offset-Constant.PAGE_SIZE > 0 ? offset-Constant.PAGE_SIZE : -1;
+					break;
+				case "q":
+					offset = -1;
+					quit = true;
+					break;
+			}
+			if (!quit || offset >= 0)
+			{
+				Optional<List<Optional<Company>>> optionalCompanies = crudCompany.findUsingPagination(offset);
+				if (optionalCompanies.isPresent())
+				{
+					listCompanyView.displayCompanies(optionalCompanies);
+				}
+			}
 		}
 	}
 	
 	/**
-	 * @param pListCompanyView the listCompanyView to set
+	 * @param listCompanyView the listCompanyView to set
 	 */
-	public void setListCompanyView(ListCompanyView pListCompanyView) {
-		this.listCompanyView = pListCompanyView;
+	public void setListCompanyView(Optional<ListCompanyView> optionalListCompanyView) {
+		if (optionalListCompanyView.isPresent()) {
+			this.listCompanyView = optionalListCompanyView.get();
+		}
 	}
 }

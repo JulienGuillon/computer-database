@@ -2,10 +2,13 @@ package com.excilys.computerdatabase.view;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.ListComputerController;
-import com.excilys.computerdatabase.interfaces.IComputer;
+import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
+import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien
@@ -15,23 +18,18 @@ import com.excilys.computerdatabase.interfaces.IComputer;
  * View that display list of computers
  * 
  */
-public class ListComputerView {
-	
-	private static final ListComputerView LIST_COMPUTER_VIEW = new ListComputerView();
+public enum ListComputerView {
+	INSTANCE;
 		
 	private ListComputerController listComputerControler;
 	
-	private Scanner sc = ScannerInstance.getInstance();
+	private Scanner sc = ScannerInstance.INSTANCE.getScanner();
 	
 	private ListComputerView() {
-		listComputerControler = ListComputerController.getInstance();
-		listComputerControler.setListComputerView(this);
+		listComputerControler = ListComputerController.INSTANCE;
+		listComputerControler.setListComputerView(Optional.ofNullable(this));
 	}
 	
-	public static ListComputerView getInstance()
-	{
-		return LIST_COMPUTER_VIEW;
-	}
 	
 	public void displayHeader()
 	{
@@ -41,24 +39,30 @@ public class ListComputerView {
 
 	 /**
 	  * Display footer that able to select next page or previous page
+	 * @throws PersistenceException 
 	  * @throws Exception
 	  */
-	 public void displayFooter() throws Exception
+	 public void displayFooter() throws PersistenceException
 	 {
 		String choice;
 		do {
 			System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
 			choice = sc.next();
-			listComputerControler.findComputers(choice);
+			while (!SelectionValidation.userChoiceIsValid(Optional.ofNullable(choice)))
+			{	
+				choice = sc.next();
+				System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
+			}
+			listComputerControler.findComputers(Optional.ofNullable(choice));
 		}
 		while(!choice.equals("q"));
 		IView.displayMainMenu();
 	}
 	
-	public void displayUI() throws Exception
+	public void displayUI() throws PersistenceException
 	{
 		displayHeader();
-		listComputerControler.findComputers("");
+		listComputerControler.findComputers(Optional.ofNullable(""));
 		displayFooter();
 	}
 
@@ -67,18 +71,20 @@ public class ListComputerView {
 	 * @param pComputers
 	 * @throws SQLException 
 	 */
-	public void displayComputers(List<IComputer> pComputers) throws SQLException {
-		for(IComputer c : pComputers)
+	public void displayComputers(List<Optional<Computer>> computers) 
+	{
+		Computer computer;
+		for(Optional<Computer> optionalComputer : computers)
 		{
-			System.out.format(ConstanteView.FORMAT_COMPUTER, c.getId(), c.getName(),
-					(c.getIntroduced()== null) ? "" : c.getIntroduced(),
-					(c.getDiscontinued()== null) ? "" : c.getDiscontinued(),
-					(c.getManufacturer() == null) ? "" : c.getManufacturer().getName());
+			if(optionalComputer.isPresent())
+			{
+				computer = optionalComputer.get();
+				System.out.format(ConstanteView.FORMAT_COMPUTER, computer.getId(), computer.getName(),
+						(computer.getIntroduced()== null) ? "" : computer.getIntroduced(),
+						(computer.getDiscontinued()== null) ? "" : computer.getDiscontinued(),
+						(computer.getManufacturer() == null) ? "" : computer.getManufacturer().getName());
+			}
 		}
 	}
-	
-	
-	
-	
 
 }

@@ -1,5 +1,6 @@
 package com.excilys.computerdatabase.view;
 
+import com.excilys.computerdatabase.exception.PersistenceException;
 
 /**
  * @author Guillon Julien
@@ -10,29 +11,29 @@ package com.excilys.computerdatabase.view;
  * 
  */
 public interface IView {
-	public static void displayMainMenu() throws Exception
+	public static void displayMainMenu() throws PersistenceException
 	{
-		MainMenuView.getInstance().displayUI();
+		MainMenuView.INSTANCE.displayUI();
 	}
 	
-	public static void displayComputers() throws Exception
+	public static void displayComputers() throws PersistenceException
 	{
-		ListComputerView.getInstance().displayUI();
+		ListComputerView.INSTANCE.displayUI();
 	}
 	
-	public static void displayCompanies() throws Exception
+	public static void displayCompanies() throws PersistenceException
 	{
-		ListCompanyView.getInstance().displayUI();
+		ListCompanyView.INSTANCE.displayUI();
 	}
 	
-	public static void displayComputerDetails() throws Exception
+	public static void displayComputerDetails() throws PersistenceException
 	{
-		DetailsComputerView.getInstance().displayUI();
+		DetailsComputerView.INSTANCE.displayUI();
 	}
 	
-	public static void displayComputerUpdate() throws Exception
+	public static void displayComputerUpdate() throws PersistenceException
 	{
-		UpdateComputerView.getInstance().displayUI();
+		UpdateComputerView.INSTANCE.displayUI();
 	}
 
 }

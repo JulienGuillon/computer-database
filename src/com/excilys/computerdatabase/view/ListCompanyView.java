@@ -1,10 +1,13 @@
 package com.excilys.computerdatabase.view;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.ListCompanyController;
-import com.excilys.computerdatabase.interfaces.ICompany;
+import com.excilys.computerdatabase.entities.Company;
+import com.excilys.computerdatabase.exception.PersistenceException;
+import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien
@@ -14,27 +17,18 @@ import com.excilys.computerdatabase.interfaces.ICompany;
  *  View that display list of companies 
  *  
  */
-public class ListCompanyView {
-	
-	private static final ListCompanyView LIST_COMPANY_VIEW = new ListCompanyView();
-	
+public enum ListCompanyView {
+	INSTANCE;
+		
 	private ListCompanyController listCompanyControler;
 	
-	private Scanner sc = ScannerInstance.getInstance();
+	private Scanner sc = ScannerInstance.INSTANCE.getScanner();
 	
 	private ListCompanyView() {
-		listCompanyControler = ListCompanyController.getInstance();
-		listCompanyControler.setListCompanyView(this);
+		listCompanyControler = ListCompanyController.INSTANCE;
+		listCompanyControler.setListCompanyView(Optional.ofNullable(this));
 	}
 	
-	/**
-	 * 
-	 * @return an instance of ListCompanyView
-	 */
-	public static ListCompanyView getInstance()
-	{
-		return LIST_COMPANY_VIEW;
-	}
 	
 	public void displayHeader()
 	{
@@ -43,38 +37,53 @@ public class ListCompanyView {
 	
 	/**
 	 * Display footer that able to select next page or previous page
+	 * @throws PersistenceException 
 	 * @throws Exception
 	 */
-	public void displayFooter() throws Exception
+	public void displayFooter() throws PersistenceException
 	{
 		String choice;
 		do {
 			System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
 			choice = sc.next();
-			listCompanyControler.findCompanies(choice);
+			while (!SelectionValidation.userChoiceIsValid(Optional.ofNullable(choice)))
+			{	
+				choice = sc.next();
+				System.out.println("\t\t previous(p) \t\t quit(q) \t\t next(n)");
+			}
+			listCompanyControler.findCompanies(Optional.ofNullable(choice));
 		}
 		while(!choice.equals("q"));
 		IView.displayMainMenu();
 	}
 	
 	/**
+	 * @throws PersistenceException 
 	 * @throws Exception
 	 */
-	public void displayUI() throws Exception
+	public void displayUI() throws PersistenceException
 	{
-		listCompanyControler.findCompanies("");
+		System.out.print("Choose size of page: ");
+		listCompanyControler.findCompanies(Optional.ofNullable(""));
 		displayFooter();
 	}
 
 	/**
 	 * Display view that show list of companies 
-	 * @param pCompanies
+	 * @param optionalCompanies
 	 */
-	public void displayCompanies(List<ICompany> pCompanies) {
+	public void displayCompanies(Optional<List<Optional<Company>>> optionalCompanies) {
 		displayHeader();
-		for(ICompany c : pCompanies)
-		{
-			System.out.format(ConstanteView.FORMAT_COMPANY, c.getId(), c.getName());
+		if(optionalCompanies.isPresent()) {
+			Company company;
+			for(Optional<Company> optionalCompany : optionalCompanies.get())
+			{
+				if(optionalCompany.isPresent())
+				{
+					company = optionalCompany.get();
+					System.out.format(ConstanteView.FORMAT_COMPANY, company.getId(), company.getName());
+				}
+			}
 		}
 	}
 

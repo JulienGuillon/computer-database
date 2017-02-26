@@ -1,11 +1,17 @@
 package com.excilys.computerdatabase.view;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Scanner;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.excilys.computerdatabase.controller.UpdateComputerController;
-import com.excilys.computerdatabase.interfaces.IComputer;
+import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
+import com.excilys.computerdatabase.validation.DateValidation;
+import com.excilys.computerdatabase.validation.EntityValidation;
+import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien
@@ -15,99 +21,96 @@ import com.excilys.computerdatabase.interfaces.IComputer;
  * View that allows to select a computer by an id 
  * and modify it to make an update
  */
-public class UpdateComputerView {
-	
-	private static final UpdateComputerView UPDATE_COMPUTER_VIEW = new UpdateComputerView();
-	
+public enum UpdateComputerView {
+	INSTANCE;
+		
 	private UpdateComputerController updateComputerControler;
 	
-	private Scanner sc = ScannerInstance.getInstance();
+	private Scanner sc = ScannerInstance.INSTANCE.getScanner();
 	
 	private UpdateComputerView()
 	{
-		updateComputerControler = UpdateComputerController.getInstance();
-		updateComputerControler.setUpdateComputerView(this);
+		updateComputerControler = UpdateComputerController.INSTANCE;
+		updateComputerControler.setUpdateComputerView(Optional.ofNullable(this));
 	}
 	
-	public static UpdateComputerView getInstance()
-	{
-		return UPDATE_COMPUTER_VIEW;
-	}
 	
 	public void displayHeader()
 	{
 		System.out.println("\t\t UPDATE COMPUTER \t\t");
 	}
 	
-	public void displayUI() throws Exception
+	public void displayUI() throws PersistenceException
 	{
-		int choice;
+		String id;
 		displayHeader();
 		do {
 			System.out.print("Select computer's id to modify it: ");
-			choice = sc.nextInt();
+			id = sc.next();
 		}
-		while(choice <= 0);
-		updateComputerControler.findComputerById(choice);
-
+		while(!SelectionValidation.idIsValid(Optional.ofNullable(id)));
+		updateComputerControler.findComputerById(Integer.parseInt(id));
 	}
 
 	/**
-	 * @param pComputer
-	 * @throws Exception 
+	 * @param computer
+	 * @throws PersistenceException 
 	 */
-	public void displayDetailsToUpdate(IComputer pComputer) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		System.out.println("ID (" + pComputer.getId() + ")");
-		String name = "";
-		Date introduced = null;
-		Date discontinued = null;
-		String s = null;
-		sc.nextLine();
-		System.out.print("NAME (" + pComputer.getName() + "): ");
-		name = sc.nextLine();
-		if(name.equals(""))
-		{
-			name = pComputer.getName();
+	public void displayDetailsToUpdate(Optional<Computer> optionalComputer) throws PersistenceException {
+		if(optionalComputer.isPresent()) {
+			Computer computer = optionalComputer.get();
+			System.out.println("ID (" + computer.getId() + ")");
+			String name = "";
+			LocalDate introduced = null;
+			LocalDate discontinued = null;
+			String s = null;
+			sc.nextLine();
+			System.out.print("NAME (" + computer.getName() + "): ");
+			name = sc.nextLine();
+			if(StringUtils.isBlank(name) || EntityValidation.nameIsValid(Optional.ofNullable(name)))
+			{
+				name = computer.getName();
+			}
+			System.out.print("INTRODUCED (" + computer.getIntroduced() + "): ");
+			s = sc.nextLine();
+			if (DateValidation.formatIsValid(Optional.ofNullable(s)))
+			{
+				introduced = LocalDate.parse(s);
+			}
+			else
+			{
+				introduced = computer.getIntroduced();
+			}
+			
+			s = "";
+			System.out.print("DISCONTINUED (" + computer.getDiscontinued() + "): ");
+			s = sc.nextLine();
+			if (DateValidation.formatIsValid(Optional.ofNullable(s)) && DateValidation.dateIsValid(Optional.ofNullable(introduced), Optional.ofNullable(discontinued)))
+			{
+				discontinued = LocalDate.parse(s);
+			}
+			else
+			{
+				discontinued = computer.getDiscontinued();
+			}
+			computer.setIntroduced(introduced);
+			computer.setDiscontinued(discontinued);
+			computer.setName(name);
+			updateComputerControler.update(Optional.ofNullable(computer));
 		}
-
-
-		System.out.print("INTRODUCED (" + pComputer.getIntroduced() + "): ");
-		s = sc.nextLine();
-		if (s.matches("\\d{4}-\\d{2}-\\d{2}"))
-		{
-			introduced = sdf.parse(s);
-		}
-		else
-		{
-			introduced = pComputer.getIntroduced();
-		}
-		
-		s = "";
-		System.out.print("DISCONTINUED (" + pComputer.getDiscontinued() + "): ");
-		s = sc.nextLine();
-		if (s.matches("\\d{4}-\\d{2}-\\d{2}"))
-		{
-			discontinued = sdf.parse(s);
-		}
-		else
-		{
-			discontinued = pComputer.getDiscontinued();
-		}
-		System.out.println(discontinued);
-		pComputer.setIntroduced(introduced);
-		pComputer.setDiscontinued(discontinued);
-		pComputer.setName(name);
-		updateComputerControler.update(pComputer, pComputer.getId());
 	}
 
 	/**
-	 * @param pComputer
-	 * @throws Exception 
+	 * @param computer
+	 * @throws PersistenceException 
 	 */
-	public void displayInfoComputer(IComputer pComputer) throws Exception {
-		System.out.println("Computer with ID: " + pComputer.getId() + " was update");
-		IView.displayMainMenu();
+	public void displayInfoComputer(Optional<Computer> optionalComputer) throws PersistenceException
+	{
+		if(optionalComputer.isPresent()) {
+			Computer computer = optionalComputer.get();
+			System.out.println("Computer with ID: " + computer.getId() + " was update");
+			IView.displayMainMenu();
+		}
 	}
 	
 	

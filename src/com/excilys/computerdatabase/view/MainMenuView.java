@@ -1,8 +1,11 @@
 package com.excilys.computerdatabase.view;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.excilys.computerdatabase.controller.MainMenuController;
+import com.excilys.computerdatabase.exception.PersistenceException;
+import com.excilys.computerdatabase.validation.SelectionValidation;
 
 /**
  * @author Guillon Julien
@@ -12,37 +15,22 @@ import com.excilys.computerdatabase.controller.MainMenuController;
  * View that display main menu 
  * 
  */
-public class MainMenuView {
-	
-	private static final MainMenuView MAIN_MENU_VIEW = new MainMenuView();
+public enum MainMenuView {
+	INSTANCE;
 	
 	private MainMenuController mainMenuControler;
 
 	private String choice;
 	
-	private	Scanner sc = ScannerInstance.getInstance();
+	private	Scanner sc = ScannerInstance.INSTANCE.getScanner();
 	
 	private MainMenuView()
 	{
-		mainMenuControler = MainMenuController.getInstance();
-		mainMenuControler.setMainMenuView(this);
+		mainMenuControler = MainMenuController.INSTANCE;
+		mainMenuControler.setMainMenuView(Optional.ofNullable(this));
 	}
 	
-	/**
-	 * 
-	 * @return an instance of MainMenuView
-	 */
-	public static MainMenuView getInstance()
-	{
-		return MAIN_MENU_VIEW;
-	}
-	
-	/**
-     * Display menu that propose different options 
-     * and catch user selection
-	 * @throws Exception
-	 */
-	public void displayUI() throws Exception
+	public void displayMenu()
 	{
 		System.out.println("\t\t SELECT OPTION \t\t");
 		System.out.println("[1] List computers");
@@ -51,26 +39,29 @@ public class MainMenuView {
 		System.out.println("[4] Create a computer");
 		System.out.println("[5] Update a computer");
 		System.out.println("[6] Delete a computer");
-		takeUserChoice();
 	}
 	
 	/**
-	 * @throws Exception
+     * Display menu that propose different options 
+     * and catch user selection
+	 * @throws PersistenceException 
 	 */
-	public void takeUserChoice() throws Exception
+	public void displayUI() throws PersistenceException
+	{
+		displayMenu();
+		takeUserChoice();
+	}
+	
+
+	public void takeUserChoice() throws PersistenceException
 	{
 		choice = sc.next();
-		mainMenuControler.controlUserChoice(choice);
-	}
-
-	/**
-	 * @param pChoice
-	 * @throws Exception 
-	 */
-	public void displayError(String pChoice) throws Exception {
-		System.out.println("Your selection "+ pChoice +" is not a valid option.");
-		displayUI();
-		takeUserChoice();
+		while (!SelectionValidation.userSelectionIsValid(Optional.ofNullable(choice)))
+		{	
+			choice = sc.next();
+			displayMenu();
+		}
+		mainMenuControler.controlUserChoice(Optional.ofNullable(choice));
 	}
 
 }

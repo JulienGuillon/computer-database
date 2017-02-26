@@ -1,7 +1,10 @@
 package com.excilys.computerdatabase.controller;
 
-import com.excilys.computerdatabase.dao.CrudComputer;
-import com.excilys.computerdatabase.interfaces.IComputer;
+import java.util.Optional;
+
+import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
+import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.view.UpdateComputerView;
 
 /**
@@ -14,52 +17,55 @@ import com.excilys.computerdatabase.view.UpdateComputerView;
  * Allows to catch event on view UpdateComputerView and make validation.
  *
  */
-public class UpdateComputerController {
-
-	private static final UpdateComputerController UPDATE_COMPUTER_CONTROLER = new UpdateComputerController();
-	
+public enum UpdateComputerController {
+	INSTANCE;
+		
 	private UpdateComputerView updateComputerView;
 	
-	private CrudComputer crudComputer;
+	private CrudComputerImpl crudComputer;
 	
 	private UpdateComputerController()
 	{
-		crudComputer = new CrudComputer();
-	}
-	
-	/**
-	 * @return an instance of UpdateComputerController
-	 */
-	public static UpdateComputerController getInstance() {
-		return UPDATE_COMPUTER_CONTROLER;
+		crudComputer = new CrudComputerImpl();
 	}
 
 	/**
-	 * @param pUpdateComputerView
+	 * @param optionalUpdateComputerView
 	 */
-	public void setUpdateComputerView(UpdateComputerView pUpdateComputerView) {
-		this.updateComputerView = pUpdateComputerView;
+	public void setUpdateComputerView(Optional<UpdateComputerView> optionalUpdateComputerView) {
+		if (optionalUpdateComputerView.isPresent()) {
+			this.updateComputerView = optionalUpdateComputerView.get();
+		}
 	}
 
 	/**
 	 * Find a computer by id by using crud method
 	 * and call to update view to display details of computer
-	 * @param pChoice
+	 * @param choice
+	 * @throws PersistenceException 
 	 * @throws Exception 
 	 */
-	public void findComputerById(int pChoice) throws Exception {
-		updateComputerView.displayDetailsToUpdate(crudComputer.find(pChoice));		
+	public void findComputerById(int choice) throws PersistenceException {
+		Optional<Computer> computer = crudComputer.find(choice);
+		if(computer.isPresent())
+		{
+			updateComputerView.displayDetailsToUpdate(computer);		
+		}
 	}
 
 	/**
 	 * Update a computer by using crud method
 	 * and call to update view to display MainMenu 
-	 * @param pComputer
+	 * @param computer
+	 * @throws PersistenceException 
 	 * @throws Exception 
 	 */
-	public void update(IComputer pComputer, int pId) throws Exception {
-		crudComputer.update(pComputer, pId);
-		updateComputerView.displayInfoComputer(pComputer);
+	public void update(Optional<Computer> optionalComputer) throws PersistenceException {
+		if (optionalComputer.isPresent()) {
+			Computer computer = optionalComputer.get();
+			crudComputer.update(Optional.ofNullable(computer), computer.getId());
+			updateComputerView.displayInfoComputer(Optional.ofNullable(computer));
+		}
 	}
 
 }
