@@ -15,11 +15,11 @@ import com.excilys.computerdatabase.exception.PersistenceException;
  */
 public interface Crud<T> {
 	
-	public Optional<T> find(long id) throws PersistenceException;
+	public Optional<T> find(long id);
 	
-	public Optional<ResultSet> findAll() throws PersistenceException;
+	public Optional<ResultSet> findAll();
 	
-	public Optional<List<Optional<T>>> findUsingPagination(int offset) throws PersistenceException;
+	public Optional<List<Optional<T>>> findUsingPagination(int offset);
 	
-	public Optional<List<Optional<T>>> findUsingPagination(int offset, int size) throws PersistenceException;
+	public Optional<List<Optional<T>>> findUsingPagination(int offset, int size);
 }

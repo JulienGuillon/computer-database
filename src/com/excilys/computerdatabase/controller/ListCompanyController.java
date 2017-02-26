@@ -43,8 +43,7 @@ public enum ListCompanyController {
 	 * @param choice
 	 * @throws PersistenceException 
 	 */
-	public void findCompanies(Optional<String> optionalChoice) throws PersistenceException
-	{
+	public void findCompanies(Optional<String> optionalChoice) {
 		if(optionalChoice.isPresent()) {
 			String choice = optionalChoice.get();
 			boolean quit = false;

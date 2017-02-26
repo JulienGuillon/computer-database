@@ -48,7 +48,7 @@ public enum DetailsComputerController {
 	 * @param choice
 	 * @throws PersistenceException 
 	 */
-	public void findComputerById(int choice) throws PersistenceException {
+	public void findComputerById(int choice) {
 		Optional<Computer> computer = crudComputer.find(choice);
 		if(computer.isPresent())
 		{
@@ -60,7 +60,7 @@ public enum DetailsComputerController {
 	 * @param operation
 	 * @throws PersistenceException 
 	 */
-	public void makeOperation(Optional<String> optionalOperation, long id) throws PersistenceException {
+	public void makeOperation(Optional<String> optionalOperation, long id) {
 		if(optionalOperation.isPresent()) {
 			String operation = optionalOperation.get();
 			switch (operation)

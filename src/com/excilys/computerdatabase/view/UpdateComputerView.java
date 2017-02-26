@@ -41,8 +41,7 @@ public enum UpdateComputerView {
 		System.out.println("\t\t UPDATE COMPUTER \t\t");
 	}
 	
-	public void displayUI() throws PersistenceException
-	{
+	public void displayUI()	{
 		String id;
 		displayHeader();
 		do {
@@ -57,7 +56,7 @@ public enum UpdateComputerView {
 	 * @param computer
 	 * @throws PersistenceException 
 	 */
-	public void displayDetailsToUpdate(Optional<Computer> optionalComputer) throws PersistenceException {
+	public void displayDetailsToUpdate(Optional<Computer> optionalComputer) {
 		if(optionalComputer.isPresent()) {
 			Computer computer = optionalComputer.get();
 			System.out.println("ID (" + computer.getId() + ")");
@@ -106,8 +105,7 @@ public enum UpdateComputerView {
 	 * @param computer
 	 * @throws PersistenceException 
 	 */
-	public void displayInfoComputer(Optional<Computer> optionalComputer) throws PersistenceException
-	{
+	public void displayInfoComputer(Optional<Computer> optionalComputer) {
 		if(optionalComputer.isPresent()) {
 			Computer computer = optionalComputer.get();
 			System.out.println("Computer with ID: " + computer.getId() + " was update");
