@@ -28,8 +28,7 @@ public class DateValidation {
 		return false;
 	}
 
-	public static boolean dateIsValid(Optional<LocalDate> optionalDateBefore, Optional<LocalDate> optionalDateAfter)
-	{
+	public static boolean dateIsValid(Optional<LocalDate> optionalDateBefore, Optional<LocalDate> optionalDateAfter){
 		if(optionalDateBefore.isPresent() && optionalDateAfter.isPresent())
 		{
 			LocalDate dateBefore = optionalDateBefore.get();
