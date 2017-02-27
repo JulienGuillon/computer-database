@@ -3,24 +3,40 @@ package com.excilys.computerdatabase.exception;
 /**
  * @author Guillon Julien
  *
- * 24 févr. 2017
+ *         24 févr. 2017
  */
 public class PersistenceException extends RuntimeException {
 
-	public PersistenceException() {
-		super();
-	}
+    /**
+     *
+     */
+    public PersistenceException() {
+        super();
+    }
 
-	public PersistenceException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    /**
+     *
+     * @param message :
+     * @param cause :
+     */
+    public PersistenceException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public PersistenceException(String message) {
-		super(message);
-	}
+    /**
+     *
+     * @param message :
+     */
+    public PersistenceException(String message) {
+        super(message);
+    }
 
-	public PersistenceException(Throwable cause) {
-		super(cause);
-	}
-	
+    /**
+     *
+     * @param cause :
+     */
+    public PersistenceException(Throwable cause) {
+        super(cause);
+    }
+
 }

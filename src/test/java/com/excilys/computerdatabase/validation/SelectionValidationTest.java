@@ -14,6 +14,9 @@ import org.junit.Test;
  */
 public class SelectionValidationTest {
 
+    /**
+     *
+     */
     @Test
     public void userChoiceIsValid() {
         assertTrue(SelectionValidation.userChoiceIsValid(Optional.ofNullable("n")));
@@ -31,7 +34,10 @@ public class SelectionValidationTest {
         assertTrue(SelectionValidation.userChoiceIsValid(Optional.ofNullable("u")));
         assertTrue(SelectionValidation.userChoiceIsValid(Optional.ofNullable("U")));
     }
-    
+
+    /**
+     *
+     */
     @Test
     public void userSelectionIsValid() {
         assertTrue(SelectionValidation.userSelectionIsValid(Optional.ofNullable("q")));
@@ -43,17 +49,23 @@ public class SelectionValidationTest {
         assertTrue(SelectionValidation.userSelectionIsValid(Optional.ofNullable("5")));
         assertTrue(SelectionValidation.userSelectionIsValid(Optional.ofNullable("6")));
     }
-    
+
+    /**
+     *
+     */
     @Test
     public void idIsValid() {
         assertTrue(SelectionValidation.idIsValid(Optional.ofNullable("0")));
         assertTrue(SelectionValidation.idIsValid(Optional.ofNullable("01")));
         assertTrue(SelectionValidation.idIsValid(Optional.ofNullable("25")));
     }
-    
+
+    /**
+     *
+     */
     @Test
     public void userChoiceIsNotValid() {
-        assertFalse(SelectionValidation.userChoiceIsValid(Optional.ofNullable("a")));        
+        assertFalse(SelectionValidation.userChoiceIsValid(Optional.ofNullable("a")));
         assertFalse(SelectionValidation.userChoiceIsValid(Optional.ofNullable("")));
         assertFalse(SelectionValidation.userChoiceIsValid(Optional.ofNullable(" ")));
         assertFalse(SelectionValidation.userChoiceIsValid(Optional.ofNullable("1")));
@@ -64,7 +76,10 @@ public class SelectionValidationTest {
         assertFalse(SelectionValidation.userChoiceIsValid(Optional.ofNullable("a ")));
         assertFalse(SelectionValidation.userChoiceIsValid(Optional.ofNullable(null)));
     }
-    
+
+    /**
+     *
+     */
     @Test
     public void userSelectionIsNotValid() {
         assertFalse(SelectionValidation.userSelectionIsValid(Optional.ofNullable("")));
@@ -73,16 +88,19 @@ public class SelectionValidationTest {
         assertFalse(SelectionValidation.userSelectionIsValid(Optional.ofNullable("a")));
         assertFalse(SelectionValidation.userSelectionIsValid(Optional.ofNullable("12")));
         assertFalse(SelectionValidation.userSelectionIsValid(Optional.ofNullable("7")));
-        assertFalse(SelectionValidation.userSelectionIsValid(Optional.ofNullable("0")));        
+        assertFalse(SelectionValidation.userSelectionIsValid(Optional.ofNullable("0")));
         assertFalse(SelectionValidation.userSelectionIsValid(Optional.ofNullable("-0")));
     }
-    
+
+    /**
+     *
+     */
     @Test
     public void idIsNotValid() {
         assertFalse(SelectionValidation.idIsValid(Optional.ofNullable("")));
         assertFalse(SelectionValidation.idIsValid(Optional.ofNullable(" ")));
         assertFalse(SelectionValidation.idIsValid(Optional.ofNullable(null)));
         assertFalse(SelectionValidation.idIsValid(Optional.ofNullable("a")));
-        assertFalse(SelectionValidation.idIsValid(Optional.ofNullable("-7"))); 
+        assertFalse(SelectionValidation.idIsValid(Optional.ofNullable("-7")));
     }
 }

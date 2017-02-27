@@ -8,13 +8,10 @@ import com.excilys.computerdatabase.view.IView;
  */
 public class App {
 
-	/**
-	 * @param args
-	 * @throws Exception 
-	 */
-	public static void main(String[] args)
-	{
-
-		IView.displayMainMenu();
-	}
+    /**
+     * @param args :
+     */
+    public static void main(String[] args) {
+        IView.displayMainMenu();
+        }
 }

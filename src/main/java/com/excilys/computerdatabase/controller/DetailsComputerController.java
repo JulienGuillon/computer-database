@@ -13,72 +13,68 @@ import com.excilys.computerdatabase.view.DetailsComputerView;
 /**
  * @author Guillon Julien
  *
- * 21 févr. 2017
- * 
- * Controller for the DetailsComputerView
- * It is a singleton.
- * Allows to catch event on view DetailsComputerView and make validation.
- * 
+ *         21 févr. 2017
+ *
+ *         Controller for the DetailsComputerView It is a singleton. Allows to
+ *         catch event on view DetailsComputerView and make validation.
+ *
  */
 public enum DetailsComputerController {
-	INSTANCE;
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(DetailsComputerController.class);
-		
-	private DetailsComputerView detailsComputerView;
-	
-	private CrudComputerImpl crudComputer;
+    INSTANCE;
 
-	private DetailsComputerController()
-	{
-		crudComputer = new CrudComputerImpl();
-	}
-	
+    private static final Logger LOGGER = LoggerFactory.getLogger(DetailsComputerController.class);
 
-	/**
-	 * @param optionalDetailsComputerView
-	 */
-	public void setDetailsComputerView(Optional<DetailsComputerView> optionalDetailsComputerView) {
-		if(optionalDetailsComputerView.isPresent()) {
-			this.detailsComputerView = optionalDetailsComputerView.get();
-		}
-	}
+    private DetailsComputerView detailsComputerView;
 
-	/**
-	 * @param choice
-	 * @throws PersistenceException 
-	 */
-	public void findComputerById(int choice) {
-		Optional<Computer> computer = crudComputer.find(choice);
-		if(computer.isPresent())
-		{
-			detailsComputerView.displayDetails(computer);
-		}
-	}
+    private CrudComputerImpl crudComputer;
 
-	/**
-	 * @param operation
-	 * @throws PersistenceException 
-	 */
-	public void makeOperation(Optional<String> optionalOperation, long id) {
-		if(optionalOperation.isPresent()) {
-			String operation = optionalOperation.get();
-			switch (operation)
-			{
-				case "d":
-					crudComputer.delete(id);
-					detailsComputerView.displayDeletion(id);
-					break;
-				case "u":
-					break;
-				default:
-					LOGGER.info("Choice is not valid !");
-					break;
-			}
-		}
-	}
+    /**
+     * .
+     */
+    DetailsComputerController() {
+        crudComputer = new CrudComputerImpl();
+    }
 
+    /**
+     * @param optionalDetailsComputerView :
+     */
+    public void setDetailsComputerView(Optional<DetailsComputerView> optionalDetailsComputerView) {
+        if (optionalDetailsComputerView.isPresent()) {
+            this.detailsComputerView = optionalDetailsComputerView.get();
+        }
+    }
 
-	
-	
+    /**
+     * @param choice :
+     * @throws PersistenceException
+     */
+    public void findComputerById(int choice) {
+        Optional<Computer> computer = crudComputer.find(choice);
+        if (computer.isPresent()) {
+            detailsComputerView.displayDetails(computer);
+        }
+    }
+
+    /**
+     * @param optionalOperation :
+     * @param id :
+     * @throws PersistenceException
+     */
+    public void makeOperation(Optional<String> optionalOperation, long id) {
+        if (optionalOperation.isPresent()) {
+            String operation = optionalOperation.get();
+            switch (operation) {
+            case "d":
+                crudComputer.delete(id);
+                detailsComputerView.displayDeletion(id);
+                break;
+            case "u":
+                break;
+            default:
+                LOGGER.info("Choice is not valid !");
+                break;
+            }
+        }
+    }
+
 }

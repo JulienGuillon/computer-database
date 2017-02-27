@@ -13,16 +13,21 @@ import org.slf4j.LoggerFactory;
  */
 public class EntityValidation {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EntityValidation.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EntityValidation.class);
 
-	public static boolean nameIsValid(Optional<String> optionalName) {
-		if(optionalName.isPresent()) {
-			String name = optionalName.get();
-			if (StringUtils.isNotBlank(name) && name.matches("[\\w-_.\\s]*")) {
-				return true;
-			}
-			LOGGER.info("Name is not valid, contains characters not permitted or is blank!");
-		}
-		return false;
-	}
+    /**
+     *
+     * @param optionalName :
+     * @return a boolean
+     */
+    public static boolean nameIsValid(Optional<String> optionalName) {
+        if (optionalName.isPresent()) {
+            String name = optionalName.get();
+            if (StringUtils.isNotBlank(name) && name.matches("[\\w-_.\\s]*")) {
+                return true;
+            }
+            LOGGER.info("Name is not valid, contains characters not permitted or is blank!");
+        }
+        return false;
+    }
 }

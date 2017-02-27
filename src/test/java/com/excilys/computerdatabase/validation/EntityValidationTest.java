@@ -14,6 +14,9 @@ import org.junit.Test;
  */
 public class EntityValidationTest {
 
+    /**
+     *
+     */
     @Test
     public void nameIsValid() {
         assertTrue(EntityValidation.nameIsValid(Optional.ofNullable("name")));
@@ -36,12 +39,15 @@ public class EntityValidationTest {
         assertTrue(EntityValidation.nameIsValid(Optional.ofNullable("n")));
         assertTrue(EntityValidation.nameIsValid(Optional.ofNullable("N")));
         assertTrue(EntityValidation.nameIsValid(Optional.ofNullable("122-455")));
-        assertTrue(EntityValidation.nameIsValid(Optional.ofNullable("122_445")));    
+        assertTrue(EntityValidation.nameIsValid(Optional.ofNullable("122_445")));
         assertTrue(EntityValidation.nameIsValid(Optional.ofNullable("12 532")));
         assertTrue(EntityValidation.nameIsValid(Optional.ofNullable("Name.test")));
 
     }
-    
+
+    /**
+     *
+     */
     @Test
     public void nameIsNotValid() {
         assertFalse(EntityValidation.nameIsValid(Optional.ofNullable("")));
