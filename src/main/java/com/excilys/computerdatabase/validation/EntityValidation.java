@@ -15,13 +15,10 @@ public class EntityValidation {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EntityValidation.class);
 
-	public static boolean nameIsValid(Optional<String> optionalName)
-	{
-		if(optionalName.isPresent())
-		{
+	public static boolean nameIsValid(Optional<String> optionalName) {
+		if(optionalName.isPresent()) {
 			String name = optionalName.get();
-			if (StringUtils.isNotBlank(name) && name.matches("[\\w-\\s]*"))
-			{
+			if (StringUtils.isNotBlank(name) && name.matches("[\\w-_.\\s]*")) {
 				return true;
 			}
 			LOGGER.info("Name is not valid, contains characters not permitted or is blank!");

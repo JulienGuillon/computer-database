@@ -15,13 +15,10 @@ public class SelectionValidation {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SelectionValidation.class);
 
 	
-	public static boolean userChoiceIsValid(Optional<String> optionalChoice)
-	{
-		if (optionalChoice.isPresent())
-		{
+	public static boolean userChoiceIsValid(Optional<String> optionalChoice) {
+		if (optionalChoice.isPresent()) {
 			String choice = optionalChoice.get();
-			if (choice.matches("[npqduNPQDU]"))
-			{
+			if (choice.matches("[npqduNPQDU]")) {
 				return true;
 			}
 			LOGGER.info("Choice is not valid !");
@@ -29,13 +26,10 @@ public class SelectionValidation {
 		return false;
 	}
 		
-	public static boolean userSelectionIsValid(Optional<String> optionalSelection)
-	{
-		if (optionalSelection.isPresent())
-		{
+	public static boolean userSelectionIsValid(Optional<String> optionalSelection) {
+		if (optionalSelection.isPresent()) {
 			String selection = optionalSelection.get();
-			if (selection.matches("[1-6qQ]"))
-			{
+			if (selection.matches("[1-6qQ]")) {
 				return true;
 			}
 			LOGGER.info("Selection is not valid, should be number 1-6 or q !");
@@ -43,13 +37,10 @@ public class SelectionValidation {
 		return false;
 	}
 	
-	public static boolean idIsValid(Optional<String> optionalId)
-	{
-		if (optionalId.isPresent())
-		{
+	public static boolean idIsValid(Optional<String> optionalId) {
+		if (optionalId.isPresent()) {
 			String id = optionalId.get();
-			if (id.matches("[\\d]*"))
-			{
+			if (id.matches("[\\d]+")) {
 				return true;
 			}
 			LOGGER.info("Id is not valid, should be number !");

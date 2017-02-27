@@ -24,8 +24,7 @@ public class MapperCompany {
 	public static Optional<Company> resultSetToCompany(Optional<ResultSet> optionalResultSet)
 	{
 		Company.Builder companyBuilder = null;
-		if( optionalResultSet.isPresent())
-		{
+		if( optionalResultSet.isPresent()) {
 			ResultSet resultSet = optionalResultSet.get();
 			try {
 				companyBuilder = new Company.Builder()

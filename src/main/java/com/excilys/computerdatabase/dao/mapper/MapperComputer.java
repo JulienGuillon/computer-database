@@ -40,17 +40,18 @@ public class MapperComputer {
 				computerBuilder = new Computer.Builder()
 						.withId(resultSet.getLong(COLUMN_ID))
 						.withName(resultSet.getString(COLUMN_NAME));
-				Object dateIntroduced = resultSet.getObject(COLUMN_INTRODUCED);
-				if (dateIntroduced != null)
+				
+				Timestamp date = resultSet.getTimestamp(COLUMN_INTRODUCED);
+				if (date != null)
 				{	
-					dateIntroduced = ((Timestamp)dateIntroduced).toLocalDateTime().toLocalDate();
-					computerBuilder.withIntroduced((LocalDate)dateIntroduced);
+				    LocalDate dateIntroduced = date.toLocalDateTime().toLocalDate();
+					computerBuilder.withIntroduced(dateIntroduced);
 				}
-				Object dateDiscontinued = resultSet.getObject(COLUMN_DISCONTINUED);
-				if (dateDiscontinued != null)
+				date = resultSet.getTimestamp(COLUMN_DISCONTINUED);
+				if (date != null)
 				{
-					dateDiscontinued=  ((Timestamp)dateDiscontinued).toLocalDateTime().toLocalDate();
-					computerBuilder.withDiscontinued((LocalDate)dateDiscontinued);
+					LocalDate dateDiscontinued=  date.toLocalDateTime().toLocalDate();
+					computerBuilder.withDiscontinued(dateDiscontinued);
 				}
 				Long companyId = resultSet.getLong(COLUMN_COMPANY_ID);
 				Company.Builder companyBuilder = null;
