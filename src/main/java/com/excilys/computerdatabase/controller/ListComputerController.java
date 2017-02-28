@@ -35,7 +35,7 @@ public enum ListComputerController {
      *
      */
     ListComputerController() {
-        crudComputer = new CrudComputerImpl();
+        crudComputer = CrudComputerImpl.INSTANCE;
     }
 
     /**

@@ -17,7 +17,7 @@ public class Company {
     /**
      *
      */
-    private Company() {
+    public Company() {
     }
 
     public String getName() {

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,28 +29,26 @@ import com.excilys.computerdatabase.exception.PersistenceException;
  *         Allows to make all the crud operation on entity computer
  */
 
-public class CrudComputerImpl implements CrudComputer {
-
+public enum CrudComputerImpl implements CrudComputer {
+    INSTANCE;
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudComputerImpl.class);
 
     private static int page = 10;
+    private String name = "";
     private static final String SELECT_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id;";
     private static final String SELECT_COMPUTER_BY_ID = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id where computer.id= ?;";
-    private static final String PAGINATION_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id limit ? offset ?;";
+    private static final String PAGINATION_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id where computer.name like ? limit ? offset ?;";
     private static final String DELETE_COMPUTER_BY_ID = "delete from computer where id = ? ";
     private static final String UPDATE_COMPUTER_BY_ID = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
     private static final String INSERT_COMPUTER = "insert into computer(name, introduced, discontinued, company_id) values (?, ?, ?, ?)";
-
+    private static final String SELECT_COMPUTERS_NUMBER = "select count(*) as number from computer;";
+    
     private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
     private Connection connection;
     private ResultSet resultSet;
 
-    /**
-     *
-     */
-    public CrudComputerImpl() {
 
-    }
 
     /**
      * @param id :
@@ -188,8 +187,9 @@ public class CrudComputerImpl implements CrudComputer {
         connection = databaseManager.getConnection();
         try {
             PreparedStatement preparedStatementPagination = connection.prepareStatement(PAGINATION_COMPUTERS);
-            preparedStatementPagination.setInt(1, page);
-            preparedStatementPagination.setInt(2, offset);
+            preparedStatementPagination.setString(1, "%"+name+"%");
+            preparedStatementPagination.setInt(2, page);
+            preparedStatementPagination.setInt(3, offset);
             resultSet = preparedStatementPagination.executeQuery();
             while (resultSet.next()) {
                 if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
@@ -204,6 +204,7 @@ public class CrudComputerImpl implements CrudComputer {
             e.printStackTrace();
         } finally {
             databaseManager.closeConnection();
+            ResultSet resultSet = null;
         }
         return Optional.of(computers);
     }
@@ -219,5 +220,37 @@ public class CrudComputerImpl implements CrudComputer {
         }
         return findUsingPagination(offset);
     }
+    
+    @Override
+    public Optional<List<Optional<Computer>>> findUsingPaginationFilterByName(int offset, int size, String name) {
+        if (StringUtils.isBlank(name)) {
+            LOGGER.info("String for filter is not valid, default filter is used !");
+            this.name = "";
+        } else {
+            this.name = name;
+        }
+        return findUsingPagination(offset);
+    }
+
+    /* (non-Javadoc)
+     * @see com.excilys.computerdatabase.dao.Crud#getNumber()
+     */
+    @Override
+    public int getNumber() {
+        connection = databaseManager.getConnection();
+        ResultSet resultSet = null;
+        int number = 0;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(SELECT_COMPUTERS_NUMBER);
+            resultSet.next();
+            number = resultSet.getInt("number");
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        } finally {
+            databaseManager.closeConnection();
+        }
+        return number;
+        }
 
 }

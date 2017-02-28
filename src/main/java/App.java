@@ -1,4 +1,3 @@
-
 import com.excilys.computerdatabase.view.IView;
 
 /**
@@ -13,5 +12,5 @@ public class App {
      */
     public static void main(String[] args) {
         IView.displayMainMenu();
-        }
+    }
 }

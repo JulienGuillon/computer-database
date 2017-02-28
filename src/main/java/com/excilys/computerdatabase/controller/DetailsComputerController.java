@@ -32,7 +32,7 @@ public enum DetailsComputerController {
      * .
      */
     DetailsComputerController() {
-        crudComputer = new CrudComputerImpl();
+        crudComputer = CrudComputerImpl.INSTANCE;
     }
 
     /**

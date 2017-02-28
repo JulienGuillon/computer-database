@@ -27,7 +27,7 @@ public enum UpdateComputerController {
      *
      */
     UpdateComputerController() {
-        crudComputer = new CrudComputerImpl();
+        crudComputer = CrudComputerImpl.INSTANCE;
     }
 
     /**

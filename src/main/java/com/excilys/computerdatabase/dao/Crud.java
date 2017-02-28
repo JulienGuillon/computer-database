@@ -40,4 +40,6 @@ public interface Crud<T> {
      * @return an Optional list of Optional
      */
     Optional<List<Optional<T>>> findUsingPagination(int offset, int size);
+    
+    int getNumber();
 }

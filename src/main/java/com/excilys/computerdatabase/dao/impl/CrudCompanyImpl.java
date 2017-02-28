@@ -33,6 +33,7 @@ public class CrudCompanyImpl implements CrudCompany {
     private static final String SELECT_COMPANIES = "select * from company;";
     private static final String SELECT_COMPANY_BY_ID = "select * from company where id= ?;";
     private static final String PAGINATION_COMPANIES = "select * from company limit ? offset ?;";
+    private static final String SELECT_COMPANIES_NUMBER = "select count(*) as number from company;";
 
     private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
     private Connection connection;
@@ -132,5 +133,27 @@ public class CrudCompanyImpl implements CrudCompany {
         }
         return findUsingPagination(offset);
     }
+    
+
+    /* (non-Javadoc)
+     * @see com.excilys.computerdatabase.dao.Crud#getNumber()
+     */
+    @Override
+    public int getNumber() {
+        connection = databaseManager.getConnection();
+        ResultSet resultSet = null;
+        int number = 0;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(SELECT_COMPANIES_NUMBER);
+            resultSet.next();
+            number = resultSet.getInt("number");
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        } finally {
+            databaseManager.closeConnection();
+        }
+        return number;
+        }
 
 }
