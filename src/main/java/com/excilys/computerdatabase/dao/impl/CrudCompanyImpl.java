@@ -25,8 +25,8 @@ import com.excilys.computerdatabase.exception.PersistenceException;
  *
  *         Allows to make all the crud operation on entity company
  */
-public class CrudCompanyImpl implements CrudCompany {
-
+public enum CrudCompanyImpl implements CrudCompany {
+    INSTANCE;
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudCompanyImpl.class);
 
     private static int page = 10;
@@ -38,12 +38,6 @@ public class CrudCompanyImpl implements CrudCompany {
     private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
     private Connection connection;
     private ResultSet resultSet;
-
-    /**
-     *
-     */
-    public CrudCompanyImpl() {
-    }
 
     /**
      * @param id :
@@ -77,17 +71,26 @@ public class CrudCompanyImpl implements CrudCompany {
     /**
      * @return an Optional ResultSet
      */
-    public Optional<ResultSet> findAll() {
+    public Optional<List<Optional<Company>>> findAll() {
         connection = databaseManager.getConnection();
+        List<Optional<Company>> companies = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(SELECT_COMPANIES);
+            while (resultSet.next()) {
+                if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
+                    companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)));
+                }
+            }
         } catch (SQLException e) {
             throw new PersistenceException(e);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         } finally {
             databaseManager.closeConnection();
         }
-        return Optional.of(resultSet);
+        return Optional.ofNullable(companies);
     }
 
     /**

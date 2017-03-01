@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdatabase.dao.CrudComputer;
 import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
 import com.excilys.computerdatabase.entities.Computer;
@@ -15,13 +18,14 @@ import com.excilys.computerdatabase.entities.Computer;
  */
 public class ManagerBeanComputer {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ManagerBeanComputer.class);
+
     private CrudComputer crudComputer = CrudComputerImpl.INSTANCE;
     
     private int currentPage = 0;
     private int sizePage = 100;
     private int numberOfComputers;
     private String filter = "";
-    private Computer computer;
     
     public int getNumberOfComputer() {
         numberOfComputers = crudComputer.getNumber();
@@ -44,6 +48,11 @@ public class ManagerBeanComputer {
             }
         }
         return computers;
+    }
+    
+    public void createComputer(String name) {
+        //Computer comp = crudComputer.find(Long.valueOf(name).longValue()).get();
+        LOGGER.info("TEST " + name);
     }
     
      /**
@@ -86,20 +95,6 @@ public class ManagerBeanComputer {
      */
     public void setFilter(String filter) {
         this.filter = filter;
-    }
-    /**
-     * @return the computer
-     */
-    public Computer getComputer() {
-        return computer;
-    }
-    
-    /**
-     * @param computer the computer to set
-     */
-    public void setComputer(Computer computer) {
-        System.out.println(computer.getName());
-        this.computer = computer;
     }
     
     

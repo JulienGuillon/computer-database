@@ -77,18 +77,28 @@ public enum CrudComputerImpl implements CrudComputer {
     /**
      * @return an Optional ResultSet
      */
-    public Optional<ResultSet> findAll() {
+    public Optional<List<Optional<Computer>>> findAll() {
         connection = databaseManager.getConnection();
         ResultSet resultSet = null;
+        List<Optional<Computer>> computers = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(SELECT_COMPUTERS);
+            while (resultSet.next()) {
+                if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
+                    computers.add(MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)));
+                }
+            }
+
         } catch (SQLException e) {
             throw new PersistenceException(e);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         } finally {
             databaseManager.closeConnection();
         }
-        return Optional.ofNullable(resultSet);
+        return Optional.ofNullable(computers);
     }
 
     /**
@@ -204,7 +214,6 @@ public enum CrudComputerImpl implements CrudComputer {
             e.printStackTrace();
         } finally {
             databaseManager.closeConnection();
-            ResultSet resultSet = null;
         }
         return Optional.of(computers);
     }

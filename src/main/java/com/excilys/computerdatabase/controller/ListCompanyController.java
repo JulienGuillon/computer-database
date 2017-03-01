@@ -35,7 +35,7 @@ public enum ListCompanyController {
      *
      */
     ListCompanyController() {
-        crudCompany = new CrudCompanyImpl();
+        crudCompany = CrudCompanyImpl.INSTANCE;
     }
 
     /**
