@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import com.excilys.computerdatabase.validation.DateValidation;
+import com.excilys.computerdatabase.validations.DateValidation;
 
 /**
  * @author Guillon Julien
@@ -45,7 +45,7 @@ public class DateValidationTest {
     }
 
     /**
-     * 
+     *
      */
     @Test
     public void dateIsValid() {
@@ -58,6 +58,9 @@ public class DateValidationTest {
         assertTrue(DateValidation.dateIsValid(Optional.ofNullable(date1), Optional.ofNullable(date2)));
     }
 
+    /**
+     *
+     */
     @Test
     public void dateIsNotValid() {
         LocalDate date1 = LocalDate.parse("2000-01-01");

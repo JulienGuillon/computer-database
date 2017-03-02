@@ -22,34 +22,43 @@ public class MapperCompanyTest {
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_ID = "id";
     private ResultSet resultSet;
-    
+
+    /**
+     *
+     */
     @Before
     public void initBeforeEachTest() {
         resultSet = Mockito.mock(ResultSet.class);
     }
-    
+
+    /**
+     *
+     * @throws SQLException :
+     */
     @Test
     public void resultSetToCompany() throws SQLException {
         Mockito.when(resultSet.getLong(COLUMN_ID)).thenReturn((long) 2);
         Mockito.when(resultSet.getString(COLUMN_NAME)).thenReturn("Name");
         Optional<Company> optionalCompany = MapperCompany.resultSetToCompany(
                 Optional.ofNullable(resultSet));
-        if(optionalCompany.isPresent())
-        {
+        if (optionalCompany.isPresent()) {
             Company company =  optionalCompany.get();
             assertEquals(company.getId(), 2);
             assertEquals(company.getName(), "Name");
         }
     }
-    
+
+    /**
+     *
+     * @throws SQLException :
+     */
     @Test
     public void resultSetToCompanyWithNameNull() throws SQLException {
         Mockito.when(resultSet.getLong(COLUMN_ID)).thenReturn((long) 2);
         Mockito.when(resultSet.getString(COLUMN_NAME)).thenReturn(null);
         Optional<Company> optionalCompany = MapperCompany.resultSetToCompany(
                 Optional.ofNullable(resultSet));
-        if(optionalCompany.isPresent())
-        {
+        if (optionalCompany.isPresent()) {
             Company company =  optionalCompany.get();
             assertEquals(company.getId(), 2);
             assertEquals(company.getName(), null);
