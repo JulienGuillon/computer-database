@@ -1,6 +1,5 @@
 package com.excilys.computerdatabase.dao;
 
-import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,18 +27,13 @@ public interface Crud<T> {
 
     /**
      *
-     * @param offset :
      * @return an Optional list of Optional
      */
-    Optional<List<Optional<T>>> findUsingPagination(int offset);
+    Optional<List<Optional<T>>> findUsingPagination();
 
     /**
      *
-     * @param offset :
-     * @param size :
-     * @return an Optional list of Optional
+     * @return number of row in the database
      */
-    Optional<List<Optional<T>>> findUsingPagination(int offset, int size);
-    
     int getNumber();
 }

@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.junit.Test;
 
+import com.excilys.computerdatabase.validations.SelectionValidation;
+
 /**
  * @author Guillon Julien
  *

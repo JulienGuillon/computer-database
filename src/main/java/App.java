@@ -1,4 +1,4 @@
-import com.excilys.computerdatabase.view.IView;
+import com.excilys.computerdatabase.views.IView;
 
 /**
  * @author Guillon Julien

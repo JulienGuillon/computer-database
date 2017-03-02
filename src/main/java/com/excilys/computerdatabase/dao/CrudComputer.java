@@ -1,6 +1,5 @@
 package com.excilys.computerdatabase.dao;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.excilys.computerdatabase.entities.Computer;
@@ -26,16 +25,6 @@ public interface CrudComputer extends Crud<Computer> {
     /**
      *
      * @param computer :
-     * @param id :
      */
-    void update(Optional<Computer> computer, long id);
-
-    /**
-     * @param offset
-     * @param size
-     * @param name
-     * @return
-     */
-    Optional<List<Optional<Computer>>> findUsingPaginationFilterByName(int offset, int size, String name);
-
+    void update(Optional<Computer> computer);
 }

@@ -8,13 +8,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
-<link href="../css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="../css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="../css/main.css" rel="stylesheet" media="screen">
+<link href="./css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="./css/font-awesome.css" rel="stylesheet" media="screen">
+<link href="./css/main.css" rel="stylesheet" media="screen">
 </head>
-	<jsp:useBean id="managerBean" scope="page" class="com.excilys.computerdatabase.manager.ManagerBeanComputer" >
-	<jsp:setProperty name="managerBean" property="*" />
-	</jsp:useBean>
+
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -25,7 +23,7 @@
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-            	${managerBean.numberOfComputer} Computers found            	
+            	${numberOfComputers} Computers found            	
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
@@ -36,8 +34,8 @@
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer.jsp">Add Computer</a> 
-                    <a class="btn btn-default" id="editComputer" href="#" onclick="$.fn.toggleEditMode();">Edit</a>
+                    <a class="btn btn-success" id="addComputer" href="?action=add">Add Computer</a> 
+                    <a class="btn btn-default" id="editComputer" href="?action=edit" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
         </div>
@@ -78,24 +76,20 @@
 
                     </tr>
                 </thead>
-                <!-- Browse attribute computers -->
+                
                 <tbody id="results">
-                    
-				<c:forEach var="computer" items="${managerBean.computersByPage}">
+				<c:forEach items="${computers}" var="computer">
 					<tr>
-                    	<td class="editMode">
-                            <input type="checkbox" name="cb" class="cb" value="0">
-                        </td>
-                        <td>
-                            <a href="editComputer.jsp?computerId=${computer.id}" onclick=""><c:out value="${computer.name}"/></a>
-                        </td>
-                        <td><c:out value="${computer.introduced}"/></td>
-                        <td><c:out value="${computer.discontinued}"/></td>
-                        <td><c:out value="${computer.manufacturer.name}"/></td>
-                        <td></td>
-                   </tr>
-                        
-					</c:forEach>                
+						<td class="editMode"><input type="checkbox" name="cb"
+							class="cb" value="0"></td>
+						<td><a href="?action=edit&id=${computer.id}"
+							onclick="">${computer.name}</a></td>
+						<td>${computer.introduced}</td>
+						<td>${computer.discontinued}</td>
+						<td>${computer.manufacturerName}</td>
+					</tr>
+				</c:forEach>
+
                 </tbody>
             </table>
         </div>
@@ -106,30 +100,30 @@
         <div class="container text-center">
             <ul class="pagination">
                 <li>
-                    <a href="?sizePage=${param.sizePage}&currentPage=${param.currentPage-1}" aria-label="Previous">
+                    <a href="?action=previousPage" aria-label="Previous">
                       <span aria-hidden="true">&laquo;</span>
                   </a>
               </li>
-              <c:forEach var="i" begin="${(param.currentPage - 2 > 0) ? (param.currentPage - 2) : 1}" end="${(param.currentPage + 2 < managerBean.numberOfPages) ? (param.currentPage + 2) : managerBean.numberOfPages}">
-	              <li><a href="?sizePage=${param.sizePage}&currentPage=${i-1}">${i}</a></li>
+              <c:forEach var="i" begin="${(currentPage - 2 > 0) ? (currentPage - 2) : 1}" end="${(currentPage + 2 < numberOfPages) ? (currentPage + 2) : numberOfPages}">
+	              <li><a href="?action=numOfPage&numOfPage=${i-1}">${i}</a></li>
 	          </c:forEach>
               <li>
-                <a href="?sizePage=${param.sizePage}&currentPage=${param.currentPage+1}" aria-label="Next">
+                <a href="?action=nextPage" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>
         </ul>
 
         <div class="btn-group btn-group-sm pull-right" role="group" >
-            <a type="button" class="btn btn-default" href="?sizePage=10">10</a>
-            <a type="button" class="btn btn-default" href="?sizePage=50">50</a>
-            <a type="button" class="btn btn-default" href="?sizePage=100">100</a>
+            <a class="btn btn-default " href="?action=size&size=10">10</a>
+			<a class="btn btn-default " href="?action=size&size=50">50</a>
+			<a class="btn btn-default " href="?action=size&size=100">100</a>
         </div>
 		</div>
     </footer>
-<script src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/dashboard.js"></script>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/dashboard.js"></script>
 
 </body>
 </html>

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +18,8 @@ import com.excilys.computerdatabase.dao.DatabaseManager;
 import com.excilys.computerdatabase.dao.CrudComputer;
 import com.excilys.computerdatabase.dao.mapper.MapperComputer;
 import com.excilys.computerdatabase.entities.Computer;
-import com.excilys.computerdatabase.exception.PersistenceException;
+import com.excilys.computerdatabase.exceptions.PersistenceException;
+import com.excilys.computerdatabase.utils.PageComputer;
 
 /**
  * @author Guillon Julien
@@ -31,10 +31,9 @@ import com.excilys.computerdatabase.exception.PersistenceException;
 
 public enum CrudComputerImpl implements CrudComputer {
     INSTANCE;
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudComputerImpl.class);
 
-    private static int page = 10;
     private String name = "";
     private static final String SELECT_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id;";
     private static final String SELECT_COMPUTER_BY_ID = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id where computer.id= ?;";
@@ -43,7 +42,7 @@ public enum CrudComputerImpl implements CrudComputer {
     private static final String UPDATE_COMPUTER_BY_ID = "update computer set name = ?, introduced = ?, discontinued = ?, company_id = ? where id = ?";
     private static final String INSERT_COMPUTER = "insert into computer(name, introduced, discontinued, company_id) values (?, ?, ?, ?)";
     private static final String SELECT_COMPUTERS_NUMBER = "select count(*) as number from computer;";
-    
+
     private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
     private Connection connection;
     private ResultSet resultSet;
@@ -127,12 +126,12 @@ public enum CrudComputerImpl implements CrudComputer {
      * Update a computer on database.
      *
      * @param optionalComputer :
-     * @param id :
      *
      */
-    public void update(Optional<Computer> optionalComputer, long id) {
+    public void update(Optional<Computer> optionalComputer) {
         if (optionalComputer.isPresent()) {
             Computer computer = optionalComputer.get();
+            long id = computer.getId();
             connection = databaseManager.getConnection();
             try {
                 System.out.println(computer.getManufacturer() != null);
@@ -174,7 +173,11 @@ public enum CrudComputerImpl implements CrudComputer {
                 preparedStatementInsert.setString(1, computer.getName());
                 preparedStatementInsert.setObject(2, computer.getIntroduced());
                 preparedStatementInsert.setObject(3, computer.getDiscontinued());
-                preparedStatementInsert.setLong(4, computer.getManufacturer().getId());
+                if (computer.getManufacturer() != null) {
+                    preparedStatementInsert.setLong(4, computer.getManufacturer().getId());
+                } else {
+                    preparedStatementInsert.setNull(4, Types.BIGINT);
+                }
                 preparedStatementInsert.execute();
                 databaseManager.commit();
             } catch (SQLException e) {
@@ -189,17 +192,16 @@ public enum CrudComputerImpl implements CrudComputer {
     /**
      * Find computers using pagination on database.
      *
-     * @param offset :
      * @return an Optional list of computer
      */
-    public Optional<List<Optional<Computer>>> findUsingPagination(int offset) {
+    public Optional<List<Optional<Computer>>> findUsingPagination() {
         List<Optional<Computer>> computers = new ArrayList<>();
         connection = databaseManager.getConnection();
         try {
             PreparedStatement preparedStatementPagination = connection.prepareStatement(PAGINATION_COMPUTERS);
-            preparedStatementPagination.setString(1, "%"+name+"%");
-            preparedStatementPagination.setInt(2, page);
-            preparedStatementPagination.setInt(3, offset);
+            preparedStatementPagination.setString(1, "%" + name + "%");
+            preparedStatementPagination.setInt(2, PageComputer.getSize());
+            preparedStatementPagination.setInt(3, PageComputer.getOffset());
             resultSet = preparedStatementPagination.executeQuery();
             while (resultSet.next()) {
                 if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
@@ -216,29 +218,6 @@ public enum CrudComputerImpl implements CrudComputer {
             databaseManager.closeConnection();
         }
         return Optional.of(computers);
-    }
-
-
-    @Override
-    public Optional<List<Optional<Computer>>> findUsingPagination(int offset, int size) {
-        if (size <= 10) {
-            LOGGER.info("Size of page is not valid, default size is used !");
-            page = 10;
-        } else {
-            page = size;
-        }
-        return findUsingPagination(offset);
-    }
-    
-    @Override
-    public Optional<List<Optional<Computer>>> findUsingPaginationFilterByName(int offset, int size, String name) {
-        if (StringUtils.isBlank(name)) {
-            LOGGER.info("String for filter is not valid, default filter is used !");
-            this.name = "";
-        } else {
-            this.name = name;
-        }
-        return findUsingPagination(offset);
     }
 
     /* (non-Javadoc)

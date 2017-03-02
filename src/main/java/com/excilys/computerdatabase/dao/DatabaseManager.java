@@ -8,7 +8,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.computerdatabase.exception.PersistenceException;
+import com.excilys.computerdatabase.exceptions.PersistenceException;
 import com.excilys.computerdatabase.utils.LoadProperties;
 
 /**

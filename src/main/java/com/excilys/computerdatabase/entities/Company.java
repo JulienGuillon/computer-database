@@ -2,7 +2,7 @@ package com.excilys.computerdatabase.entities;
 
 import java.util.Optional;
 
-import com.excilys.computerdatabase.validation.EntityValidation;
+import com.excilys.computerdatabase.validations.EntityValidation;
 
 /**
  * @author Guillon Julien

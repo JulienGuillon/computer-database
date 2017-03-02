@@ -16,7 +16,8 @@ import com.excilys.computerdatabase.dao.DatabaseManager;
 import com.excilys.computerdatabase.dao.CrudCompany;
 import com.excilys.computerdatabase.dao.mapper.MapperCompany;
 import com.excilys.computerdatabase.entities.Company;
-import com.excilys.computerdatabase.exception.PersistenceException;
+import com.excilys.computerdatabase.exceptions.PersistenceException;
+import com.excilys.computerdatabase.utils.PageCompany;
 
 /**
  * @author Guillon Julien
@@ -29,7 +30,6 @@ public enum CrudCompanyImpl implements CrudCompany {
     INSTANCE;
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudCompanyImpl.class);
 
-    private static int page = 10;
     private static final String SELECT_COMPANIES = "select * from company;";
     private static final String SELECT_COMPANY_BY_ID = "select * from company where id= ?;";
     private static final String PAGINATION_COMPANIES = "select * from company limit ? offset ?;";
@@ -96,16 +96,15 @@ public enum CrudCompanyImpl implements CrudCompany {
     /**
      * Find companies using pagination from database.
      *
-     * @param offset :
      * @return an Optional list of companies
      */
-    public Optional<List<Optional<Company>>> findUsingPagination(int offset) {
+    public Optional<List<Optional<Company>>> findUsingPagination() {
         connection = databaseManager.getConnection();
         List<Optional<Company>> companies = new ArrayList<>();
         try {
             PreparedStatement preparedStatementPagination = connection.prepareStatement(PAGINATION_COMPANIES);
-            preparedStatementPagination.setInt(1, page);
-            preparedStatementPagination.setInt(2, offset);
+            preparedStatementPagination.setInt(1, PageCompany.getSize());
+            preparedStatementPagination.setInt(2, PageCompany.getOffset());
             resultSet = preparedStatementPagination.executeQuery();
             while (resultSet.next()) {
                 if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
@@ -123,20 +122,6 @@ public enum CrudCompanyImpl implements CrudCompany {
         return Optional.of(companies);
     }
 
-    /**
-     *
-     */
-    @Override
-    public Optional<List<Optional<Company>>> findUsingPagination(int offset, int size) {
-        if (size <= 10) {
-            LOGGER.info("Size of page is not valid, default size is used !");
-            page = 10;
-        } else {
-            page = size;
-        }
-        return findUsingPagination(offset);
-    }
-    
 
     /* (non-Javadoc)
      * @see com.excilys.computerdatabase.dao.Crud#getNumber()
@@ -157,6 +142,6 @@ public enum CrudCompanyImpl implements CrudCompany {
             databaseManager.closeConnection();
         }
         return number;
-        }
+    }
 
 }
