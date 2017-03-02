@@ -45,9 +45,6 @@ public enum DatabaseManager {
 
         try {
             Class.forName(properties.getProperty(DRIVER));
-            // connection =
-            // DriverManager.getConnection(properties.getProperty(URL),
-            // properties.getProperty(USER), properties.getProperty(PASSWORD));
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -59,6 +56,7 @@ public enum DatabaseManager {
      * @throws PersistenceException
      */
     public Connection getConnection() {
+        Connection connection;
         try {
             connection = DriverManager.getConnection(properties.getProperty(URL), properties.getProperty(USER),
                     properties.getProperty(PASSWORD));
