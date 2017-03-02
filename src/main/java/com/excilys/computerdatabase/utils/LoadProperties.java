@@ -36,10 +36,10 @@ public enum LoadProperties {
         }
         try {
             properties.load(input);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public Properties getProperties() {
