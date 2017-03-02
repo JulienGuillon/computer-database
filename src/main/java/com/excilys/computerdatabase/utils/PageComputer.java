@@ -10,16 +10,17 @@ public class PageComputer {
     private static int size = 10;
     private static int offset = 0;
     private static int pageIndex = 0;
-    private static int numberOfPages; 
-    private static int numberOfComputers; 
+    private static int numberOfPages;
+    private static int numberOfComputers;
 
+    /**
+     *
+     */
     public PageComputer() {
-        
     }
 
-    
     /**
-	 * @param page the page to set
+     * @param page the page to set
 	 */
 	public static void setSize(int size) {
 		PageComputer.size = size;
@@ -29,21 +30,19 @@ public class PageComputer {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static void nextPage() {
 		PageComputer.pageIndex = pageIndex + 1;
 		PageComputer.offset = pageIndex * size;
-
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static void previousPage() {
-		PageComputer.pageIndex = (pageIndex - 1) >=0 ? (offset - 1) * size : 0;
+		PageComputer.pageIndex = (pageIndex - 1) >= 0 ? (offset - 1) * size : 0;
 		PageComputer.offset = pageIndex * size;
-
 	}
 
 	/**
@@ -88,14 +87,14 @@ public class PageComputer {
 	public static int getNumberOfPages() {
 		return numberOfPages ;
 	}
-	
+
 	/**
 	 * @param numberOfPages the numberOfPages to set
 	 */
 	public static void setNumberOfPages(int numberOfPages) {
 		PageComputer.numberOfPages = numberOfPages;
 	}
-	
+
 	/**
 	 * @param numberOfComputers the numberOfComputers to set
 	 */
@@ -103,11 +102,11 @@ public class PageComputer {
 		PageComputer.numberOfComputers = numberOfComputers;
 		PageComputer.numberOfPages = PageComputer.numberOfComputers / PageComputer.size;
 	}
-	
+
 	/**
 	 * @return the numberOfComputers
 	 */
 	public static int getNumberOfComputers() {
-		return numberOfComputers;
-	}
+        return numberOfComputers;
+    }
 }
