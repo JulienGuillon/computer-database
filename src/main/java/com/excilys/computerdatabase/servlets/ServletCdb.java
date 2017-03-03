@@ -2,6 +2,7 @@ package com.excilys.computerdatabase.servlets;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,13 +17,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.computerdatabase.dao.PaginationComputer;
 import com.excilys.computerdatabase.dto.ComputerDTO;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.services.ServiceCompany;
 import com.excilys.computerdatabase.services.ServiceComputer;
-import com.excilys.computerdatabase.utils.MapperOptional;
-import com.excilys.computerdatabase.utils.PageComputer;
+import com.excilys.computerdatabase.utils.MapperComputerDTO;
 import com.excilys.computerdatabase.validations.DateValidation;
 
 /**
@@ -35,6 +36,13 @@ public class ServletCdb extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private String pageToForward = "/views/dashboard.jsp";
+
+    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
+
+    private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
+    
+    private PaginationComputer paginationComputer = new PaginationComputer();
+
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -50,37 +58,38 @@ public class ServletCdb extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        List<ComputerDTO> computers = new ArrayList<>();
 
-        PageComputer.setNumberOfComputers(ServiceComputer.getNumber());
         if (request.getParameter("action") != null) {
             switch (request.getParameter("action")) {
             case "numOfPage":
                 if (request.getParameter("numOfPage") != null) {
-                    try {
+                    try {        doGet(request, response);
+
                         int numOfPage = Integer.parseInt(request.getParameter("numOfPage"));
-                        PageComputer.setPageIndex(numOfPage);
+                        computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.getPageNumber(numOfPage));
                     } catch (NumberFormatException e) {
                     }
                 }
                 break;
             case "nextPage":
-                PageComputer.nextPage();
+                computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.nextPage());
                 break;
             case "previousPage":
-                PageComputer.previousPage();
+                computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.previousPage());
                 break;
             case "size":
                 if (request.getParameter("size") != null) {
                     try {
                         int size = Integer.parseInt(request.getParameter("size"));
-                        PageComputer.setSize(size);
+                        paginationComputer.setSize(size);
                     } catch (NumberFormatException e) {
                     }
                 }
                 break;
             case "add":
-                List<Company> companies = MapperOptional
-                        .optionalListOfCompaniesToListOfCompanies(ServiceCompany.findAll());
+                List<Company> companies = MapperComputerDTO
+                        .optionalListOfCompaniesToListOfCompanies(serviceCompany.findAll());
                 request.getSession().setAttribute("companies", companies);
                 pageToForward = "/views/addComputer.jsp";
                 break;
@@ -90,13 +99,14 @@ public class ServletCdb extends HttpServlet {
             }
         }
         if (pageToForward.equals("/views/dashboard.jsp")) {
-            List<ComputerDTO> computers = MapperOptional
-                    .optionalListOfComputersToListOfComputersDTO(ServiceComputer.findUsingPagination());
+            if (computers.isEmpty()) {
+                computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.getPageNumber(1));
+            }
 
             request.getSession().setAttribute("computers", computers);
-            request.getSession().setAttribute("numberOfPages", PageComputer.getNumberOfPages());
-            request.getSession().setAttribute("currentPage", PageComputer.getPageIndex());
-            request.getSession().setAttribute("numberOfComputers", PageComputer.getNumberOfComputers());
+            request.getSession().setAttribute("numberOfPages", paginationComputer.getNumberOfPages());
+            request.getSession().setAttribute("currentPage", paginationComputer.getPageIndex());
+            request.getSession().setAttribute("numberOfComputers", paginationComputer.getNumberOfComputers());
         }
         RequestDispatcher rd = getServletContext().getRequestDispatcher(pageToForward);
         rd.forward(request, response);
@@ -139,7 +149,7 @@ public class ServletCdb extends HttpServlet {
                         company = new Company.Builder().withId(companyId).build();
                         computerBuilder.withManufacturer(company);
                     }
-                    ServiceComputer.create(Optional.ofNullable(computerBuilder.build()));
+                    serviceComputer.create(Optional.ofNullable(computerBuilder.build()));
 
                 } catch (NumberFormatException e) {
                     System.out.println(e);

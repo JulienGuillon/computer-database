@@ -13,18 +13,12 @@ import com.excilys.computerdatabase.entities.Computer;
  *
  * 2017-03-01
  */
-public class MapperOptional {
+public class MapperComputerDTO {
 
-    public static List<ComputerDTO> optionalListOfComputersToListOfComputersDTO(
-            Optional<List<Optional<Computer>>> optionalComputers) {
+    public static List<ComputerDTO> computersToComputersDTO(List<Computer> computers) {
         List<ComputerDTO> computersDTO = new ArrayList<>();
-        if (optionalComputers.isPresent()) {
-            List<Optional<Computer>> computersOptional = optionalComputers.get();
-            for (Optional<Computer> optionalComputer : computersOptional) {
-                if (optionalComputer.isPresent()) {
-                    computersDTO.add(computerToComputerDTO(optionalComputer.get()));
-                }
-            }
+        for (Computer computer : computers) {
+            computersDTO.add(computerToComputerDTO(computer));   
         }
         return computersDTO;
     }
@@ -47,9 +41,9 @@ public class MapperOptional {
         ComputerDTO computerDTO = new ComputerDTO();
         computerDTO.setId(computer.getId());
         computerDTO.setName(computer.getName());
-        computerDTO.setIntroduced(computer.getIntroduced());
-        computerDTO.setDiscontinued(computer.getDiscontinued());
-        computerDTO.setManufacturerName(computer.getManufacturer().getName());
+        computerDTO.setIntroduced(computer.getIntroduced() == null ? "": computer.getIntroduced().toString());
+        computerDTO.setDiscontinued(computer.getDiscontinued() == null ? "": computer.getDiscontinued().toString());
+        computerDTO.setManufacturerName(computer.getManufacturer() == null ? "" : computer.getManufacturer().getName());
         return computerDTO;
     }
 

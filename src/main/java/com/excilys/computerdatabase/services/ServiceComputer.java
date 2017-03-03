@@ -12,16 +12,17 @@ import com.excilys.computerdatabase.entities.Computer;
  *
  * 2017-03-02
  */
-public class ServiceComputer {
-
-    private static CrudComputer crudComputer = CrudComputerImpl.INSTANCE;
+public enum ServiceComputer {
+    INSTANCE;
+    
+    private CrudComputer crudComputer = CrudComputerImpl.INSTANCE;
 
     /**
      *
      * @param optionalComputer
      *            :
      */
-    public static void create(Optional<Computer> optionalComputer) {
+    public void create(Optional<Computer> optionalComputer) {
         crudComputer.create(optionalComputer);
     }
 
@@ -29,16 +30,8 @@ public class ServiceComputer {
      *
      * @return all computers in an optional list
      */
-    public static Optional<List<Optional<Computer>>> findAll() {
+    public Optional<List<Optional<Computer>>> findAll() {
         return crudComputer.findAll();
-    }
-
-    /**
-     *
-     * @return paginated computers in an optional list of optional computer
-     */
-    public static Optional<List<Optional<Computer>>> findUsingPagination() {
-        return crudComputer.findUsingPagination();
     }
 
     /**
@@ -46,7 +39,7 @@ public class ServiceComputer {
      * @param id
      *            :
      */
-    public static void delete(long id) {
+    public void delete(long id) {
         crudComputer.delete(id);
     }
 
@@ -55,7 +48,7 @@ public class ServiceComputer {
      * @param optionalComputer
      *            :
      */
-    public static void update(Optional<Computer> optionalComputer) {
+    public void update(Optional<Computer> optionalComputer) {
         crudComputer.update(optionalComputer);
     }
 
@@ -63,7 +56,7 @@ public class ServiceComputer {
      *
      * @return number of row in database
      */
-    public static int getNumber() {
+    public int getNumber() {
         return crudComputer.getNumber();
     }
 
@@ -73,7 +66,7 @@ public class ServiceComputer {
      *            :
      * @return a computer found using its id
      */
-    public static Optional<Computer> find(long id) {
+    public Optional<Computer> find(long id) {
         return crudComputer.find(id);
     }
 }

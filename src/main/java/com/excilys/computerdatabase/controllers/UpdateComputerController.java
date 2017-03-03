@@ -21,6 +21,8 @@ public enum UpdateComputerController {
 
     private UpdateComputerView updateComputerView;
 
+    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
+
     /**
      *
      */
@@ -45,7 +47,7 @@ public enum UpdateComputerController {
      * @throws Exception
      */
     public void findComputerById(int choice) {
-        Optional<Computer> computer = ServiceComputer.find(choice);
+        Optional<Computer> computer = serviceComputer.find(choice);
         if (computer.isPresent()) {
             updateComputerView.displayDetailsToUpdate(computer);
         }
@@ -61,7 +63,7 @@ public enum UpdateComputerController {
     public void update(Optional<Computer> optionalComputer) {
         if (optionalComputer.isPresent()) {
             Computer computer = optionalComputer.get();
-            ServiceComputer.update(Optional.ofNullable(computer));
+            serviceComputer.update(Optional.ofNullable(computer));
             updateComputerView.displayInfoComputer(Optional.ofNullable(computer));
         }
     }

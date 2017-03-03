@@ -71,16 +71,10 @@ public enum ListCompanyView {
      *
      * @param optionalCompanies :
      */
-    public void displayCompanies(Optional<List<Optional<Company>>> optionalCompanies) {
+    public void displayCompanies(List<Company> companies) {
         displayHeader();
-        if (optionalCompanies.isPresent()) {
-            Company company;
-            for (Optional<Company> optionalCompany : optionalCompanies.get()) {
-                if (optionalCompany.isPresent()) {
-                    company = optionalCompany.get();
-                    System.out.format(ConstanteView.FORMAT_COMPANY, company.getId(), company.getName());
-                }
-            }
+        for (Company company : companies) {
+            System.out.format(ConstanteView.FORMAT_COMPANY, company.getId(), company.getName());
         }
     }
 

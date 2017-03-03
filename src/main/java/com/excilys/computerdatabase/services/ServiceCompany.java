@@ -12,31 +12,24 @@ import com.excilys.computerdatabase.entities.Company;
  *
  * 2017-03-02
  */
-public class ServiceCompany {
-
-    private static CrudCompany crudCompany = CrudCompanyImpl.INSTANCE;
+public enum ServiceCompany {
+    INSTANCE;
+    
+    private CrudCompany crudCompany = CrudCompanyImpl.INSTANCE;
 
     /**
      *
      * @return all companies in an optional list of optional company
      */
-    public static Optional<List<Optional<Company>>> findAll() {
+    public Optional<List<Optional<Company>>> findAll() {
         return crudCompany.findAll();
-    }
-
-    /**
-     *
-     * @return paginated companies in an optional list of optional company
-     */
-    public static Optional<List<Optional<Company>>> findUsingPagination() {
-        return crudCompany.findUsingPagination();
     }
 
     /**
      *
      * @return number of row in database
      */
-    public static int getNumber() {
+    public int getNumber() {
         return crudCompany.getNumber();
     }
 
@@ -45,7 +38,7 @@ public class ServiceCompany {
      * @param id :
      * @return an optional list of Company
      */
-    public static Optional<Company> find(long id) {
+    public Optional<Company> find(long id) {
         return crudCompany.find(id);
     }
 }

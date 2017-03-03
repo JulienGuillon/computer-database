@@ -36,7 +36,9 @@ public enum DatabaseManager {
 
     private static final String PASSWORD = "db.password";
 
-    private Properties properties = LoadProperties.INSTANCE.getProperties();
+    private LoadProperties loadProperties = LoadProperties.INSTANCE;
+    
+    private Properties properties;
 
     /**
      *
@@ -44,6 +46,10 @@ public enum DatabaseManager {
     DatabaseManager() {
 
         try {
+            
+            loadProperties.setFileName("database.properties");
+            loadProperties.initLoadProperties();
+            properties = loadProperties.getProperties();
             Class.forName(properties.getProperty(DRIVER));
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
@@ -56,7 +62,6 @@ public enum DatabaseManager {
      * @throws PersistenceException
      */
     public Connection getConnection() {
-        Connection connection;
         try {
             connection = DriverManager.getConnection(properties.getProperty(URL), properties.getProperty(USER),
                     properties.getProperty(PASSWORD));
