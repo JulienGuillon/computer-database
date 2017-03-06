@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-    
+<%@taglib prefix="hashtag" tagdir="/WEB-INF/tags"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -95,32 +96,10 @@
         </div>
     </section>
 
-    <footer class="navbar-fixed-bottom">
-    
-        <div class="container text-center">
-            <ul class="pagination">
-                <li>
-                    <a href="?action=previousPage" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                  </a>
-              </li>
-              <c:forEach var="i" begin="${(currentPage - 2 > 0) ? (currentPage - 2) : 1}" end="${(currentPage + 2 < numberOfPages) ? (currentPage + 2) : numberOfPages}">
-	              <li><a href="?action=numOfPage&numOfPage=${i-1}">${i}</a></li>
-	          </c:forEach>
-              <li>
-                <a href="?action=nextPage" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-
-        <div class="btn-group btn-group-sm pull-right" role="group" >
-            <a class="btn btn-default " href="?action=size&size=10">10</a>
-			<a class="btn btn-default " href="?action=size&size=50">50</a>
-			<a class="btn btn-default " href="?action=size&size=100">100</a>
-        </div>
-		</div>
-    </footer>
+<footer class="navbar-fixed-bottom">
+		<hashtag:pagination currentPage="${currentPage}" size="10" numbers="${numberOfComputers}" search="">
+		</hashtag:pagination>
+	</footer>
 <script src="./js/jquery.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>
 <script src="./js/dashboard.js"></script>

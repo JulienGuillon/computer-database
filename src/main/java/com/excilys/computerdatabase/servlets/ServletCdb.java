@@ -64,8 +64,7 @@ public class ServletCdb extends HttpServlet {
             switch (request.getParameter("action")) {
             case "numOfPage":
                 if (request.getParameter("numOfPage") != null) {
-                    try {        doGet(request, response);
-
+                    try {
                         int numOfPage = Integer.parseInt(request.getParameter("numOfPage"));
                         computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.getPageNumber(numOfPage));
                     } catch (NumberFormatException e) {
@@ -96,6 +95,13 @@ public class ServletCdb extends HttpServlet {
             default:
                 // TODO Log..
                 break;
+            }
+        }
+        if (request.getParameter("numOfPage") != null) {
+            try {
+                int numOfPage = Integer.parseInt(request.getParameter("numOfPage"));
+                computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.getPageNumber(numOfPage));
+            } catch (NumberFormatException e) {
             }
         }
         if (pageToForward.equals("/views/dashboard.jsp")) {
