@@ -36,12 +36,12 @@ public enum CrudCompanyImpl implements CrudCompany {
 
     private LoadProperties loadProperties = LoadProperties.INSTANCE;
     
-    private Properties properties = loadProperties.getProperties();
+    private Properties properties;
 
     private static final String SELECT_COMPANIES = "SELECT_COMPANIES";
-    private static final String SELECT_COMPANY_BY_ID = "select * from company where id= ?;";
-    private static final String PAGINATION_COMPANIES = "select * from company limit ? offset ?;";
-    private static final String SELECT_COMPANIES_NUMBER = "select count(*) as number from company;";
+    private static final String SELECT_COMPANY_BY_ID = "SELECT_COMPANY_BY_ID";
+    private static final String PAGINATION_COMPANIES = "PAGINATION_COMPANIES";
+    private static final String SELECT_COMPANIES_NUMBER = "SELECT_COMPANIES_NUMBER";
 
     private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
     private Connection connection;
@@ -51,6 +51,7 @@ public enum CrudCompanyImpl implements CrudCompany {
     private CrudCompanyImpl() {
         loadProperties.setFileName("queries.properties");
         loadProperties.initLoadProperties();
+        properties = loadProperties.getProperties();
     }
     
     /**
@@ -118,9 +119,9 @@ public enum CrudCompanyImpl implements CrudCompany {
         Page page = new Page.Builder().build();
         try {
             PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty("PAGINATION_COMPANIES"));
-            preparedStatementPagination.setString(1, "%" + name + "%");
-            preparedStatementPagination.setInt(2, size);
-            preparedStatementPagination.setInt(3, offset);
+            //preparedStatementPagination.setString(1, "%" + name + "%");
+            preparedStatementPagination.setInt(1, size);
+            preparedStatementPagination.setInt(2, offset);
             resultSet = preparedStatementPagination.executeQuery();
             while (resultSet.next()) {
                 if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
@@ -141,13 +142,14 @@ public enum CrudCompanyImpl implements CrudCompany {
      * @see com.excilys.computerdatabase.dao.Crud#getNumber()
      */
     @Override
-    public int getNumber() {
+    public int getNumber(String filter) {
         connection = databaseManager.getConnection();
         ResultSet resultSet = null;
         int number = 0;
         try {
-            Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery("select count(*) as number from company;");
+            PreparedStatement statement = connection.prepareStatement(properties.getProperty(SELECT_COMPANIES_NUMBER));
+            statement.setString(1, "%" + filter + "%");
+            resultSet = statement.executeQuery();
             resultSet.next();
             number = resultSet.getInt("number");
         } catch (SQLException e) {

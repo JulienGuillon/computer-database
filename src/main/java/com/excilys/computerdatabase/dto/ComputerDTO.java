@@ -1,10 +1,5 @@
 package com.excilys.computerdatabase.dto;
 
-import java.time.LocalDate;
-
-import com.excilys.computerdatabase.entities.Company;
-import com.excilys.computerdatabase.entities.Company.Builder;
-
 /**
  * @author Guillon Julien
  *
@@ -16,7 +11,7 @@ public class ComputerDTO {
     private String introduced;
     private String discontinued;
     private String manufacturerName;
-    private int manufacturerId;
+    private long manufacturerId;
 
     /**
      * @return the id
@@ -86,6 +81,20 @@ public class ComputerDTO {
      */
     public void setManufacturerName(String manufacturerName) {
         this.manufacturerName = manufacturerName;
+    }
+    
+    /**
+     * @return the manufacturerId
+     */
+    public long getManufacturerId() {
+        return manufacturerId;
+    }
+    
+    /**
+     * @param manufacturerId the manufacturerId to set
+     */
+    public void setManufacturerId(long manufacturerId) {
+        this.manufacturerId = manufacturerId;
     }
     
     public static Builder builder() {

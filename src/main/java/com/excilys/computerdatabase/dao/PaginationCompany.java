@@ -26,16 +26,13 @@ public class PaginationCompany {
     private int pageIndex = 0;
     private int numberOfPages;
     private int numberOfCompanie;
-    private String name = "";
+    private String filter = "";
     private CrudCompany crudCompany;
 
-    private ResultSet resultSet;
-
-    private static final String PAGINATION_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id where computer.name like ? limit ? offset ?;";
 
     public PaginationCompany() {
         crudCompany = CrudCompanyImpl.INSTANCE;
-        this.numberOfCompanie = crudCompany.getNumber();
+        this.numberOfCompanie = crudCompany.getNumber(filter);
         this.numberOfPages = numberOfCompanie / size;
     }
     
@@ -43,7 +40,7 @@ public class PaginationCompany {
         List<Company> companies = new ArrayList<>();
         this.pageIndex = pageNumber;
         int offset = pageIndex * size;
-        companies = crudCompany.findUsingPagination(size, offset, name);        
+        companies = crudCompany.findUsingPagination(size, offset, filter);        
         return companies;
     }
     

@@ -31,7 +31,7 @@ public interface Crud<T> {
      *
      * @return number of row in the database
      */
-    int getNumber();
+    int getNumber(String filter);
     
     public List<T> findUsingPagination(int size, int offset, String name);
 }

@@ -1,15 +1,17 @@
 package com.excilys.computerdatabase.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.computerdatabase.exceptions.PersistenceException;
 import com.excilys.computerdatabase.utils.LoadProperties;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * @author Guillon Julien
@@ -28,33 +30,22 @@ public enum DatabaseManager {
 
     private Connection connection;
 
-    private static final String DRIVER = "db.driver";
-
-    private static final String URL = "db.url";
-
-    private static final String USER = "db.user";
-
-    private static final String PASSWORD = "db.password";
-
     private LoadProperties loadProperties = LoadProperties.INSTANCE;
     
     private Properties properties;
+    
+    private HikariDataSource dataSource;
 
     /**
      *
      */
     DatabaseManager() {
-
-        try {
-            
-            loadProperties.setFileName("database.properties");
-            loadProperties.initLoadProperties();
-            properties = loadProperties.getProperties();
-            Class.forName(properties.getProperty(DRIVER));
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        loadProperties.setFileName("hikari.properties");
+        loadProperties.initLoadProperties();
+        properties = loadProperties.getProperties();
+        HikariConfig config = new HikariConfig(properties);
+        config.setConnectionTestQuery("show tables");
+        dataSource = new HikariDataSource(config);
     }
 
     /**
@@ -63,8 +54,7 @@ public enum DatabaseManager {
      */
     public Connection getConnection() {
         try {
-            connection = DriverManager.getConnection(properties.getProperty(URL), properties.getProperty(USER),
-                    properties.getProperty(PASSWORD));
+            connection = dataSource.getConnection();
             connection.setAutoCommit(false);
         } catch (SQLException e) {
             throw new PersistenceException("Error on openning connection to database", e);

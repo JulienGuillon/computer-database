@@ -21,7 +21,6 @@ import com.excilys.computerdatabase.dao.PaginationComputer;
 import com.excilys.computerdatabase.dto.ComputerDTO;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.entities.Computer;
-import com.excilys.computerdatabase.services.ServiceCompany;
 import com.excilys.computerdatabase.services.ServiceComputer;
 import com.excilys.computerdatabase.utils.MapperComputerDTO;
 import com.excilys.computerdatabase.validations.DateValidation;
@@ -37,11 +36,7 @@ public class ServletCdb extends HttpServlet {
 
     private String pageToForward = "/views/dashboard.jsp";
 
-    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
-
-    private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
-    
-    private PaginationComputer paginationComputer = new PaginationComputer();
+    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;    
 
 
     /**
@@ -58,64 +53,78 @@ public class ServletCdb extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        PaginationComputer paginationComputer = getPage(request);
         List<ComputerDTO> computers = new ArrayList<>();
-
-        if (request.getParameter("action") != null) {
-            switch (request.getParameter("action")) {
-            case "numOfPage":
-                if (request.getParameter("numOfPage") != null) {
-                    try {
-                        int numOfPage = Integer.parseInt(request.getParameter("numOfPage"));
-                        computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.getPageNumber(numOfPage));
-                    } catch (NumberFormatException e) {
-                    }
-                }
-                break;
-            case "nextPage":
-                computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.nextPage());
-                break;
-            case "previousPage":
-                computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.previousPage());
-                break;
-            case "size":
-                if (request.getParameter("size") != null) {
-                    try {
-                        int size = Integer.parseInt(request.getParameter("size"));
-                        paginationComputer.setSize(size);
-                    } catch (NumberFormatException e) {
-                    }
-                }
-                break;
-            case "add":
-                List<Company> companies = MapperComputerDTO
-                        .optionalListOfCompaniesToListOfCompanies(serviceCompany.findAll());
-                request.getSession().setAttribute("companies", companies);
-                pageToForward = "/views/addComputer.jsp";
-                break;
-            default:
-                // TODO Log..
-                break;
+        int size = paginationComputer.getSize();
+        int numOfPage = 1;
+        String filter = "";
+        
+        if (request.getParameter("nextPage") != null) {
+            try {
+                numOfPage = Integer.parseInt(request.getParameter("numOfPage"));
+            } catch (NumberFormatException e) {
+            }
+        }
+        if (request.getParameter("previousPage") != null) {
+            try {
+                numOfPage = Integer.parseInt(request.getParameter("numOfPage"));
+            } catch (NumberFormatException e) {
             }
         }
         if (request.getParameter("numOfPage") != null) {
             try {
-                int numOfPage = Integer.parseInt(request.getParameter("numOfPage"));
-                computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.getPageNumber(numOfPage));
+                numOfPage = Integer.parseInt(request.getParameter("numOfPage"));
             } catch (NumberFormatException e) {
             }
         }
-        if (pageToForward.equals("/views/dashboard.jsp")) {
-            if (computers.isEmpty()) {
-                computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.getPageNumber(1));
+        if (request.getParameter("limit") != null) {
+            try {
+                size = Integer.parseInt(request.getParameter("limit"));
+                paginationComputer.setSize(size);
+            } catch (NumberFormatException e) {
             }
+        }
+        if (request.getParameter("filter") != null) {
+            try {
+                filter = request.getParameter("filter");
+                paginationComputer.setFilter(filter);
+            } catch (NumberFormatException e) {
+            }
+        }
+        if (request.getParameter("action") != null && request.getParameter("action").equals("add")) {
+            response.sendRedirect(request.getContextPath() + "/addComputer");
+            return;
+        }
+        if (request.getParameter("action") != null && request.getParameter("action").equals("edit")) {
+            request.getSession().setAttribute("id", Integer.parseInt(request.getParameter("id")));
+            response.sendRedirect(request.getContextPath() + "/editComputer");
+            return;
+        }
+        if (pageToForward.equals("/views/dashboard.jsp")) {
+            computers = MapperComputerDTO.computersToComputersDTO(paginationComputer.getPageNumber(numOfPage));
 
             request.getSession().setAttribute("computers", computers);
             request.getSession().setAttribute("numberOfPages", paginationComputer.getNumberOfPages());
             request.getSession().setAttribute("currentPage", paginationComputer.getPageIndex());
             request.getSession().setAttribute("numberOfComputers", paginationComputer.getNumberOfComputers());
+            request.getSession().setAttribute("size", size);
+            request.getSession().setAttribute("filter", filter);
+            RequestDispatcher rd = getServletContext().getRequestDispatcher(pageToForward);
+            rd.forward(request, response);            
         }
-        RequestDispatcher rd = getServletContext().getRequestDispatcher(pageToForward);
-        rd.forward(request, response);
+    }
+
+    /**
+     * @return
+     */
+    private PaginationComputer getPage(HttpServletRequest httpServletRequest) {
+        if (httpServletRequest.getSession().getAttribute("paginationComputer") == null) {
+            PaginationComputer paginationComputer = new PaginationComputer();
+            httpServletRequest.getSession().setAttribute("paginationComputer", paginationComputer);
+        }
+        
+        return (PaginationComputer) httpServletRequest.getSession().getAttribute("paginationComputer");
+        
     }
 
     /**
@@ -127,44 +136,14 @@ public class ServletCdb extends HttpServlet {
 
         if (request.getParameter("action") != null) {
             switch (request.getParameter("action")) {
-            case "add":
-                try {
-                    String name = request.getParameter("computerName");
-                    Computer.Builder computerBuilder = new Computer.Builder().withName(name);
-                    LocalDate introduced = null;
-                    if (DateValidation.formatIsValid(Optional.of(request.getParameter("introduced")))
-                            && StringUtils.isNotBlank(request.getParameter("introduced"))) {
-                        introduced = LocalDate.parse(request.getParameter("introduced"));
-                        computerBuilder.withIntroduced(introduced);
-                    }
-
-                    LocalDate discontinued = null;
-                    if (DateValidation.formatIsValid(Optional.of(request.getParameter("discontinued")))
-                            && StringUtils.isNotBlank(request.getParameter("discontinued"))) {
-                        if (DateValidation.dateIsValid(Optional.ofNullable(introduced),
-                                Optional.ofNullable(LocalDate.parse(request.getParameter("discontinued"))))) {
-                            discontinued = LocalDate.parse(request.getParameter("discontinued"));
-                            computerBuilder.withDiscontinued(discontinued);
-                        }
-                    }
-                    int companyId = Integer.parseInt(request.getParameter("companyId"));
-
-                    Company company = null;
-
-                    if (companyId != 0) {
-                        company = new Company.Builder().withId(companyId).build();
-                        computerBuilder.withManufacturer(company);
-                    }
-                    serviceComputer.create(Optional.ofNullable(computerBuilder.build()));
-
-                } catch (NumberFormatException e) {
-                    System.out.println(e);
-                }
-
+            case "delete":
+                String selection = request.getParameter("selection");
+                serviceComputer.delete(Long.parseLong(selection.split(",")[0])); 
+                response.sendRedirect(request.getContextPath() + "/computerdatabase");
+                break;
             default:
                 break;
             }
         }
-        doGet(request, response);
     }
 }

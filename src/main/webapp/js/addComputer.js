@@ -2,7 +2,7 @@
 $(function() {
 	$('#computerName').on('input', function() {
 		var input=$(this);
-		var regex = /^[a-z0-9\\s._ -]*$/;
+		var regex = /^[a-zA-Z0-9\\s._ -]*$/;
 		var is_valid = regex.test(input.val());
 		if(is_valid) {
 			$("#nameError").css("display", "none");
@@ -10,6 +10,7 @@ $(function() {
 		else {
 			$("#nameError").css("display", "inline");
 			$("#nameError").css("color", "red");
+			$("#validAdd").attr('disabled', 'disabled');
 		}
 	});
 	

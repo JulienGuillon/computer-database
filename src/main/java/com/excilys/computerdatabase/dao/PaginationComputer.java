@@ -24,16 +24,12 @@ public class PaginationComputer {
     private int pageIndex = 0;
     private int numberOfPages;
     private int numberOfComputers;
-    private String name = "";
+    private String filter = "";
     private CrudComputer crudComputer;
-
-    private ResultSet resultSet;
-
-    private static final String PAGINATION_COMPUTERS = "select computer.id, computer.name, introduced, discontinued, company_id, company.name company_name from computer left join company on company.id = computer.company_id where computer.name like ? limit ? offset ?;";
 
     public PaginationComputer() {
         crudComputer = CrudComputerImpl.INSTANCE;
-        this.numberOfComputers = crudComputer.getNumber();
+        this.numberOfComputers = crudComputer.getNumber(filter);
         this.numberOfPages = numberOfComputers / size;
     }
     
@@ -41,7 +37,7 @@ public class PaginationComputer {
         List<Computer> computers = new ArrayList<>();
         this.pageIndex = pageNumber;
         int offset = pageIndex * size;
-        computers = crudComputer.findUsingPagination(size, offset, name);        
+        computers = crudComputer.findUsingPagination(size, offset, filter);        
         return computers;
     }
     
@@ -87,7 +83,29 @@ public class PaginationComputer {
      * @return
      */
     public int getNumberOfComputers() {
+        this.numberOfComputers = crudComputer.getNumber(filter);
         return numberOfComputers;
+    }
+
+    /**
+     * @return
+     */
+    public int getSize() {
+        return size;
+    }
+    
+    /**
+     * @return the filter
+     */
+    public String getFilter() {
+        return filter;
+    }
+    
+    /**
+     * @param filter the filter to set
+     */
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 
 }

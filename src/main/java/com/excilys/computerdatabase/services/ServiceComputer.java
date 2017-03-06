@@ -56,8 +56,8 @@ public enum ServiceComputer {
      *
      * @return number of row in database
      */
-    public int getNumber() {
-        return crudComputer.getNumber();
+    public int getNumber(String filter) {
+        return crudComputer.getNumber(filter);
     }
 
     /**

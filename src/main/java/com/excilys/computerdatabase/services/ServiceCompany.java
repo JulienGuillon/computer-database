@@ -29,8 +29,8 @@ public enum ServiceCompany {
      *
      * @return number of row in database
      */
-    public int getNumber() {
-        return crudCompany.getNumber();
+    public int getNumber(String filter) {
+        return crudCompany.getNumber(filter);
     }
 
     /**

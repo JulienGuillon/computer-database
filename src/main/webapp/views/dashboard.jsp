@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib prefix="hashtag" tagdir="/WEB-INF/tags"%>
+<%@taglib prefix="page" tagdir="/WEB-INF/tags"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -17,7 +17,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="dashboard.jsp"> Application - Computer Database </a>
+            <a class="navbar-brand" href="computerdatabase"> Application - Computer Database </a>
         </div>
     </header>
 
@@ -30,18 +30,18 @@
                 <div class="pull-left">
                     <form id="searchForm" action="#" method="GET" class="form-inline">
 
-                        <input type="search" id="searchbox" name="filter" class="form-control" placeholder="Search name" value="${param.filter}" />
+                        <input type="search" id="searchbox" name="filter" class="form-control" placeholder="Search name"/>
                         <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary"/>
                     </form>
                 </div>
                 <div class="pull-right">
                     <a class="btn btn-success" id="addComputer" href="?action=add">Add Computer</a> 
-                    <a class="btn btn-default" id="editComputer" href="?action=edit" onclick="$.fn.toggleEditMode();">Edit</a>
+                    <a class="btn btn-default" id="editComputer" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
         </div>
 
-        <form id="deleteForm" action="#" method="POST">
+        <form id="deleteForm" action="?action=delete" method="POST">
             <input type="hidden" name="selection" value="">
         </form>
 
@@ -82,7 +82,7 @@
 				<c:forEach items="${computers}" var="computer">
 					<tr>
 						<td class="editMode"><input type="checkbox" name="cb"
-							class="cb" value="0"></td>
+							class="cb" value="${computer.id}"></td>
 						<td><a href="?action=edit&id=${computer.id}"
 							onclick="">${computer.name}</a></td>
 						<td>${computer.introduced}</td>
@@ -96,9 +96,9 @@
         </div>
     </section>
 
-<footer class="navbar-fixed-bottom">
-		<hashtag:pagination currentPage="${currentPage}" size="10" numbers="${numberOfComputers}" search="">
-		</hashtag:pagination>
+	<footer class="navbar-fixed-bottom">
+		<page:pagination currentPage="${currentPage}" size="${size}" numbers="${numberOfComputers}" filter="${filter}">
+		</page:pagination>
 	</footer>
 <script src="./js/jquery.min.js"></script>
 <script src="./js/bootstrap.min.js"></script>

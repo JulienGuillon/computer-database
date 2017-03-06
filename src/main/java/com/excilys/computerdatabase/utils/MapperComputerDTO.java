@@ -1,8 +1,11 @@
 package com.excilys.computerdatabase.utils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.excilys.computerdatabase.dto.ComputerDTO;
 import com.excilys.computerdatabase.entities.Company;
@@ -45,6 +48,25 @@ public class MapperComputerDTO {
         computerDTO.setDiscontinued(computer.getDiscontinued() == null ? "": computer.getDiscontinued().toString());
         computerDTO.setManufacturerName(computer.getManufacturer() == null ? "" : computer.getManufacturer().getName());
         return computerDTO;
+    }
+
+    /**
+     * @param optionalComputer
+     * @return
+     */
+    public static Optional<Computer> computerDtoToComputer(Optional<ComputerDTO> optionalComputer) {
+        if (optionalComputer.isPresent()) {
+            ComputerDTO computerDTO = optionalComputer.get();
+            Computer computer = new Computer.Builder().withId(computerDTO.getId())
+                    .withName(computerDTO.getName())
+                    .withIntroduced(StringUtils.isNotBlank(computerDTO.getIntroduced()) ? LocalDate.parse(computerDTO.getIntroduced()) : null)
+                    .withDiscontinued(StringUtils.isNotBlank(computerDTO.getDiscontinued()) ? LocalDate.parse(computerDTO.getDiscontinued()) : null)
+                    .withManufacturer(computerDTO.getManufacturerId() != 0 ? new Company.Builder().withId(computerDTO.getManufacturerId())
+                            .withName(computerDTO.getManufacturerName()).build() : null)
+                    .build();
+            return Optional.ofNullable(computer);
+        }
+        return Optional.empty();
     }
 
 }

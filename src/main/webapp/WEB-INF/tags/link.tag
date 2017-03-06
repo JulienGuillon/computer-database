@@ -11,9 +11,7 @@
 	description="Classes to apply at the link"%>
 <%@ attribute name="orderBy" type="java.lang.String"
 	description="Order by ascending or descending"%>
-<%@ attribute name="column" type="java.lang.String"
-	description="Column to order on"%>
-<%@ attribute name="search" type="java.lang.String"
+<%@ attribute name="filter" type="java.lang.String"
 	description="Pattern to search"%>
 <%@ attribute name="lang" type="java.lang.String"
 	description="Just for a change of locale"%>
@@ -21,10 +19,10 @@
 <c:choose>
 	<c:when test='${lang != null && lang != ""}'>
 		<a class="${classes}"
-			href="${target}?numOfPage=${numOfPage}&limit=${limit}&order=${orderBy}&column=${column}&search=${search}&lang=${lang}">${body}</a>
+			href="${target}?numOfPage=${numOfPage}&limit=${limit}&order=${orderBy}&filter=${filter}&lang=${lang}">${body}</a>
 	</c:when>
 	<c:otherwise>
 		<a class="${classes}"
-			href="${target}?numOfPage=${numOfPage}&limit=${limit}&order=${orderBy}&column=${column}&search=${search}">${body}</a>
+			href="${target}?numOfPage=${numOfPage}&limit=${limit}&order=${orderBy}&filter=${filter}">${body}</a>
 	</c:otherwise>
 </c:choose>

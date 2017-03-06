@@ -23,7 +23,7 @@
 		<webapp.username>admin</webapp.username>
 		<webapp.password>admin</webapp.password>
 		<jxr.version>2.3</jxr.version>
-		<mysql.version>6.0.5</mysql.version>
+		<mysql.version>5.1.40</mysql.version>
 		<slf4j.version>1.7.23</slf4j.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>1.9.5</mockito.version>
@@ -132,7 +132,6 @@
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
 		    <version>${mysql.version}</version>
-		    <scope>runtime</scope>
 		</dependency>
 
 
@@ -201,6 +200,11 @@
 		    <version>2.5.3</version>
 		</dependency>
 
+    <dependency>
+        <groupId>com.zaxxer</groupId>
+        <artifactId>HikariCP</artifactId>
+        <version>2.6.0</version>
+    </dependency>
 		
 			
 	</dependencies>
