@@ -25,6 +25,8 @@ public enum DetailsComputerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DetailsComputerController.class);
 
     private DetailsComputerView detailsComputerView;
+    
+    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
 
     /**
      * .
@@ -46,7 +48,7 @@ public enum DetailsComputerController {
      * @throws PersistenceException
      */
     public void findComputerById(int choice) {
-        Optional<Computer> computer = ServiceComputer.find(choice);
+        Optional<Computer> computer = serviceComputer.find(choice);
         if (computer.isPresent()) {
             detailsComputerView.displayDetails(computer);
         }
@@ -62,7 +64,7 @@ public enum DetailsComputerController {
             String operation = optionalOperation.get();
             switch (operation) {
             case "d":
-                ServiceComputer.delete(id);
+                serviceComputer.delete(id);
                 detailsComputerView.displayDeletion(id);
                 break;
             case "u":

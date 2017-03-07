@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.computerdatabase.dao.PaginationComputer;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.exceptions.PersistenceException;
 import com.excilys.computerdatabase.services.ServiceComputer;
@@ -28,6 +29,10 @@ public enum ListComputerController {
     private ListComputerView listComputerView;
 
     private int offset;
+    
+    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
+
+    private PaginationComputer paginationComputer = new PaginationComputer();
 
     /**
      *
@@ -64,11 +69,8 @@ public enum ListComputerController {
                 break;
             }
             if (!quit && offset >= 0) {
-                Optional<List<Optional<Computer>>> optionalComputers = ServiceComputer.findUsingPagination();
-                if (optionalComputers.isPresent()) {
-                    List<Optional<Computer>> computers = optionalComputers.get();
-                    listComputerView.displayComputers(computers);
-                }
+                List<Computer> computers = paginationComputer.getPageNumber(offset);
+                listComputerView.displayComputers(computers);
             }
         }
     }

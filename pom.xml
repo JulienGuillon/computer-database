@@ -23,7 +23,7 @@
 		<webapp.username>admin</webapp.username>
 		<webapp.password>admin</webapp.password>
 		<jxr.version>2.3</jxr.version>
-		<mysql.version>6.0.5</mysql.version>
+		<mysql.version>5.1.40</mysql.version>
 		<slf4j.version>1.7.23</slf4j.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>1.9.5</mockito.version>
@@ -31,6 +31,8 @@
 		<jstl.version>1.2</jstl.version>
 		<servlet.api.version>3.1.0</servlet.api.version>
 		<servlet.jsp.version>2.3.1</servlet.jsp.version>
+		<dbunit.version>2.5.3</dbunit.version>
+		<hikari.version>2.6.0</hikari.version>
     	<checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
   	</properties>
 	<build>
@@ -132,7 +134,6 @@
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
 		    <version>${mysql.version}</version>
-		    <scope>runtime</scope>
 		</dependency>
 
 
@@ -192,7 +193,21 @@
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>javax.servlet.jsp-api</artifactId>
 			<version>${servlet.jsp.version}</version>
-</dependency>
-			
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.dbunit/dbunit -->
+		<dependency>
+		    <groupId>org.dbunit</groupId>
+		    <artifactId>dbunit</artifactId>
+		    <version>${dbunit.version}</version>
+		</dependency>
+
+	    <dependency>
+	        <groupId>com.zaxxer</groupId>
+	        <artifactId>HikariCP</artifactId>
+	        <version>${hikari.version}</version>
+	    </dependency>
+	    
+	   	
 	</dependencies>
 </project>

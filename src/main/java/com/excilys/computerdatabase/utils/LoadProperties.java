@@ -21,18 +21,22 @@ public enum LoadProperties {
 
     private Properties properties;
 
-    private static final String FILENAME = "database.properties";
+    private String fileName;
 
+    private LoadProperties() {
+        
+    }
+    
     /**
      *
      */
-    LoadProperties() {
+    public void initLoadProperties() {
         properties = new Properties();
         InputStream input = null;
-        input = LoadProperties.class.getClassLoader().getResourceAsStream(FILENAME);
+        input = LoadProperties.class.getClassLoader().getResourceAsStream(fileName);
         if (input == null) {
-            LOGGER.error("Sorry, unable to find " + FILENAME);
-            throw new PersistenceException("Unable to acces config file at " + FILENAME);
+            LOGGER.error("Sorry, unable to find " + fileName);
+            throw new PersistenceException("Unable to acces config file at " + fileName);
         }
         try {
             properties.load(input);
@@ -44,6 +48,20 @@ public enum LoadProperties {
 
     public Properties getProperties() {
         return properties;
+    }
+    
+    /**
+     * @return the filename
+     */
+    public String getFileName() {
+        return fileName;
+    }
+    
+    /**
+     * @param fILENAME the fILENAME to set
+     */
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
 }
