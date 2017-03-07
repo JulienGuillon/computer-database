@@ -15,14 +15,4 @@
 	description="Pattern to search"%>
 <%@ attribute name="lang" type="java.lang.String"
 	description="Just for a change of locale"%>
-	
-<c:choose>
-	<c:when test='${lang != null && lang != ""}'>
-		<a class="${classes}"
-			href="${target}?numOfPage=${numOfPage}&limit=${limit}&order=${orderBy}&filter=${filter}&lang=${lang}">${body}</a>
-	</c:when>
-	<c:otherwise>
-		<a class="${classes}"
-			href="${target}?numOfPage=${numOfPage}&limit=${limit}&order=${orderBy}&filter=${filter}">${body}</a>
-	</c:otherwise>
-</c:choose>
+<a class="${classes}" href="${target}?numOfPage=${numOfPage}&limit=${limit}&filter=${filter}">${body}</a>

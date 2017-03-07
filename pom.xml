@@ -31,6 +31,8 @@
 		<jstl.version>1.2</jstl.version>
 		<servlet.api.version>3.1.0</servlet.api.version>
 		<servlet.jsp.version>2.3.1</servlet.jsp.version>
+		<dbunit.version>2.5.3</dbunit.version>
+		<hikari.version>2.6.0</hikari.version>
     	<checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
   	</properties>
 	<build>
@@ -197,15 +199,15 @@
 		<dependency>
 		    <groupId>org.dbunit</groupId>
 		    <artifactId>dbunit</artifactId>
-		    <version>2.5.3</version>
+		    <version>${dbunit.version}</version>
 		</dependency>
 
-    <dependency>
-        <groupId>com.zaxxer</groupId>
-        <artifactId>HikariCP</artifactId>
-        <version>2.6.0</version>
-    </dependency>
-		
-			
+	    <dependency>
+	        <groupId>com.zaxxer</groupId>
+	        <artifactId>HikariCP</artifactId>
+	        <version>${hikari.version}</version>
+	    </dependency>
+	    
+	   	
 	</dependencies>
 </project>
