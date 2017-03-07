@@ -69,17 +69,13 @@ public enum ListComputerView {
      *
      * @param computers :
      */
-    public void displayComputers(List<Optional<Computer>> computers) {
-        Computer computer;
-        for (Optional<Computer> optionalComputer : computers) {
-            if (optionalComputer.isPresent()) {
-                computer = optionalComputer.get();
-                System.out.format(ConstanteView.FORMAT_COMPUTER, computer.getId(), computer.getName(),
-                        (computer.getIntroduced() == null) ? "" : computer.getIntroduced(),
-                        (computer.getDiscontinued() == null) ? "" : computer.getDiscontinued(),
-                        (computer.getManufacturer() == null) ? "" : computer.getManufacturer().getName());
+    public void displayComputers(List<Computer> computers) {
+        for (Computer computer : computers) {
+            System.out.format(ConstanteView.FORMAT_COMPUTER, computer.getId(), computer.getName(),
+                    (computer.getIntroduced() == null) ? "" : computer.getIntroduced(),
+                    (computer.getDiscontinued() == null) ? "" : computer.getDiscontinued(),
+                    (computer.getManufacturer() == null) ? "" : computer.getManufacturer().getName());
             }
-        }
     }
 
 }

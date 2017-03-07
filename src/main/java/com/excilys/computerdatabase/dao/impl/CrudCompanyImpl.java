@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,12 @@ import org.slf4j.LoggerFactory;
 import com.excilys.computerdatabase.dao.DatabaseManager;
 import com.excilys.computerdatabase.dao.CrudCompany;
 import com.excilys.computerdatabase.dao.mapper.MapperCompany;
+
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.exceptions.PersistenceException;
-import com.excilys.computerdatabase.utils.PageCompany;
+import com.excilys.computerdatabase.services.ServiceCompany;
+import com.excilys.computerdatabase.utils.LoadProperties;
+import com.excilys.computerdatabase.utils.Page;
 
 /**
  * @author Guillon Julien
@@ -30,15 +34,26 @@ public enum CrudCompanyImpl implements CrudCompany {
     INSTANCE;
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudCompanyImpl.class);
 
-    private static final String SELECT_COMPANIES = "select * from company;";
-    private static final String SELECT_COMPANY_BY_ID = "select * from company where id= ?;";
-    private static final String PAGINATION_COMPANIES = "select * from company limit ? offset ?;";
-    private static final String SELECT_COMPANIES_NUMBER = "select count(*) as number from company;";
+    private LoadProperties loadProperties = LoadProperties.INSTANCE;
+    
+    private Properties properties;
+
+    private static final String SELECT_COMPANIES = "SELECT_COMPANIES";
+    private static final String SELECT_COMPANY_BY_ID = "SELECT_COMPANY_BY_ID";
+    private static final String PAGINATION_COMPANIES = "PAGINATION_COMPANIES";
+    private static final String SELECT_COMPANIES_NUMBER = "SELECT_COMPANIES_NUMBER";
 
     private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
     private Connection connection;
     private ResultSet resultSet;
+    private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
 
+    private CrudCompanyImpl() {
+        loadProperties.setFileName("queries.properties");
+        loadProperties.initLoadProperties();
+        properties = loadProperties.getProperties();
+    }
+    
     /**
      * @param id :
      * @return an Optional Company
@@ -47,7 +62,7 @@ public enum CrudCompanyImpl implements CrudCompany {
         Optional<Company> company = null;
         connection = databaseManager.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_COMPANY_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty("SELECT_COMPANY_BY_ID"));
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -76,7 +91,7 @@ public enum CrudCompanyImpl implements CrudCompany {
         List<Optional<Company>> companies = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery(SELECT_COMPANIES);
+            resultSet = statement.executeQuery(properties.getProperty("SELECT_COMPANIES"));
             while (resultSet.next()) {
                 if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
                     companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)));
@@ -92,34 +107,34 @@ public enum CrudCompanyImpl implements CrudCompany {
         }
         return Optional.ofNullable(companies);
     }
-
+    
     /**
-     * Find companies using pagination from database.
+     * Find companies using pagination on database.
      *
-     * @return an Optional list of companies
+     * @return an Optional list of company
      */
-    public Optional<List<Optional<Company>>> findUsingPagination() {
+    public List<Company> findUsingPagination(int size, int offset, String name) {
+        List<Company> companies = new ArrayList<>();
         connection = databaseManager.getConnection();
-        List<Optional<Company>> companies = new ArrayList<>();
+        Page page = new Page.Builder().build();
         try {
-            PreparedStatement preparedStatementPagination = connection.prepareStatement(PAGINATION_COMPANIES);
-            preparedStatementPagination.setInt(1, PageCompany.getSize());
-            preparedStatementPagination.setInt(2, PageCompany.getOffset());
+            PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty("PAGINATION_COMPANIES"));
+            //preparedStatementPagination.setString(1, "%" + name + "%");
+            preparedStatementPagination.setInt(1, size);
+            preparedStatementPagination.setInt(2, offset);
             resultSet = preparedStatementPagination.executeQuery();
             while (resultSet.next()) {
                 if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
-                    companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)));
+                    companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).get());
                 }
             }
+
         } catch (SQLException e) {
             throw new PersistenceException(e);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         } finally {
             databaseManager.closeConnection();
         }
-        return Optional.of(companies);
+        return companies;
     }
 
 
@@ -127,13 +142,14 @@ public enum CrudCompanyImpl implements CrudCompany {
      * @see com.excilys.computerdatabase.dao.Crud#getNumber()
      */
     @Override
-    public int getNumber() {
+    public int getNumber(String filter) {
         connection = databaseManager.getConnection();
         ResultSet resultSet = null;
         int number = 0;
         try {
-            Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery(SELECT_COMPANIES_NUMBER);
+            PreparedStatement statement = connection.prepareStatement(properties.getProperty(SELECT_COMPANIES_NUMBER));
+            statement.setString(1, "%" + filter + "%");
+            resultSet = statement.executeQuery();
             resultSet.next();
             number = resultSet.getInt("number");
         } catch (SQLException e) {
