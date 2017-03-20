@@ -3,8 +3,6 @@ package com.excilys.computerdatabase.dao;
 import java.util.List;
 import java.util.Optional;
 
-import com.excilys.computerdatabase.entities.Computer;
-
 /**
  * @author Guillon Julien
  *
@@ -29,9 +27,17 @@ public interface Crud<T> {
 
     /**
      *
+     * @param filter :
      * @return number of row in the database
      */
     int getNumber(String filter);
-    
-    public List<T> findUsingPagination(int size, int offset, String name);
+
+    /**
+     *
+     * @param size : number of element to show by page
+     * @param offset :
+     * @param name : string used to filter result
+     * @return a list of elements
+     */
+    List<T> findUsingPagination(int size, int offset, String name);
 }
