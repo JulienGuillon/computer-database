@@ -23,7 +23,6 @@ import com.excilys.computerdatabase.exceptions.PersistenceException;
 import com.excilys.computerdatabase.services.ServiceCompany;
 import com.excilys.computerdatabase.services.ServiceComputer;
 import com.excilys.computerdatabase.utils.LoadProperties;
-import com.excilys.computerdatabase.utils.Page;
 
 /**
  * @author Guillon Julien
@@ -39,9 +38,9 @@ public enum CrudComputerImpl implements CrudComputer {
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudComputerImpl.class);
 
     private LoadProperties loadProperties = LoadProperties.INSTANCE;
-    
+
     private Properties properties;
-    
+
     private static final String SELECT_COMPUTERS = "SELECT_COMPUTERS";
     private static final String SELECT_COMPUTER_BY_ID = "SELECT_COMPUTER_BY_ID";
     private static final String PAGINATION_COMPUTERS = "PAGINATION_COMPUTERS";
@@ -52,7 +51,7 @@ public enum CrudComputerImpl implements CrudComputer {
 
     private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
 
-    private CrudComputerImpl() {
+    CrudComputerImpl() {
         loadProperties.setFileName("queries.properties");
         loadProperties.initLoadProperties();
         properties = loadProperties.getProperties();
@@ -66,15 +65,14 @@ public enum CrudComputerImpl implements CrudComputer {
     public Optional<Computer> find(long id) {
         Optional<Computer> computer = Optional.empty();
         try (Connection connection = databaseManager.getConnection();
-        		PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty(SELECT_COMPUTER_BY_ID));) {
+                PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty(SELECT_COMPUTER_BY_ID));) {
             preparedStatement.setLong(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery())
-            {
-	            if (resultSet.next()) {
-	                computer = MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet));
-	            } else {
-	                LOGGER.info("Id doesn't match any computer in database");
-	            }
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    computer = MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet));
+                } else {
+                    LOGGER.info("Id doesn't match any computer in database");
+                }
             }
         } catch (SQLException e) {
             throw new PersistenceException(e);
@@ -85,24 +83,22 @@ public enum CrudComputerImpl implements CrudComputer {
     /**
      * @return an Optional ResultSet
      */
-    public Optional<List<Optional<Computer>>> findAll() {
-        
-        List<Optional<Computer>> computers = new ArrayList<>();
-        try(Connection connection = databaseManager.getConnection();
-        		Statement statement = connection.createStatement();
-        		) {
-        	try (ResultSet resultSet = statement.executeQuery(properties.getProperty(SELECT_COMPUTERS))) {
-        		
-	            while (resultSet.next()) {
-	                if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
-	                    computers.add(MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)));
-	                }
-	            }
-        	}
+    public List<Computer> findAll() {
+
+        List<Computer> computers = new ArrayList<>();
+        try (Connection connection = databaseManager.getConnection();
+                Statement statement = connection.createStatement();) {
+            try (ResultSet resultSet = statement.executeQuery(properties.getProperty(SELECT_COMPUTERS))) {
+                while (resultSet.next()) {
+                    if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
+                        computers.add(MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).get());
+                    }
+                }
+            }
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
-        return Optional.ofNullable(computers);
+        return computers;
     }
 
     /**
@@ -111,10 +107,9 @@ public enum CrudComputerImpl implements CrudComputer {
      */
     public void delete(long id) {
 
-        
-        try(Connection connection = databaseManager.getConnection();
-            PreparedStatement preparedStatementDelete = connection.prepareStatement(properties.getProperty(DELETE_COMPUTER_BY_ID));
-        		) {
+
+        try (Connection connection = databaseManager.getConnection();
+            PreparedStatement preparedStatementDelete = connection.prepareStatement(properties.getProperty(DELETE_COMPUTER_BY_ID));) {
             preparedStatementDelete.setLong(1, id);
             if (preparedStatementDelete.executeUpdate() == 0) {
                 LOGGER.info("This id doesn't match any computer in database");
@@ -136,10 +131,9 @@ public enum CrudComputerImpl implements CrudComputer {
         if (optionalComputer.isPresent()) {
             Computer computer = optionalComputer.get();
             long id = computer.getId();
-            
+
             try (Connection connection = databaseManager.getConnection();
-                PreparedStatement preparedStatementUpdate = connection.prepareStatement(properties.getProperty(UPDATE_COMPUTER_BY_ID));
-            		) {
+                PreparedStatement preparedStatementUpdate = connection.prepareStatement(properties.getProperty(UPDATE_COMPUTER_BY_ID));) {
                 preparedStatementUpdate.setString(1, computer.getName());
                 preparedStatementUpdate.setDate(2,
                         computer.getIntroduced() != null ? Date.valueOf(computer.getIntroduced()) : null);
@@ -154,7 +148,7 @@ public enum CrudComputerImpl implements CrudComputer {
                 preparedStatementUpdate.execute();
                 databaseManager.commit();
             } catch (SQLException e) {
-            	databaseManager.rollback();
+                databaseManager.rollback();
                 throw new PersistenceException(e);
             }
         }
@@ -169,10 +163,9 @@ public enum CrudComputerImpl implements CrudComputer {
     public void create(Optional<Computer> optionalComputer) {
         if (optionalComputer.isPresent()) {
             Computer computer = optionalComputer.get();
-            
+
             try (Connection connection = databaseManager.getConnection();
-                PreparedStatement preparedStatementInsert = connection.prepareStatement(properties.getProperty(INSERT_COMPUTER));
-            		) {
+                PreparedStatement preparedStatementInsert = connection.prepareStatement(properties.getProperty(INSERT_COMPUTER));) {
                 preparedStatementInsert.setString(1, computer.getName());
                 preparedStatementInsert.setObject(2, computer.getIntroduced());
                 preparedStatementInsert.setObject(3, computer.getDiscontinued());
@@ -197,19 +190,18 @@ public enum CrudComputerImpl implements CrudComputer {
      */
     public List<Computer> findUsingPagination(int size, int offset, String name) {
         List<Computer> computers = new ArrayList<>();
-        
+
         try (Connection connection = databaseManager.getConnection();
-            PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty(PAGINATION_COMPUTERS));
-        		) {
+            PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty(PAGINATION_COMPUTERS));) {
             preparedStatementPagination.setString(1, "%" + name + "%");
             preparedStatementPagination.setInt(2, size);
             preparedStatementPagination.setInt(3, offset);
             try (ResultSet resultSet = preparedStatementPagination.executeQuery();) {
-	            while (resultSet.next()) {
-	                if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
-	                    computers.add(MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).get());
-	                }
-	            }
+                while (resultSet.next()) {
+                    if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
+                        computers.add(MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).get());
+                    }
+                }
             }
         } catch (SQLException e) {
             throw new PersistenceException(e);
@@ -225,15 +217,14 @@ public enum CrudComputerImpl implements CrudComputer {
      */
     @Override
     public int getNumber(String filter) {
-        
+
         int number = 0;
         try (Connection connection = databaseManager.getConnection();
-        		PreparedStatement statement = connection.prepareStatement(properties.getProperty(SELECT_COMPUTERS_NUMBER));
-        		){
+                PreparedStatement statement = connection.prepareStatement(properties.getProperty(SELECT_COMPUTERS_NUMBER));){
             statement.setString(1, "%" + filter + "%");
             try (ResultSet resultSet = statement.executeQuery();) {
-            	resultSet.next();
-            	number = resultSet.getInt("number");
+                resultSet.next();
+                number = resultSet.getInt("number");
             }
         } catch (SQLException e) {
             throw new PersistenceException(e);

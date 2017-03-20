@@ -14,7 +14,7 @@ import com.excilys.computerdatabase.entities.Computer;
  */
 public enum ServiceComputer {
     INSTANCE;
-    
+
     private CrudComputer crudComputer = CrudComputerImpl.INSTANCE;
 
     /**
@@ -30,7 +30,7 @@ public enum ServiceComputer {
      *
      * @return all computers in an optional list
      */
-    public Optional<List<Optional<Computer>>> findAll() {
+    public List<Computer> findAll() {
         return crudComputer.findAll();
     }
 
@@ -53,7 +53,7 @@ public enum ServiceComputer {
     }
 
     /**
-     *
+     * @param filter :
      * @return number of row in database
      */
     public int getNumber(String filter) {

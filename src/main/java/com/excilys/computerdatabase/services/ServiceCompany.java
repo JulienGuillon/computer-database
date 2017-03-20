@@ -14,19 +14,19 @@ import com.excilys.computerdatabase.entities.Company;
  */
 public enum ServiceCompany {
     INSTANCE;
-    
+
     private CrudCompany crudCompany = CrudCompanyImpl.INSTANCE;
 
     /**
      *
      * @return all companies in an optional list of optional company
      */
-    public Optional<List<Optional<Company>>> findAll() {
+    public List<Company> findAll() {
         return crudCompany.findAll();
     }
 
     /**
-     *
+     * @param filter :
      * @return number of row in database
      */
     public int getNumber(String filter) {

@@ -23,10 +23,12 @@ public enum LoadProperties {
 
     private String fileName;
 
-    private LoadProperties() {
-        
+    /**
+     *
+     */
+    LoadProperties() {
     }
-    
+
     /**
      *
      */
@@ -49,16 +51,16 @@ public enum LoadProperties {
     public Properties getProperties() {
         return properties;
     }
-    
+
     /**
      * @return the filename
      */
     public String getFileName() {
         return fileName;
     }
-    
+
     /**
-     * @param fILENAME the fILENAME to set
+     * @param fileName the fileName to set
      */
     public void setFileName(String fileName) {
         this.fileName = fileName;

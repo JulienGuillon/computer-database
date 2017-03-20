@@ -23,7 +23,7 @@ public interface Crud<T> {
      *
      * @return a ResultSet
      */
-    Optional<List<Optional<T>>> findAll();
+    List<T> findAll();
 
     /**
      *

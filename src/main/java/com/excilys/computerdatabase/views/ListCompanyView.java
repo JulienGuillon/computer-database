@@ -69,7 +69,7 @@ public enum ListCompanyView {
     /**
      * Display view that show list of companies.
      *
-     * @param optionalCompanies :
+     * @param companies :
      */
     public void displayCompanies(List<Company> companies) {
         displayHeader();

@@ -4,6 +4,7 @@ package com.excilys.computerdatabase.dao;
 import java.util.ArrayList;
 import java.util.List;
 import com.excilys.computerdatabase.dao.impl.CrudCompanyImpl;
+import com.excilys.computerdatabase.entities.Company;
 
 /**
  * @author Guillon Julien

@@ -18,14 +18,24 @@ import com.excilys.computerdatabase.entities.Computer;
  */
 public class MapperComputerDTO {
 
+    /**
+     *
+     * @param computers :
+     * @return a list of computer dto
+     */
     public static List<ComputerDTO> computersToComputersDTO(List<Computer> computers) {
         List<ComputerDTO> computersDTO = new ArrayList<>();
         for (Computer computer : computers) {
-            computersDTO.add(computerToComputerDTO(computer));   
+            computersDTO.add(computerToComputerDTO(computer));
         }
         return computersDTO;
     }
 
+    /**
+     *
+     * @param optionalCompanies :
+     * @return a list of company
+     */
     public static List<Company> optionalListOfCompaniesToListOfCompanies(
             Optional<List<Optional<Company>>> optionalCompanies) {
         List<Company> companies = new ArrayList<>();
@@ -40,19 +50,24 @@ public class MapperComputerDTO {
         return companies;
     }
 
+    /**
+     *
+     * @param computer :
+     * @return a computer dto
+     */
     public static ComputerDTO computerToComputerDTO(Computer computer) {
         ComputerDTO computerDTO = new ComputerDTO();
         computerDTO.setId(computer.getId());
         computerDTO.setName(computer.getName());
-        computerDTO.setIntroduced(computer.getIntroduced() == null ? "": computer.getIntroduced().toString());
-        computerDTO.setDiscontinued(computer.getDiscontinued() == null ? "": computer.getDiscontinued().toString());
+        computerDTO.setIntroduced(computer.getIntroduced() == null ? "" : computer.getIntroduced().toString());
+        computerDTO.setDiscontinued(computer.getDiscontinued() == null ? "" : computer.getDiscontinued().toString());
         computerDTO.setManufacturerName(computer.getManufacturer() == null ? "" : computer.getManufacturer().getName());
         return computerDTO;
     }
 
     /**
-     * @param optionalComputer
-     * @return
+     * @param optionalComputer :
+     * @return an optional computer
      */
     public static Optional<Computer> computerDtoToComputer(Optional<ComputerDTO> optionalComputer) {
         if (optionalComputer.isPresent()) {

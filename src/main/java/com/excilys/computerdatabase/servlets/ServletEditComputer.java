@@ -62,8 +62,7 @@ public class ServletEditComputer extends HttpServlet {
         if (optionalComputer.isPresent()) {
             computerDto = MapperComputerDTO.computerToComputerDTO(optionalComputer.get());
             request.getSession().setAttribute("computer", computerDto);
-            List<Company> companies = MapperComputerDTO
-                    .optionalListOfCompaniesToListOfCompanies(serviceCompany.findAll());
+            List<Company> companies = serviceCompany.findAll();
             request.getSession().setAttribute("companies", companies);
             RequestDispatcher rd = getServletContext().getRequestDispatcher(pageToForward);
             rd.forward(request, response);

@@ -52,7 +52,7 @@ public class ServletAddComputer extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        List<Company> companies = MapperComputerDTO.optionalListOfCompaniesToListOfCompanies(serviceCompany.findAll());
+        List<Company> companies = serviceCompany.findAll();
         request.getSession().setAttribute("companies", companies);
         RequestDispatcher rd = getServletContext().getRequestDispatcher(pageToForward);
         rd.forward(request, response);

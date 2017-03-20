@@ -36,7 +36,7 @@ public class ServletCdb extends HttpServlet {
 
     private String pageToForward = "/views/dashboard.jsp";
 
-    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;    
+    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
 
 
     /**

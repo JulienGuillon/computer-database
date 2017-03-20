@@ -21,7 +21,6 @@ import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.exceptions.PersistenceException;
 import com.excilys.computerdatabase.services.ServiceCompany;
 import com.excilys.computerdatabase.utils.LoadProperties;
-import com.excilys.computerdatabase.utils.Page;
 
 /**
  * @author Guillon Julien
@@ -35,7 +34,7 @@ public enum CrudCompanyImpl implements CrudCompany {
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudCompanyImpl.class);
 
     private LoadProperties loadProperties = LoadProperties.INSTANCE;
-    
+
     private Properties properties;
 
     private static final String SELECT_COMPANIES = "SELECT_COMPANIES";
@@ -48,12 +47,12 @@ public enum CrudCompanyImpl implements CrudCompany {
     private ResultSet resultSet;
     private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
 
-    private CrudCompanyImpl() {
+    CrudCompanyImpl() {
         loadProperties.setFileName("queries.properties");
         loadProperties.initLoadProperties();
         properties = loadProperties.getProperties();
     }
-    
+
     /**
      * @param id :
      * @return an Optional Company
@@ -86,15 +85,15 @@ public enum CrudCompanyImpl implements CrudCompany {
     /**
      * @return an Optional ResultSet
      */
-    public Optional<List<Optional<Company>>> findAll() {
+    public List<Company> findAll() {
         connection = databaseManager.getConnection();
-        List<Optional<Company>> companies = new ArrayList<>();
+        List<Company> companies = new ArrayList<>();
         try {
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(properties.getProperty("SELECT_COMPANIES"));
             while (resultSet.next()) {
                 if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
-                    companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)));
+                    companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).get());
                 }
             }
         } catch (SQLException e) {
@@ -105,9 +104,9 @@ public enum CrudCompanyImpl implements CrudCompany {
         } finally {
             databaseManager.closeConnection();
         }
-        return Optional.ofNullable(companies);
+        return companies;
     }
-    
+
     /**
      * Find companies using pagination on database.
      *
@@ -116,7 +115,6 @@ public enum CrudCompanyImpl implements CrudCompany {
     public List<Company> findUsingPagination(int size, int offset, String name) {
         List<Company> companies = new ArrayList<>();
         connection = databaseManager.getConnection();
-        Page page = new Page.Builder().build();
         try {
             PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty("PAGINATION_COMPANIES"));
             //preparedStatementPagination.setString(1, "%" + name + "%");
