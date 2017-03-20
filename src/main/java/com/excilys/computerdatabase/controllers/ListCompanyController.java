@@ -7,11 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.excilys.computerdatabase.dao.PaginationCompany;
-import com.excilys.computerdatabase.dao.PaginationComputer;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.exceptions.PersistenceException;
 import com.excilys.computerdatabase.services.ServiceCompany;
-import com.excilys.computerdatabase.services.ServiceComputer;
 import com.excilys.computerdatabase.views.ListCompanyView;
 
 /**
@@ -31,7 +29,7 @@ public enum ListCompanyController {
     private ListCompanyView listCompanyView;
 
     private int offset;
-    
+
     private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
 
     private PaginationCompany paginationCompany = new PaginationCompany();

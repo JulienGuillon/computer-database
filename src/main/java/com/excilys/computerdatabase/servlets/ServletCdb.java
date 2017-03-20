@@ -138,7 +138,10 @@ public class ServletCdb extends HttpServlet {
             switch (request.getParameter("action")) {
             case "delete":
                 String selection = request.getParameter("selection");
-                serviceComputer.delete(Long.parseLong(selection.split(",")[0])); 
+                String[] selections = selection.split(",");
+                for (String select : selections) {                    
+                    serviceComputer.delete(Long.parseLong(select)); 
+                }
                 response.sendRedirect(request.getContextPath() + "/computerdatabase");
                 break;
             default:

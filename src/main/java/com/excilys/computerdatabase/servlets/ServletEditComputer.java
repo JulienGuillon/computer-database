@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +25,9 @@ import com.excilys.computerdatabase.utils.MapperComputerDTO;
 import com.excilys.computerdatabase.validations.DateValidation;
 
 /**
- * Servlet implementation class ServletEditComputer
+ * Servlet implementation class ServletEditComputer.
  */
-@WebServlet(name="/ServletEditComputer", urlPatterns = "/editComputer")
+@WebServlet(name = "/ServletEditComputer", urlPatterns = "/editComputer")
 public class ServletEditComputer extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -39,9 +38,9 @@ public class ServletEditComputer extends HttpServlet {
     private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
 
     private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
-    
+
     private ComputerDTO computerDto;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -51,10 +50,12 @@ public class ServletEditComputer extends HttpServlet {
     }
 
     /**
-     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     *      response)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         int id = (int) request.getSession().getAttribute("id");
         request.getSession().setAttribute("id", id);
         Optional<Computer> optionalComputer = serviceComputer.find(id);
@@ -70,42 +71,42 @@ public class ServletEditComputer extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/computerdatabase");
     }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    try {
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
             String name = request.getParameter("computerName");
             if (StringUtils.isNotBlank(name)) {
                 computerDto.setName(name);
             }
             LocalDate introduced = null;
-            if (DateValidation.formatIsValid(Optional.of(request.getParameter("introduced")))
-                    && StringUtils.isNotBlank(request.getParameter("introduced"))) {
+            if (DateValidation.formatIsValid(Optional.of(request.getParameter("introduced")))) {
                 computerDto.setIntroduced(request.getParameter("introduced"));
             }
-        
+
             LocalDate discontinued = null;
-            if (DateValidation.formatIsValid(Optional.of(request.getParameter("discontinued")))
-                    && StringUtils.isNotBlank(request.getParameter("discontinued"))) {
+            if (DateValidation.formatIsValid(Optional.of(request.getParameter("discontinued")))) {
                 if (DateValidation.dateIsValid(Optional.ofNullable(introduced),
                         Optional.ofNullable(LocalDate.parse(request.getParameter("discontinued"))))) {
                     computerDto.setDiscontinued(request.getParameter("discontinued"));
                 }
             }
             int companyId = Integer.parseInt(request.getParameter("companyId"));
-        
+
             if (companyId != 0) {
                 computerDto.setManufacturerId(Long.parseLong(request.getParameter("companyId")));
             }
             Optional<Computer> computer = MapperComputerDTO.computerDtoToComputer(Optional.ofNullable(computerDto));
             serviceComputer.update(computer);
-        
+
         } catch (NumberFormatException e) {
             System.out.println(e);
         }
 
         response.sendRedirect(request.getContextPath() + "/computerdatabase");
-	}
+    }
 
 }
