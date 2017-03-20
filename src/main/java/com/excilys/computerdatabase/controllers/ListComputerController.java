@@ -29,7 +29,7 @@ public enum ListComputerController {
     private ListComputerView listComputerView;
 
     private int offset;
-    
+
     private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
 
     private PaginationComputer paginationComputer = new PaginationComputer();

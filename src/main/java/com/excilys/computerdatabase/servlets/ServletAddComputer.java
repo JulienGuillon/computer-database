@@ -24,11 +24,11 @@ import com.excilys.computerdatabase.utils.MapperComputerDTO;
 import com.excilys.computerdatabase.validations.DateValidation;
 
 /**
- * Servlet implementation class ServletAddComputer
+ * Servlet implementation class ServletAddComputer.
  */
 @WebServlet(name = "/ServletAddComputer", urlPatterns = "/addComputer")
 public class ServletAddComputer extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServletAddComputer.class);
 
@@ -37,8 +37,7 @@ public class ServletAddComputer extends HttpServlet {
     private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
 
     private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
-	    
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -47,21 +46,25 @@ public class ServletAddComputer extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    List<Company> companies = MapperComputerDTO
-                .optionalListOfCompaniesToListOfCompanies(serviceCompany.findAll());
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<Company> companies = MapperComputerDTO.optionalListOfCompaniesToListOfCompanies(serviceCompany.findAll());
         request.getSession().setAttribute("companies", companies);
-	    RequestDispatcher rd = getServletContext().getRequestDispatcher(pageToForward);
-        rd.forward(request, response);	}
+        RequestDispatcher rd = getServletContext().getRequestDispatcher(pageToForward);
+        rd.forward(request, response);
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	    
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         try {
             String name = request.getParameter("computerName");
             Computer.Builder computerBuilder = new Computer.Builder().withName(name);
@@ -71,7 +74,7 @@ public class ServletAddComputer extends HttpServlet {
                 introduced = LocalDate.parse(request.getParameter("introduced"));
                 computerBuilder.withIntroduced(introduced);
             }
-        
+
             LocalDate discontinued = null;
             if (DateValidation.formatIsValid(Optional.of(request.getParameter("discontinued")))
                     && StringUtils.isNotBlank(request.getParameter("discontinued"))) {
@@ -82,20 +85,20 @@ public class ServletAddComputer extends HttpServlet {
                 }
             }
             int companyId = Integer.parseInt(request.getParameter("companyId"));
-        
+
             Company company = null;
-        
+
             if (companyId != 0) {
                 company = new Company.Builder().withId(companyId).build();
                 computerBuilder.withManufacturer(company);
             }
             serviceComputer.create(Optional.ofNullable(computerBuilder.build()));
-        
+
         } catch (NumberFormatException e) {
             System.out.println(e);
         }
 
-	    response.sendRedirect(request.getContextPath() + "/computerdatabase");
-	}
+        response.sendRedirect(request.getContextPath() + "/computerdatabase");
+    }
 
 }

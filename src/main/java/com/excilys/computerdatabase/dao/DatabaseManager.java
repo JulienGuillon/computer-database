@@ -31,9 +31,9 @@ public enum DatabaseManager {
     private Connection connection;
 
     private LoadProperties loadProperties = LoadProperties.INSTANCE;
-    
+
     private Properties properties;
-    
+
     private HikariDataSource dataSource;
 
     /**

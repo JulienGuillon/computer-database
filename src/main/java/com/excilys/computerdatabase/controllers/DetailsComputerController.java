@@ -25,7 +25,7 @@ public enum DetailsComputerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DetailsComputerController.class);
 
     private DetailsComputerView detailsComputerView;
-    
+
     private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
 
     /**
