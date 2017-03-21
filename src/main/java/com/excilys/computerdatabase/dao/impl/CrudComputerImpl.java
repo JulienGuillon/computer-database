@@ -14,27 +14,32 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.computerdatabase.dao.DatabaseManager;
 import com.excilys.computerdatabase.dao.CrudComputer;
 import com.excilys.computerdatabase.dao.mapper.MapperComputer;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.exceptions.PersistenceException;
-import com.excilys.computerdatabase.services.ServiceCompany;
-import com.excilys.computerdatabase.services.ServiceComputer;
+import com.excilys.computerdatabase.springConfig.AppConfig;
 import com.excilys.computerdatabase.utils.LoadProperties;
 
 /**
  * @author Guillon Julien
  *
- *         20 févr. 2017
+ * 20 févr. 2017
  *
- *         Allows to make all the crud operation on entity computer
+ * Allows to make all the crud operation on entity computer
  */
 
-public enum CrudComputerImpl implements CrudComputer {
-    INSTANCE;
-
+@Repository
+public class CrudComputerImpl implements CrudComputer {
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudComputerImpl.class);
 
     private LoadProperties loadProperties = LoadProperties.INSTANCE;
@@ -48,10 +53,11 @@ public enum CrudComputerImpl implements CrudComputer {
     private static final String UPDATE_COMPUTER_BY_ID = "UPDATE_COMPUTER_BY_ID";
     private static final String INSERT_COMPUTER = "INSERT_COMPUTER";
     private static final String SELECT_COMPUTERS_NUMBER = "SELECT_COMPUTERS_NUMBER";
+ 
+    @Autowired
+    private DatabaseManager databaseManager;
 
-    private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
-
-    CrudComputerImpl() {
+    public CrudComputerImpl() {
         loadProperties.setFileName("queries.properties");
         loadProperties.initLoadProperties();
         properties = loadProperties.getProperties();
@@ -220,8 +226,8 @@ public enum CrudComputerImpl implements CrudComputer {
 
         int number = 0;
         try (Connection connection = databaseManager.getConnection();
-                PreparedStatement statement = connection.prepareStatement(properties.getProperty(SELECT_COMPUTERS_NUMBER));){
-            statement.setString(1, "%" + filter + "%");
+                PreparedStatement statement = connection.prepareStatement(properties.getProperty(SELECT_COMPUTERS_NUMBER));) {
+            statement.setString(1, "%" + filter);
             try (ResultSet resultSet = statement.executeQuery();) {
                 resultSet.next();
                 number = resultSet.getInt("number");

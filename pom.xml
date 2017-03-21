@@ -4,11 +4,11 @@
 
   <groupId>com.excilys.computerdatabase</groupId>
   <artifactId>cdb</artifactId>
-  <version>0.0.5</version>
+  <version>0.0.5-SNAPSHOT</version>
   <packaging>war</packaging>
   
   <name>cdb</name>
-  <url>http://maven.apache.org</url>
+  <url></url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,6 +33,7 @@
 		<servlet.jsp.version>2.3.1</servlet.jsp.version>
 		<dbunit.version>2.5.3</dbunit.version>
 		<hikari.version>2.6.0</hikari.version>
+		<spring.version>4.3.7.RELEASE</spring.version>
     	<checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
   	</properties>
 	<build>
@@ -70,25 +71,25 @@
 				<version>${checkstyle.version}</version>
 			</plugin>
 			
-			  <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>${war.version}</version>
-            <configuration>
-                <failOnMissingWebXml>false</failOnMissingWebXml>
-            </configuration>
-        </plugin>
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-war-plugin</artifactId>
+	            <version>${war.version}</version>
+	            <configuration>
+	                <failOnMissingWebXml>false</failOnMissingWebXml>
+	            </configuration>
+	        </plugin>
         
-        <plugin>
-        <groupId>org.apache.tomcat.maven</groupId>
-        <artifactId>tomcat7-maven-plugin</artifactId>
-        <version>${tomcat.version}</version>
-        <configuration>
-          <url>${url.webapp}</url>
-          <username>${webapp.username}</username>
-          <password>${webapp.password}</password>
-        </configuration>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>${tomcat.version}</version>
+				<configuration>
+					<url>${url.webapp}</url>
+					<username>${webapp.username}</username>
+					<password>${webapp.password}</password>
+				</configuration>
+			</plugin>
         
  
         
@@ -129,7 +130,6 @@
 	</reporting>
 	
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
@@ -137,7 +137,6 @@
 		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
 		<dependency>
 		    <groupId>org.slf4j</groupId>
 		    <artifactId>slf4j-api</artifactId>
@@ -151,7 +150,6 @@
 	   </dependency>
 
 
-		<!-- Dependances de Tests -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -160,7 +158,6 @@
 		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
 		<dependency>
 		    <groupId>org.mockito</groupId>
 		    <artifactId>mockito-all</artifactId>
@@ -168,14 +165,12 @@
 		    <scope>test</scope>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
 		    <version>${commons.version}</version>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
 		<dependency>
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>jstl</artifactId>
@@ -188,14 +183,13 @@
 			<version>${servlet.api.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->
+
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>javax.servlet.jsp-api</artifactId>
 			<version>${servlet.jsp.version}</version>
 		</dependency>
 		
-		<!-- https://mvnrepository.com/artifact/org.dbunit/dbunit -->
 		<dependency>
 		    <groupId>org.dbunit</groupId>
 		    <artifactId>dbunit</artifactId>
@@ -208,6 +202,38 @@
 	        <version>${hikari.version}</version>
 	    </dependency>
 	    
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-core</artifactId>
+		    <version>${spring.version}</version>
+		</dependency>
+	   	
+	   	<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context</artifactId>
+		    <version>${spring.version}</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-test</artifactId>
+		    <version>${spring.version}</version>
+		</dependency>
+
+		
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-tx</artifactId>
+		    <version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-web</artifactId>
+		    <version>${spring.version}</version>
+		</dependency>
+				
+
 	   	
 	</dependencies>
 </project>

@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.exceptions.PersistenceException;
 import com.excilys.computerdatabase.utils.LoadProperties;
@@ -18,13 +19,12 @@ import com.zaxxer.hikari.HikariDataSource;
  *
  * 20 févr. 2017
  *
- * Singleton that consist to manage all operations concerning database
- * connection
+ * Singleton that consist to manage all operations concerning database connection
  *
  */
 
-public enum DatabaseManager {
-    INSTANCE;
+@Repository
+public class DatabaseManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManager.class);
 
@@ -39,7 +39,7 @@ public enum DatabaseManager {
     /**
      *
      */
-    DatabaseManager() {
+    public DatabaseManager() {
         loadProperties.setFileName("hikari.properties");
         loadProperties.initLoadProperties();
         properties = loadProperties.getProperties();

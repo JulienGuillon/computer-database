@@ -16,12 +16,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.excilys.computerdatabase.dao.PaginationComputer;
 import com.excilys.computerdatabase.dto.ComputerDTO;
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.entities.Computer;
 import com.excilys.computerdatabase.services.ServiceComputer;
+import com.excilys.computerdatabase.springConfig.AppConfig;
 import com.excilys.computerdatabase.utils.MapperComputerDTO;
 import com.excilys.computerdatabase.validations.DateValidation;
 
@@ -29,14 +33,20 @@ import com.excilys.computerdatabase.validations.DateValidation;
  * Servlet implementation class servletCdb.
  */
 @WebServlet(name = "CdbServlet", urlPatterns = "/computerdatabase")
-public class ServletCdb extends HttpServlet {
+public class ServletCdb extends AbstractServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServletCdb.class);
 
     private static final long serialVersionUID = 1L;
 
     private String pageToForward = "/views/dashboard.jsp";
 
-    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
+    private ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    
+    private ServiceComputer serviceComputer = context.getBean(ServiceComputer.class);
+ 
+    private PaginationComputer paginationComputer = context.getBean(PaginationComputer.class);
+    
+    //private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
 
 
     /**
@@ -44,7 +54,6 @@ public class ServletCdb extends HttpServlet {
      */
     public ServletCdb() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -53,10 +62,10 @@ public class ServletCdb extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        PaginationComputer paginationComputer = getPage(request);
+        //PaginationComputer paginationComputer = getPage(request);
         List<ComputerDTO> computers = new ArrayList<>();
         int size = paginationComputer.getSize();
-        int numOfPage = 1;
+        int numOfPage = 0;
         String filter = "";
         
         if (request.getParameter("nextPage") != null) {
@@ -116,17 +125,15 @@ public class ServletCdb extends HttpServlet {
 
     /**
      * @return
-     */
+     **/
     private PaginationComputer getPage(HttpServletRequest httpServletRequest) {
         if (httpServletRequest.getSession().getAttribute("paginationComputer") == null) {
             PaginationComputer paginationComputer = new PaginationComputer();
             httpServletRequest.getSession().setAttribute("paginationComputer", paginationComputer);
-        }
-        
+        }   
         return (PaginationComputer) httpServletRequest.getSession().getAttribute("paginationComputer");
-        
     }
-
+    
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
      *      response)

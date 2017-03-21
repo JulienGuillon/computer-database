@@ -3,6 +3,10 @@ package com.excilys.computerdatabase.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.excilys.computerdatabase.dao.impl.CrudCompanyImpl;
 import com.excilys.computerdatabase.entities.Company;
 
@@ -11,6 +15,8 @@ import com.excilys.computerdatabase.entities.Company;
  *
  * 3 mars 2017
  */
+
+@Repository
 public class PaginationCompany {
 
     private int size = 10;
@@ -18,11 +24,15 @@ public class PaginationCompany {
     private int numberOfPages;
     private int numberOfCompanie;
     private String filter = "";
-    private CrudCompany crudCompany;
+    
+    @Autowired
+    private CrudCompanyImpl crudCompany;
 
 
     public PaginationCompany() {
-        crudCompany = CrudCompanyImpl.INSTANCE;
+    }
+    
+    public void init() {
         this.numberOfCompanie = crudCompany.getNumber(filter);
         this.numberOfPages = numberOfCompanie / size;
     }

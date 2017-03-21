@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.excilys.computerdatabase.dto.ComputerDTO;
 import com.excilys.computerdatabase.entities.Company;
@@ -35,9 +36,11 @@ public class ServletEditComputer extends HttpServlet {
 
     private String pageToForward = "/views/editComputer.jsp";
 
-    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
+    @Autowired
+    private ServiceComputer serviceComputer;
 
-    private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
+    @Autowired
+    private ServiceCompany serviceCompany;
 
     private ComputerDTO computerDto;
 
@@ -46,7 +49,6 @@ public class ServletEditComputer extends HttpServlet {
      */
     public ServletEditComputer() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     /**
@@ -76,34 +78,29 @@ public class ServletEditComputer extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            String name = request.getParameter("computerName");
-            if (StringUtils.isNotBlank(name)) {
-                computerDto.setName(name);
-            }
-            LocalDate introduced = null;
-            if (DateValidation.formatIsValid(Optional.of(request.getParameter("introduced")))) {
-                computerDto.setIntroduced(request.getParameter("introduced"));
-            }
-
-            LocalDate discontinued = null;
-            if (DateValidation.formatIsValid(Optional.of(request.getParameter("discontinued")))) {
-                if (DateValidation.dateIsValid(Optional.ofNullable(introduced),
-                        Optional.ofNullable(LocalDate.parse(request.getParameter("discontinued"))))) {
-                    computerDto.setDiscontinued(request.getParameter("discontinued"));
-                }
-            }
-            int companyId = Integer.parseInt(request.getParameter("companyId"));
-
-            if (companyId != 0) {
-                computerDto.setManufacturerId(Long.parseLong(request.getParameter("companyId")));
-            }
-            Optional<Computer> computer = MapperComputerDTO.computerDtoToComputer(Optional.ofNullable(computerDto));
-            serviceComputer.update(computer);
-
-        } catch (NumberFormatException e) {
-            System.out.println(e);
+        String name = request.getParameter("computerName");
+        if (StringUtils.isNotBlank(name)) {
+            computerDto.setName(name);
         }
+        LocalDate introduced = null;
+        if (DateValidation.formatIsValid(Optional.of(request.getParameter("introduced")))) {
+            computerDto.setIntroduced(request.getParameter("introduced"));
+        }
+
+        LocalDate discontinued = null;
+        if (DateValidation.formatIsValid(Optional.of(request.getParameter("discontinued")))) {
+            if (DateValidation.dateIsValid(Optional.ofNullable(introduced),
+                    Optional.ofNullable(LocalDate.parse(request.getParameter("discontinued"))))) {
+                computerDto.setDiscontinued(request.getParameter("discontinued"));
+            }
+        }
+        int companyId = Integer.parseInt(request.getParameter("companyId"));
+
+        if (companyId != 0) {
+            computerDto.setManufacturerId(Long.parseLong(request.getParameter("companyId")));
+        }
+        Optional<Computer> computer = MapperComputerDTO.computerDtoToComputer(Optional.ofNullable(computerDto));
+        serviceComputer.update(computer);
 
         response.sendRedirect(request.getContextPath() + "/computerdatabase");
     }

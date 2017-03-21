@@ -26,7 +26,7 @@ public enum DetailsComputerController {
 
     private DetailsComputerView detailsComputerView;
 
-    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
+    private ServiceComputer serviceComputer = new ServiceComputer();
 
     /**
      * .

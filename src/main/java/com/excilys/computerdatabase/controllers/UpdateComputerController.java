@@ -21,7 +21,7 @@ public enum UpdateComputerController {
 
     private UpdateComputerView updateComputerView;
 
-    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
+    private ServiceComputer serviceComputer = new ServiceComputer();
 
     /**
      *

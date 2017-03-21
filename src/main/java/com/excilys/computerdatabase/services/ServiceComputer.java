@@ -3,6 +3,9 @@ package com.excilys.computerdatabase.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.computerdatabase.dao.CrudComputer;
 import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
 import com.excilys.computerdatabase.entities.Computer;
@@ -12,10 +15,12 @@ import com.excilys.computerdatabase.entities.Computer;
  *
  * 2017-03-02
  */
-public enum ServiceComputer {
-    INSTANCE;
 
-    private CrudComputer crudComputer = CrudComputerImpl.INSTANCE;
+@Service
+public class ServiceComputer {
+
+    @Autowired
+    private CrudComputerImpl crudComputer;
 
     /**
      *

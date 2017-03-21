@@ -30,7 +30,7 @@ public enum ListCompanyController {
 
     private int offset;
 
-    private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
+    private ServiceCompany serviceCompany = new ServiceCompany();
 
     private PaginationCompany paginationCompany = new PaginationCompany();
 

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.entities.Computer;
@@ -34,9 +35,11 @@ public class ServletAddComputer extends HttpServlet {
 
     private String pageToForward = "/views/addComputer.jsp";
 
-    private ServiceComputer serviceComputer = ServiceComputer.INSTANCE;
+    @Autowired
+    private ServiceComputer serviceComputer;
 
-    private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
+    @Autowired
+    private ServiceCompany serviceCompany;
 
     /**
      * @see HttpServlet#HttpServlet()

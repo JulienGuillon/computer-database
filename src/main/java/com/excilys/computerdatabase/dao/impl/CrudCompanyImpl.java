@@ -12,6 +12,8 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.dao.DatabaseManager;
 import com.excilys.computerdatabase.dao.CrudCompany;
@@ -19,7 +21,6 @@ import com.excilys.computerdatabase.dao.mapper.MapperCompany;
 
 import com.excilys.computerdatabase.entities.Company;
 import com.excilys.computerdatabase.exceptions.PersistenceException;
-import com.excilys.computerdatabase.services.ServiceCompany;
 import com.excilys.computerdatabase.utils.LoadProperties;
 
 /**
@@ -29,8 +30,10 @@ import com.excilys.computerdatabase.utils.LoadProperties;
  *
  *         Allows to make all the crud operation on entity company
  */
-public enum CrudCompanyImpl implements CrudCompany {
-    INSTANCE;
+
+@Repository
+public class CrudCompanyImpl implements CrudCompany {
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudCompanyImpl.class);
 
     private LoadProperties loadProperties = LoadProperties.INSTANCE;
@@ -42,12 +45,13 @@ public enum CrudCompanyImpl implements CrudCompany {
     private static final String PAGINATION_COMPANIES = "PAGINATION_COMPANIES";
     private static final String SELECT_COMPANIES_NUMBER = "SELECT_COMPANIES_NUMBER";
 
-    private DatabaseManager databaseManager = DatabaseManager.INSTANCE;
+    @Autowired
+    private DatabaseManager databaseManager;
     private Connection connection;
     private ResultSet resultSet;
-    private ServiceCompany serviceCompany = ServiceCompany.INSTANCE;
+    
 
-    CrudCompanyImpl() {
+    public CrudCompanyImpl() {
         loadProperties.setFileName("queries.properties");
         loadProperties.initLoadProperties();
         properties = loadProperties.getProperties();

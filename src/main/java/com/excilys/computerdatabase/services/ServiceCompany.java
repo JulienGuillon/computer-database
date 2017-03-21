@@ -3,6 +3,9 @@ package com.excilys.computerdatabase.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.excilys.computerdatabase.dao.CrudCompany;
 import com.excilys.computerdatabase.dao.impl.CrudCompanyImpl;
 import com.excilys.computerdatabase.entities.Company;
@@ -12,11 +15,12 @@ import com.excilys.computerdatabase.entities.Company;
  *
  * 2017-03-02
  */
-public enum ServiceCompany {
-    INSTANCE;
 
-    private CrudCompany crudCompany = CrudCompanyImpl.INSTANCE;
+@Service
+public class ServiceCompany {
 
+    @Autowired
+    private CrudCompanyImpl crudCompany;
     /**
      *
      * @return all companies in an optional list of optional company
