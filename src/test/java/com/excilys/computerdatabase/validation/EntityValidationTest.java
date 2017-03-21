@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import com.excilys.computerdatabase.validations.EntityValidation;
+import com.excilys.computerdatabase.validation.EntityValidation;
 
 /**
  * @author Guillon Julien

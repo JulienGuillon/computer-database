@@ -6,9 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.excilys.computerdatabase.dao.CrudComputer;
-import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
-import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.entity.Computer;
+import com.excilys.computerdatabase.pagination.Page;
+import com.excilys.computerdatabase.persistence.CrudComputer;
+import com.excilys.computerdatabase.persistence.impl.CrudComputerImpl;
 
 /**
  * @author jlng
@@ -73,5 +74,9 @@ public class ServiceComputer {
      */
     public Optional<Computer> find(long id) {
         return crudComputer.find(id);
+    }
+    
+    public Page<Computer> getPage(Page<Computer> page) {
+    	return crudComputer.getPage(page);
     }
 }

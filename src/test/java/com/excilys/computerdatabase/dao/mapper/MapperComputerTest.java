@@ -12,7 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.excilys.computerdatabase.entities.Computer;
+import com.excilys.computerdatabase.entity.Computer;
+import com.excilys.computerdatabase.persistence.mapper.MapperComputer;
 
 /**
  * @author Guillon Julien

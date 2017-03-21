@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import com.excilys.computerdatabase.validations.DateValidation;
+import com.excilys.computerdatabase.validation.DateValidation;
 
 /**
  * @author Guillon Julien
