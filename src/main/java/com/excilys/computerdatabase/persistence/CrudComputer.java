@@ -1,5 +1,7 @@
 package com.excilys.computerdatabase.persistence;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 import com.excilys.computerdatabase.entity.Computer;
@@ -14,8 +16,9 @@ public interface CrudComputer extends Crud<Computer> {
     /**
      *
      * @param computer :
+     * @throws SQLException 
      */
-    void create(Optional<Computer> computer);
+    void create(Connection connection, Optional<Computer> computer) throws SQLException;
 
     /**
      *
@@ -27,10 +30,10 @@ public interface CrudComputer extends Crud<Computer> {
      *
      * @param computer :
      */
-    void update(Optional<Computer> computer);
+    void update(Connection connection, Optional<Computer> computer) throws SQLException;
 
     /**
      * @param selection
      */
-    void multipleDelete(String selection);
+    void multipleDelete(Connection connection, String selection) throws SQLException;
 }

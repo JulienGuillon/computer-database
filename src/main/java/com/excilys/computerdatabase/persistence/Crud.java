@@ -1,5 +1,7 @@
 package com.excilys.computerdatabase.persistence;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,12 +34,13 @@ public interface Crud<T> {
      * @param filter :
      * @return number of row in the database
      */
-    int getNumber(String filter);
+    int getNumber(Connection connection, String filter) throws SQLException;
 
     /**
      *
      * @param page
      * @return
+     * @throws SQLException 
      */
-    Page<T> getPage(Page<T> page);
+    Page<T> getPage(Connection connection, Page<T> page) throws SQLException;
 }

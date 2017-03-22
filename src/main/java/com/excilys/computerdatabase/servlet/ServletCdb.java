@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.excilys.computerdatabase.dto.ComputerDTO;
 import com.excilys.computerdatabase.dto.mapper.MapperComputerDto;
@@ -27,17 +29,19 @@ import com.excilys.computerdatabase.springConfig.AppConfig;
 /**
  * Servlet implementation class servletCdb.
  */
+
 @WebServlet(name = "CdbServlet", urlPatterns = "/computerdatabase")
-public class ServletCdb extends HttpServlet {
+public class ServletCdb extends AbstractServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServletCdb.class);
 
     private static final long serialVersionUID = 1L;
 
     private String pageToForward = "/views/dashboard.jsp";
 
-    private ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+   // private ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     
-    private ServiceComputerImpl serviceComputer = context.getBean(ServiceComputerImpl.class);
+    @Autowired
+    private ServiceComputerImpl serviceComputer; // = context.getBean(ServiceComputerImpl.class);
      
     private Page<Computer> page;
     /**

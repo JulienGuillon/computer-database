@@ -115,8 +115,7 @@ public class CrudCompanyImpl implements CrudCompany {
      * @see com.excilys.computerdatabase.dao.Crud#getNumber()
      */
     @Override
-    public int getNumber(String filter) {
-        connection = databaseManager.getConnection();
+    public int getNumber(Connection connection, String filter) {
         ResultSet resultSet = null;
         int number = 0;
         try {
@@ -137,12 +136,12 @@ public class CrudCompanyImpl implements CrudCompany {
 	 * @see com.excilys.computerdatabase.persistence.Crud#getPage(com.excilys.computerdatabase.pagination.Page)
 	 */
 	@Override
-	public Page<Company> getPage(Page<Company> page) {
+	public Page<Company> getPage(Connection connection, Page<Company> page) {
 		 List<Company> companies = new ArrayList<>();
 	        
 	        page.getPage();
 	        
-	        try (Connection connection = databaseManager.getConnection();
+	        try (
 	                PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty(PAGINATION_COMPANIES));) {
 	                preparedStatementPagination.setInt(1, page.getElementsByPage());
 	                preparedStatementPagination.setInt(2, page.getPage());

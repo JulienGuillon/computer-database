@@ -35,7 +35,7 @@ public class ServiceCompanyImpl implements ServiceCompany {
      * @return number of row in database
      */
     public int getNumber(String filter) {
-        return crudCompany.getNumber(filter);
+        return 0;//crudCompany.getNumber(filter);
     }
 
     /**
@@ -48,6 +48,6 @@ public class ServiceCompanyImpl implements ServiceCompany {
     }
     
     public Page<Company> getPage(Page<Company> page) {
-    	return crudCompany.getPage(page);
+    	return null;//crudCompany.getPage(page);
     } 
 }
