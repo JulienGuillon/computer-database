@@ -17,7 +17,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="computerdatabase"> Application - Computer Database </a>
+            <a id="homePage" class="navbar-brand" href="computerdatabase"> Application - Computer Database </a>
         </div>
     </header>
 
@@ -80,15 +80,9 @@
                 
                 <tbody id="results">
 				<c:forEach items="${computers}" var="computer">
-					<tr>
-						<td class="editMode"><input type="checkbox" name="cb"
-							class="cb" value="${computer.id}"></td>
-						<td><a href="?action=edit&id=${computer.id}"
-							onclick="">${computer.name}</a></td>
-						<td>${computer.introduced}</td>
-						<td>${computer.discontinued}</td>
-						<td>${computer.manufacturerName}</td>
-					</tr>
+					<page:edit computerId="${computer.id}" computerName="${computer.name}" computerIntroduced="${computer.introduced}"
+					computerDiscontinued="${computer.discontinued}" computerManufacturerName="${computer.manufacturerName}">
+					</page:edit>
 				</c:forEach>
 
                 </tbody>
