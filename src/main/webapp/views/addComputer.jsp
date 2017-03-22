@@ -15,7 +15,7 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="computerdatabase"> Application - Computer Database </a>
+            <a id="homePage" class="navbar-brand" href="computerdatabase"> Application - Computer Database </a>
         </div>
     </header>
     

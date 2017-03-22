@@ -82,21 +82,21 @@ public class ComputerDTO {
     public void setManufacturerName(String manufacturerName) {
         this.manufacturerName = manufacturerName;
     }
-    
+
     /**
      * @return the manufacturerId
      */
     public long getManufacturerId() {
         return manufacturerId;
     }
-    
+
     /**
      * @param manufacturerId the manufacturerId to set
      */
     public void setManufacturerId(long manufacturerId) {
         this.manufacturerId = manufacturerId;
     }
-    
+
     public static Builder builder() {
         return new Builder();
     }
@@ -111,37 +111,37 @@ public class ComputerDTO {
         public Builder() {
             computerDto = new ComputerDTO();
         }
-     
+
         public Builder withId(int id) {
             this.computerDto.id = id;
             return this;
         }
-        
+
         public Builder withName(String name) {
             this.computerDto.name = name;
             return this;
         }
-        
+
         public Builder withIntroduced(String introduced) {
             this.computerDto.introduced = introduced;
             return this;
         }
-        
+
         public Builder withDiscontinued(String discontinued) {
             this.computerDto.discontinued = discontinued;
             return this;
         }
-        
+
         public Builder withManufacturerId(int manufacturerId) {
             this.computerDto.manufacturerId = manufacturerId;
             return this;
         }
-        
+
         public Builder withManufacturerName(String manufacturerName) {
             this.computerDto.manufacturerName =  manufacturerName;
             return this;
         }
-        
+
         public ComputerDTO build() {
             return computerDto;
         }

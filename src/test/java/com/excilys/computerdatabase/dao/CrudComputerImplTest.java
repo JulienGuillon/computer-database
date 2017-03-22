@@ -12,9 +12,9 @@ import org.dbunit.operation.DatabaseOperation;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.excilys.computerdatabase.dao.impl.CrudComputerImpl;
-import com.excilys.computerdatabase.entities.Computer;
-import com.excilys.computerdatabase.utils.LoadProperties;
+import com.excilys.computerdatabase.entity.Computer;
+import com.excilys.computerdatabase.persistence.impl.CrudComputerImpl;
+import com.excilys.computerdatabase.util.LoadProperties;
 
 
 /**
