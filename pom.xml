@@ -8,7 +8,7 @@
   <packaging>war</packaging>
   
   <name>cdb</name>
-  <url></url>
+  <url>https://github.com/JulienGuillon/computer-database</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -34,6 +34,8 @@
 		<dbunit.version>2.5.3</dbunit.version>
 		<hikari.version>2.6.0</hikari.version>
 		<spring.version>4.3.7.RELEASE</spring.version>
+		<webdrivermanager.version>1.6.1</webdrivermanager.version>
+		<selenium.version>3.3.1</selenium.version>
     	<checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
   	</properties>
 	<build>
@@ -214,12 +216,6 @@
 		    <version>${spring.version}</version>
 		</dependency>
 
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-test</artifactId>
-		    <version>${spring.version}</version>
-		</dependency>
-
 		
 		<dependency>
 		    <groupId>org.springframework</groupId>
@@ -233,7 +229,17 @@
 		    <version>${spring.version}</version>
 		</dependency>
 				
-
+		<dependency>
+		    <groupId>org.seleniumhq.selenium</groupId>
+		    <artifactId>selenium-java</artifactId>
+		    <version>${selenium.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>${webdrivermanager.version}</version>
+		</dependency>
 	   	
 	</dependencies>
 </project>

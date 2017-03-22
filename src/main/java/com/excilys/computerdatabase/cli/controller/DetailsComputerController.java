@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.excilys.computerdatabase.cli.view.DetailsComputerView;
 import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
-import com.excilys.computerdatabase.services.ServiceComputer;
+import com.excilys.computerdatabase.service.impl.ServiceComputerImpl;
 
 /**
  * @author Guillon Julien
@@ -26,7 +26,7 @@ public enum DetailsComputerController {
 
     private DetailsComputerView detailsComputerView;
 
-    private ServiceComputer serviceComputer = new ServiceComputer();
+    private ServiceComputerImpl serviceComputer = new ServiceComputerImpl();
 
     /**
      * .

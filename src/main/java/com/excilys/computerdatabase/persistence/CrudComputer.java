@@ -28,4 +28,9 @@ public interface CrudComputer extends Crud<Computer> {
      * @param computer :
      */
     void update(Optional<Computer> computer);
+
+    /**
+     * @param selection
+     */
+    void multipleDelete(String selection);
 }

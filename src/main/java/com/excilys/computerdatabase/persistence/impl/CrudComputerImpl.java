@@ -15,19 +15,13 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.pagination.Page;
 import com.excilys.computerdatabase.persistence.CrudComputer;
 import com.excilys.computerdatabase.persistence.DatabaseManager;
 import com.excilys.computerdatabase.persistence.mapper.MapperComputer;
-import com.excilys.computerdatabase.springConfig.AppConfig;
 import com.excilys.computerdatabase.util.LoadProperties;
 
 /**
@@ -40,7 +34,7 @@ import com.excilys.computerdatabase.util.LoadProperties;
 
 @Repository
 public class CrudComputerImpl implements CrudComputer {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CrudComputerImpl.class);
 
     private LoadProperties loadProperties = LoadProperties.INSTANCE;
@@ -54,7 +48,8 @@ public class CrudComputerImpl implements CrudComputer {
     private static final String UPDATE_COMPUTER_BY_ID = "UPDATE_COMPUTER_BY_ID";
     private static final String INSERT_COMPUTER = "INSERT_COMPUTER";
     private static final String SELECT_COMPUTERS_NUMBER = "SELECT_COMPUTERS_NUMBER";
- 
+    private static final String DELETE_COMPUTERS = "DELETE_COMPUTERS";
+
     @Autowired
     private DatabaseManager databaseManager;
 
@@ -209,19 +204,19 @@ public class CrudComputerImpl implements CrudComputer {
         }
         return number;
         }
-    
+
     @Override
     public Page<Computer> getPage(Page<Computer> page) {
 
         List<Computer> computers = new ArrayList<>();
-        
+
         page.getPage();
-        
+
         try (Connection connection = databaseManager.getConnection();
                 PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty(PAGINATION_COMPUTERS));) {
                 preparedStatementPagination.setString(1, "%" + page.getFilter());
                 preparedStatementPagination.setInt(2, page.getElementsByPage());
-                preparedStatementPagination.setInt(3, page.getPage());
+                preparedStatementPagination.setInt(3, page.getPage()*page.getElementsByPage());
                 try (ResultSet resultSet = preparedStatementPagination.executeQuery();) {
                     while (resultSet.next()) {
                         if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
@@ -233,11 +228,21 @@ public class CrudComputerImpl implements CrudComputer {
                 }
             } catch (SQLException e) {
                 throw new PersistenceException(e);
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
             }
         return page;
+    }
+    
+    @Override
+    public void multipleDelete(String selection) {
+        try (Connection connection = databaseManager.getConnection();
+                PreparedStatement preparedStatementDelete = connection.prepareStatement(properties.getProperty(DELETE_COMPUTERS));) {
+            preparedStatementDelete.setString(1, selection);
+            preparedStatementDelete.execute();
+            databaseManager.commit();
+        } catch (SQLException e) {
+            databaseManager.rollback();
+            throw new PersistenceException(e);
+        }
     }
 
 }

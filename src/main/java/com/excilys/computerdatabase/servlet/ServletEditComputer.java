@@ -15,14 +15,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.excilys.computerdatabase.dto.ComputerDTO;
 import com.excilys.computerdatabase.dto.mapper.MapperComputerDto;
 import com.excilys.computerdatabase.entity.Company;
 import com.excilys.computerdatabase.entity.Computer;
-import com.excilys.computerdatabase.services.ServiceCompany;
-import com.excilys.computerdatabase.services.ServiceComputer;
+import com.excilys.computerdatabase.service.ServiceCompany;
+import com.excilys.computerdatabase.service.ServiceComputer;
+import com.excilys.computerdatabase.service.impl.ServiceCompanyImpl;
+import com.excilys.computerdatabase.service.impl.ServiceComputerImpl;
+import com.excilys.computerdatabase.springConfig.AppConfig;
 import com.excilys.computerdatabase.validation.DateValidation;
 
 /**
@@ -35,12 +39,12 @@ public class ServletEditComputer extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServletEditComputer.class);
 
     private String pageToForward = "/views/editComputer.jsp";
+    
+    private ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    
+    private ServiceComputer serviceComputer = context.getBean(ServiceComputerImpl.class);
 
-    @Autowired
-    private ServiceComputer serviceComputer;
-
-    @Autowired
-    private ServiceCompany serviceCompany;
+    private ServiceCompany serviceCompany = context.getBean(ServiceCompanyImpl.class);
 
     private ComputerDTO computerDto;
 

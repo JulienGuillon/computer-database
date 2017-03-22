@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.services;
+package com.excilys.computerdatabase.service.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.excilys.computerdatabase.entity.Company;
-import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.pagination.Page;
 import com.excilys.computerdatabase.persistence.CrudCompany;
-import com.excilys.computerdatabase.persistence.impl.CrudCompanyImpl;
+import com.excilys.computerdatabase.service.ServiceCompany;
 
 /**
  * @author jlng
@@ -19,10 +18,10 @@ import com.excilys.computerdatabase.persistence.impl.CrudCompanyImpl;
  */
 
 @Service
-public class ServiceCompany {
+public class ServiceCompanyImpl implements ServiceCompany {
 
     @Autowired
-    private CrudCompanyImpl crudCompany;
+    private CrudCompany crudCompany;
     /**
      *
      * @return all companies in an optional list of optional company

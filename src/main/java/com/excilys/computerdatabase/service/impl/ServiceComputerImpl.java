@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.services;
+package com.excilys.computerdatabase.service.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.pagination.Page;
 import com.excilys.computerdatabase.persistence.CrudComputer;
-import com.excilys.computerdatabase.persistence.impl.CrudComputerImpl;
+import com.excilys.computerdatabase.service.ServiceComputer;
 
 /**
  * @author jlng
@@ -18,15 +18,15 @@ import com.excilys.computerdatabase.persistence.impl.CrudComputerImpl;
  */
 
 @Service
-public class ServiceComputer {
+public class ServiceComputerImpl implements ServiceComputer {
 
     @Autowired
-    private CrudComputerImpl crudComputer;
+    private CrudComputer crudComputer;
 
     /**
      *
-     * @param optionalComputer
-     *            :
+     * @param optionalComputer :
+     *
      */
     public void create(Optional<Computer> optionalComputer) {
         crudComputer.create(optionalComputer);
@@ -42,8 +42,8 @@ public class ServiceComputer {
 
     /**
      *
-     * @param id
-     *            :
+     * @param id :
+     *
      */
     public void delete(long id) {
         crudComputer.delete(id);
@@ -51,8 +51,8 @@ public class ServiceComputer {
 
     /**
      *
-     * @param optionalComputer
-     *            :
+     * @param optionalComputer :
+     *
      */
     public void update(Optional<Computer> optionalComputer) {
         crudComputer.update(optionalComputer);
@@ -68,15 +68,24 @@ public class ServiceComputer {
 
     /**
      *
-     * @param id
-     *            :
+     * @param id :
      * @return a computer found using its id
      */
     public Optional<Computer> find(long id) {
         return crudComputer.find(id);
     }
-    
+
+    /**
+     *
+     */
     public Page<Computer> getPage(Page<Computer> page) {
     	return crudComputer.getPage(page);
+    }
+
+    /**
+     * @param selection
+     */
+    public void multipleDelete(String selection) {
+        crudComputer.multipleDelete(selection);
     }
 }

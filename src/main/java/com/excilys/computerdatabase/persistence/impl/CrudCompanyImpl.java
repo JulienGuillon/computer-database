@@ -16,13 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.entity.Company;
-import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.pagination.Page;
 import com.excilys.computerdatabase.persistence.CrudCompany;
 import com.excilys.computerdatabase.persistence.DatabaseManager;
 import com.excilys.computerdatabase.persistence.mapper.MapperCompany;
-import com.excilys.computerdatabase.persistence.mapper.MapperComputer;
 import com.excilys.computerdatabase.util.LoadProperties;
 
 /**
@@ -113,35 +111,6 @@ public class CrudCompanyImpl implements CrudCompany {
         return companies;
     }
 
-    /**
-     * Find companies using pagination on database.
-     *
-     * @return an Optional list of company
-     */
-    public List<Company> findUsingPagination(int size, int offset, String name) {
-        List<Company> companies = new ArrayList<>();
-        connection = databaseManager.getConnection();
-        try {
-            PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty("PAGINATION_COMPANIES"));
-            //preparedStatementPagination.setString(1, "%" + name + "%");
-            preparedStatementPagination.setInt(1, size);
-            preparedStatementPagination.setInt(2, offset);
-            resultSet = preparedStatementPagination.executeQuery();
-            while (resultSet.next()) {
-                if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
-                    companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).get());
-                }
-            }
-
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        } finally {
-            databaseManager.closeConnection();
-        }
-        return companies;
-    }
-
-
     /* (non-Javadoc)
      * @see com.excilys.computerdatabase.dao.Crud#getNumber()
      */
@@ -175,12 +144,11 @@ public class CrudCompanyImpl implements CrudCompany {
 	        
 	        try (Connection connection = databaseManager.getConnection();
 	                PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty(PAGINATION_COMPANIES));) {
-	                preparedStatementPagination.setString(1, "%" + page.getFilter());
-	                preparedStatementPagination.setInt(2, page.getElementsByPage());
-	                preparedStatementPagination.setInt(3, page.getPage());
+	                preparedStatementPagination.setInt(1, page.getElementsByPage());
+	                preparedStatementPagination.setInt(2, page.getPage());
 	                try (ResultSet resultSet = preparedStatementPagination.executeQuery();) {
 	                    while (resultSet.next()) {
-	                        if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
+	                        if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
 	                            companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).get());
 	                        }
 	                    }
@@ -189,9 +157,6 @@ public class CrudCompanyImpl implements CrudCompany {
 	                }
 	            } catch (SQLException e) {
 	                throw new PersistenceException(e);
-	            } catch (Exception e) {
-	                // TODO Auto-generated catch block
-	                e.printStackTrace();
 	            }
 	        return page;
 	}

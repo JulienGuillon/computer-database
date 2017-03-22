@@ -1,17 +1,20 @@
 package com.excilys.computerdatabase.cli.controller;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.excilys.computerdatabase.cli.view.ListComputerView;
 import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.pagination.Page;
-import com.excilys.computerdatabase.services.ServiceComputer;
+import com.excilys.computerdatabase.service.ServiceComputer;
+import com.excilys.computerdatabase.service.impl.ServiceComputerImpl;
+import com.excilys.computerdatabase.springConfig.AppConfig;
 
 /**
  * @author Guillon Julien
@@ -30,7 +33,9 @@ public enum ListComputerController {
 
     private int offset;
 
-    private ServiceComputer serviceComputer = new ServiceComputer();
+    private ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    
+    private ServiceComputer serviceComputer = context.getBean(ServiceComputerImpl.class);
 
     private Page<Computer> page = new Page();
 

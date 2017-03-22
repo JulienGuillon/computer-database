@@ -1,8 +1,4 @@
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 import com.excilys.computerdatabase.cli.view.IView;
-import com.excilys.computerdatabase.springConfig.AppConfig;
 
 /**
  * @author Guillon Julien
@@ -16,9 +12,5 @@ public class App {
      */
     public static void main(String[] args) {
         IView.displayMainMenu();
-        //ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-     
-        //PaginationComputer paginationComputer = context.getBean(PaginationComputer.class);
-        //System.out.println(paginationComputer.getPageNumber(1));
     }
 }

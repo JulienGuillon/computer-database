@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.excilys.computerdatabase.cli.view.UpdateComputerView;
 import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
-import com.excilys.computerdatabase.services.ServiceComputer;
+import com.excilys.computerdatabase.service.impl.ServiceComputerImpl;
 
 /**
  * @author Guillon Julien
@@ -21,7 +21,7 @@ public enum UpdateComputerController {
 
     private UpdateComputerView updateComputerView;
 
-    private ServiceComputer serviceComputer = new ServiceComputer();
+    private ServiceComputerImpl serviceComputer = new ServiceComputerImpl();
 
     /**
      *

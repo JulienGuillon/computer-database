@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -20,7 +21,7 @@ import com.excilys.computerdatabase.dto.ComputerDTO;
 import com.excilys.computerdatabase.dto.mapper.MapperComputerDto;
 import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.pagination.Page;
-import com.excilys.computerdatabase.services.ServiceComputer;
+import com.excilys.computerdatabase.service.impl.ServiceComputerImpl;
 import com.excilys.computerdatabase.springConfig.AppConfig;
 
 /**
@@ -36,9 +37,9 @@ public class ServletCdb extends HttpServlet {
 
     private ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     
-    private ServiceComputer serviceComputer = context.getBean(ServiceComputer.class);
+    private ServiceComputerImpl serviceComputer = context.getBean(ServiceComputerImpl.class);
      
-    private Page<Computer> page = new Page();
+    private Page<Computer> page;
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -52,7 +53,7 @@ public class ServletCdb extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //PaginationComputer paginationComputer = getPage(request);
+        page = getPage(request);
         List<ComputerDTO> computers = new ArrayList<>();
         int size = page.getElementsByPage();
         int numOfPage = page.getPage();
@@ -87,6 +88,7 @@ public class ServletCdb extends HttpServlet {
             try {
                 filter = request.getParameter("filter");
                 page.setFilter(filter);
+                page.setPage(0);
             } catch (NumberFormatException e) {
             }
         }
@@ -115,6 +117,16 @@ public class ServletCdb extends HttpServlet {
         }
     }
     
+    private Page getPage(HttpServletRequest httpServletRequest) {
+        if (httpServletRequest.getSession().getAttribute("paginationComputer") == null) {
+            Page page = new Page();
+            httpServletRequest.getSession().setAttribute("paginationComputer", page);
+        }
+        
+        return (Page) httpServletRequest.getSession().getAttribute("paginationComputer");
+        
+    }
+    
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
      *      response)
@@ -126,10 +138,12 @@ public class ServletCdb extends HttpServlet {
             switch (request.getParameter("action")) {
             case "delete":
                 String selection = request.getParameter("selection");
-                String[] selections = selection.split(",");
+                /**String[] selections = selection.split(",");
                 for (String select : selections) {                    
                     serviceComputer.delete(Long.parseLong(select)); 
                 }
+                **/
+                serviceComputer.multipleDelete(selection);
                 response.sendRedirect(request.getContextPath() + "/computerdatabase");
                 break;
             default:

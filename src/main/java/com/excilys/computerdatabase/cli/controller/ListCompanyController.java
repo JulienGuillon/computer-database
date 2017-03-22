@@ -4,12 +4,16 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.excilys.computerdatabase.cli.view.ListCompanyView;
 import com.excilys.computerdatabase.entity.Company;
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.pagination.Page;
-import com.excilys.computerdatabase.services.ServiceCompany;
+import com.excilys.computerdatabase.service.ServiceCompany;
+import com.excilys.computerdatabase.service.impl.ServiceCompanyImpl;
+import com.excilys.computerdatabase.springConfig.AppConfig;
 
 /**
  * @author Guillon Julien
@@ -29,7 +33,9 @@ public enum ListCompanyController {
 
     private int offset;
 
-    private ServiceCompany serviceCompany = new ServiceCompany();
+    private ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    
+    private ServiceCompany serviceCompany = context.getBean(ServiceCompanyImpl.class);
 
     private Page<Company> page = new Page();
 
