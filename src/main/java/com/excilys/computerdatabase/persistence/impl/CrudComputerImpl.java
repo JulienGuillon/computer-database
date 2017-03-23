@@ -197,10 +197,7 @@ public class CrudComputerImpl implements CrudComputer {
     @Override
     public Page<Computer> getPage(Connection connection, Page<Computer> page) {
 
-        List<Computer> computers = new ArrayList<>();
-
-        page.getPage();
-      
+        List<Computer> computers = new ArrayList<>();      
         try ( PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty(PAGINATION_COMPUTERS));) {
                 preparedStatementPagination.setString(1, "%" + page.getFilter());
             preparedStatementPagination.setInt(2, page.getElementsByPage());

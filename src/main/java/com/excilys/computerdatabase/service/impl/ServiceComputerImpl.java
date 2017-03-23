@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
@@ -23,7 +26,10 @@ import com.excilys.computerdatabase.service.ServiceComputer;
  */
 
 @Service
+@Transactional
 public class ServiceComputerImpl implements ServiceComputer {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceComputerImpl.class);
 
     @Autowired
     private CrudComputer crudComputer;
@@ -161,9 +167,11 @@ public class ServiceComputerImpl implements ServiceComputer {
             crudComputer.multipleDelete(connection, selection);
             databaseManager.commit();
         } catch (SQLException e) {
-            databaseManager.rollback();
-            databaseManager.closeConnection();
+            //databaseManager.rollback();
+            LOGGER.info(e.toString());
             throw new PersistenceException(e);
+        } finally {
+            databaseManager.closeConnection();
         }
     }
 }

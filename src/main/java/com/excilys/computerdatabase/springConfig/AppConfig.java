@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan("com.excilys.computerdatabase")
+@EnableTransactionManagement
 public class AppConfig {
    
 }

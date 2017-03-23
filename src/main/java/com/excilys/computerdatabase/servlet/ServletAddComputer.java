@@ -32,7 +32,7 @@ import com.excilys.computerdatabase.validation.DateValidation;
  * Servlet implementation class ServletAddComputer.
  */
 @WebServlet(name = "/ServletAddComputer", urlPatterns = "/addComputer")
-public class ServletAddComputer extends HttpServlet {
+public class ServletAddComputer extends AbstractServlet {
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServletAddComputer.class);
@@ -41,9 +41,11 @@ public class ServletAddComputer extends HttpServlet {
     
     private ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     
-    private ServiceComputer serviceComputer = context.getBean(ServiceComputerImpl.class);
+    @Autowired
+    private ServiceComputer serviceComputer;
 
-    private ServiceCompany serviceCompany = context.getBean(ServiceCompanyImpl.class);;
+    @Autowired
+    private ServiceCompany serviceCompany;
 
     /**
      * @see HttpServlet#HttpServlet()

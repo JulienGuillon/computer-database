@@ -23,6 +23,7 @@ import com.excilys.computerdatabase.dto.ComputerDTO;
 import com.excilys.computerdatabase.dto.mapper.MapperComputerDto;
 import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.pagination.Page;
+import com.excilys.computerdatabase.service.ServiceComputer;
 import com.excilys.computerdatabase.service.impl.ServiceComputerImpl;
 import com.excilys.computerdatabase.springConfig.AppConfig;
 
@@ -30,18 +31,16 @@ import com.excilys.computerdatabase.springConfig.AppConfig;
  * Servlet implementation class servletCdb.
  */
 
-@WebServlet(name = "CdbServlet", urlPatterns = "/computerdatabase")
+@WebServlet(name = "CdbServlet", urlPatterns = "/computerdatabasesssss")
 public class ServletCdb extends AbstractServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServletCdb.class);
 
     private static final long serialVersionUID = 1L;
 
     private String pageToForward = "/views/dashboard.jsp";
-
-   // private ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     
     @Autowired
-    private ServiceComputerImpl serviceComputer; // = context.getBean(ServiceComputerImpl.class);
+    private ServiceComputer serviceComputer;
      
     private Page<Computer> page;
     /**
@@ -142,11 +141,6 @@ public class ServletCdb extends AbstractServlet {
             switch (request.getParameter("action")) {
             case "delete":
                 String selection = request.getParameter("selection");
-                /**String[] selections = selection.split(",");
-                for (String select : selections) {                    
-                    serviceComputer.delete(Long.parseLong(select)); 
-                }
-                **/
                 serviceComputer.multipleDelete(selection);
                 response.sendRedirect(request.getContextPath() + "/computerdatabase");
                 break;

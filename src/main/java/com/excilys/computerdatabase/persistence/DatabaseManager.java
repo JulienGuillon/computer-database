@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.exception.PersistenceException;
@@ -33,13 +34,16 @@ public class DatabaseManager {
 
     @Autowired
     private Datasource datasource;
-
-    /**
-     *
-     */
-    public DatabaseManager() {
-       
+    
+    //private JdbcTemplate jdbcTemplate;
+/**
+    @Autowired
+    public void setDataSource(Datasource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate();
+        this.jdbcTemplate.setDataSource(dataSource);
     }
+**/
+
 
     /**
      * @return the connect
