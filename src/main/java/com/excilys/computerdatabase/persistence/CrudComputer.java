@@ -24,7 +24,7 @@ public interface CrudComputer extends Crud<Computer> {
      *
      * @param id :
      */
-    void delete(long id);
+    void delete(Connection connection, long id) throws SQLException;
 
     /**
      *

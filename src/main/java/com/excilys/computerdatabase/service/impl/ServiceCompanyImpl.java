@@ -1,5 +1,8 @@
 package com.excilys.computerdatabase.service.impl;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.excilys.computerdatabase.entity.Company;
+import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.pagination.Page;
 import com.excilys.computerdatabase.persistence.CrudCompany;
+import com.excilys.computerdatabase.persistence.DatabaseManager;
 import com.excilys.computerdatabase.service.ServiceCompany;
 
 /**
@@ -22,12 +27,25 @@ public class ServiceCompanyImpl implements ServiceCompany {
 
     @Autowired
     private CrudCompany crudCompany;
+    
+    @Autowired
+    private DatabaseManager databaseManager;
+    
     /**
      *
      * @return all companies in an optional list of optional company
      */
     public List<Company> findAll() {
-        return crudCompany.findAll();
+        List<Company> companies = new ArrayList<>();
+        try {
+            Connection connection = databaseManager.getConnection();
+            companies = crudCompany.findAll(connection);
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        } finally {
+            databaseManager.closeConnection();
+        }
+        return companies;
     }
 
     /**
@@ -35,7 +53,16 @@ public class ServiceCompanyImpl implements ServiceCompany {
      * @return number of row in database
      */
     public int getNumber(String filter) {
-        return 0;//crudCompany.getNumber(filter);
+        int number = -1;
+        try {
+            Connection connection = databaseManager.getConnection();
+            number = crudCompany.getNumber(connection, filter);
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        } finally {
+            databaseManager.closeConnection();
+        }
+        return number;
     }
 
     /**
@@ -44,10 +71,27 @@ public class ServiceCompanyImpl implements ServiceCompany {
      * @return an optional list of Company
      */
     public Optional<Company> find(long id) {
-        return crudCompany.find(id);
+        Optional<Company> company = Optional.empty();
+        try {
+            Connection connection = databaseManager.getConnection();
+            company = crudCompany.find(connection, id);
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        } finally {
+            databaseManager.closeConnection();
+        }
+        return company;
     }
     
     public Page<Company> getPage(Page<Company> page) {
-    	return null;//crudCompany.getPage(page);
+        try {
+            Connection connection = databaseManager.getConnection();
+            page = crudCompany.getPage(connection, page);
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        } finally {
+            databaseManager.closeConnection();
+        }
+        return page;
     } 
 }

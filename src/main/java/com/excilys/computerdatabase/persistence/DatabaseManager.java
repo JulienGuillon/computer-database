@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.exception.PersistenceException;
@@ -30,22 +31,14 @@ public class DatabaseManager {
 
     private Connection connection;
 
-    private LoadProperties loadProperties = LoadProperties.INSTANCE;
-
-    private Properties properties;
-
-    private HikariDataSource dataSource;
+    @Autowired
+    private Datasource datasource;
 
     /**
      *
      */
     public DatabaseManager() {
-        loadProperties.setFileName("hikari.properties");
-        loadProperties.initLoadProperties();
-        properties = loadProperties.getProperties();
-        HikariConfig config = new HikariConfig(properties);
-        config.setConnectionTestQuery("show tables");
-        dataSource = new HikariDataSource(config);
+       
     }
 
     /**
@@ -54,7 +47,7 @@ public class DatabaseManager {
      */
     public Connection getConnection() {
         try {
-            connection = dataSource.getConnection();
+            connection = datasource.getConnection();
             connection.setAutoCommit(false);
         } catch (SQLException e) {
             throw new PersistenceException("Error on openning connection to database", e);

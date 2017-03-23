@@ -21,13 +21,13 @@ public interface Crud<T> {
      * @param id :
      * @return <T>
      */
-    Optional<T> find(long id);
+    Optional<T> find(Connection connection, long id) throws SQLException;
 
     /**
      *
      * @return a ResultSet
      */
-    List<T> findAll();
+    List<T> findAll(Connection connection) throws SQLException;
 
     /**
      *

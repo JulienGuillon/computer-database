@@ -61,11 +61,9 @@ public class CrudCompanyImpl implements CrudCompany {
      * @param id :
      * @return an Optional Company
      */
-    public Optional<Company> find(long id) {
+    public Optional<Company> find(Connection connection, long id) {
         Optional<Company> company = null;
-        connection = databaseManager.getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty("SELECT_COMPANY_BY_ID"));
+        try (PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty("SELECT_COMPANY_BY_ID"));) {
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -77,11 +75,6 @@ public class CrudCompanyImpl implements CrudCompany {
             company = MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet));
         } catch (SQLException e) {
             throw new PersistenceException(e);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            databaseManager.closeConnection();
         }
         return company;
     }
@@ -89,11 +82,9 @@ public class CrudCompanyImpl implements CrudCompany {
     /**
      * @return an Optional ResultSet
      */
-    public List<Company> findAll() {
-        connection = databaseManager.getConnection();
+    public List<Company> findAll(Connection connection) {
         List<Company> companies = new ArrayList<>();
-        try {
-            Statement statement = connection.createStatement();
+        try (Statement statement = connection.createStatement();) {
             resultSet = statement.executeQuery(properties.getProperty("SELECT_COMPANIES"));
             while (resultSet.next()) {
                 if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
@@ -102,11 +93,6 @@ public class CrudCompanyImpl implements CrudCompany {
             }
         } catch (SQLException e) {
             throw new PersistenceException(e);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            databaseManager.closeConnection();
         }
         return companies;
     }
@@ -118,16 +104,13 @@ public class CrudCompanyImpl implements CrudCompany {
     public int getNumber(Connection connection, String filter) {
         ResultSet resultSet = null;
         int number = 0;
-        try {
-            PreparedStatement statement = connection.prepareStatement(properties.getProperty(SELECT_COMPANIES_NUMBER));
+        try (PreparedStatement statement = connection.prepareStatement(properties.getProperty(SELECT_COMPANIES_NUMBER));) {
             statement.setString(1, "%" + filter + "%");
             resultSet = statement.executeQuery();
             resultSet.next();
             number = resultSet.getInt("number");
         } catch (SQLException e) {
             throw new PersistenceException(e);
-        } finally {
-            databaseManager.closeConnection();
         }
         return number;
     }
@@ -138,11 +121,8 @@ public class CrudCompanyImpl implements CrudCompany {
 	@Override
 	public Page<Company> getPage(Connection connection, Page<Company> page) {
 		 List<Company> companies = new ArrayList<>();
-	        
 	        page.getPage();
-	        
-	        try (
-	                PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty(PAGINATION_COMPANIES));) {
+	        try (PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty(PAGINATION_COMPANIES));) {
 	                preparedStatementPagination.setInt(1, page.getElementsByPage());
 	                preparedStatementPagination.setInt(2, page.getPage());
 	                try (ResultSet resultSet = preparedStatementPagination.executeQuery();) {
@@ -152,7 +132,7 @@ public class CrudCompanyImpl implements CrudCompany {
 	                        }
 	                    }
 	                    page.setElements(companies);
-	                    page.setTotalElements(getNumber(page.getFilter()));
+	                    page.setTotalElements(getNumber(connection, page.getFilter()));
 	                }
 	            } catch (SQLException e) {
 	                throw new PersistenceException(e);

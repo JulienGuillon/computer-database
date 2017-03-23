@@ -2,6 +2,7 @@ package com.excilys.computerdatabase.service.impl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +54,16 @@ public class ServiceComputerImpl implements ServiceComputer {
      * @return all computers in an optional list
      */
     public List<Computer> findAll() {
-        return crudComputer.findAll();
+        List<Computer> computers = new ArrayList();
+        try {
+            Connection connection = databaseManager.getConnection();
+            computers =  crudComputer.findAll(connection);
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        } finally {
+            databaseManager.closeConnection();
+        }
+        return computers;
     }
 
     /**
@@ -62,7 +72,17 @@ public class ServiceComputerImpl implements ServiceComputer {
      *
      */
     public void delete(long id) {
-        crudComputer.delete(id);
+
+        try {
+            Connection connection = databaseManager.getConnection();
+            crudComputer.delete(connection, id);
+            databaseManager.commit();
+        } catch (SQLException e) {
+            databaseManager.rollback();
+            throw new PersistenceException(e);
+        } finally {
+            databaseManager.closeConnection();
+        }
     }
 
     /**
@@ -76,6 +96,7 @@ public class ServiceComputerImpl implements ServiceComputer {
             crudComputer.update(connection, optionalComputer);
             databaseManager.commit();
         } catch (SQLException e) {
+            databaseManager.rollback();
             throw new PersistenceException(e);
         } finally {            
             databaseManager.closeConnection();
@@ -91,7 +112,6 @@ public class ServiceComputerImpl implements ServiceComputer {
         try {
             Connection connection = databaseManager.getConnection();
             number = crudComputer.getNumber(connection, filter);
-            databaseManager.commit();
         } catch (SQLException e) {
             throw new PersistenceException(e);
         } finally {            
@@ -106,7 +126,16 @@ public class ServiceComputerImpl implements ServiceComputer {
      * @return a computer found using its id
      */
     public Optional<Computer> find(long id) {
-        return crudComputer.find(id);
+        Optional<Computer> computer = Optional.empty();
+        try {
+            Connection connection = databaseManager.getConnection();
+            computer = crudComputer.find(connection, id);
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        } finally {            
+            databaseManager.closeConnection();
+        }
+        return computer;
     }
 
     /**
@@ -116,9 +145,7 @@ public class ServiceComputerImpl implements ServiceComputer {
         try {
             Connection connection = databaseManager.getConnection();
             page = crudComputer.getPage(connection, page);
-            databaseManager.commit();
         } catch (SQLException e) {
-            databaseManager.rollback();
             databaseManager.closeConnection();
             throw new PersistenceException(e);
         }

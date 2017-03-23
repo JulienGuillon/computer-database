@@ -64,10 +64,9 @@ public class CrudComputerImpl implements CrudComputer {
      * @param id :
      * @return an optional computer
      */
-    public Optional<Computer> find(long id) {
+    public Optional<Computer> find(Connection connection, long id) {
         Optional<Computer> computer = Optional.empty();
-        try (Connection connection = databaseManager.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty(SELECT_COMPUTER_BY_ID));) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty(SELECT_COMPUTER_BY_ID));) {
             preparedStatement.setLong(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -85,11 +84,10 @@ public class CrudComputerImpl implements CrudComputer {
     /**
      * @return an Optional ResultSet
      */
-    public List<Computer> findAll() {
+    public List<Computer> findAll(Connection connection) {
 
         List<Computer> computers = new ArrayList<>();
-        try (Connection connection = databaseManager.getConnection();
-                Statement statement = connection.createStatement();) {
+        try (Statement statement = connection.createStatement();) {
             try (ResultSet resultSet = statement.executeQuery(properties.getProperty(SELECT_COMPUTERS))) {
                 while (resultSet.next()) {
                     if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
@@ -107,11 +105,10 @@ public class CrudComputerImpl implements CrudComputer {
      * Delete a computer on database.
      * @param id :
      */
-    public void delete(long id) {
+    public void delete(Connection connection, long id) {
 
 
-        try (Connection connection = databaseManager.getConnection();
-            PreparedStatement preparedStatementDelete = connection.prepareStatement(properties.getProperty(DELETE_COMPUTER_BY_ID));) {
+        try (PreparedStatement preparedStatementDelete = connection.prepareStatement(properties.getProperty(DELETE_COMPUTER_BY_ID));) {
             preparedStatementDelete.setLong(1, id);
             if (preparedStatementDelete.executeUpdate() == 0) {
                 LOGGER.info("This id doesn't match any computer in database");
