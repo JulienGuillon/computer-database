@@ -1,6 +1,7 @@
 package com.excilys.computerdatabase.servlet;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,17 +31,15 @@ public class DashboardController {
 
     @Autowired
     private ServiceComputer serviceComputer;
-    
-    @RequestMapping(method = RequestMethod.GET)
-    public String doGet(ModelMap model,
-            @RequestParam(value = "limit", defaultValue="10") int limit,
-            @RequestParam(value = "numOfPage", defaultValue="0") int numOfPage,
-            @RequestParam(value = "filter", defaultValue="") String filter) {
 
+
+    @RequestMapping(method = RequestMethod.GET)
+    public String doGet(ModelMap model, @RequestParam Map<String, String> params) {
         Page<Computer> page = new Page<>();
-        page.setPage(numOfPage);
-        page.setFilter(filter);
-        page.setElementsByPage(limit);
+
+        page.setPage(params.get("numOfPage") != null ? Integer.parseInt(params.get("numOfPage")) : 0);
+        page.setFilter(params.get("filter") != null ? params.get("filter") : "");
+        page.setElementsByPage(params.get("limit") != null ? Integer.parseInt(params.get("limit")) : 10);
         
         setParamToJsp(model, page);
         return "dashboard";
@@ -58,6 +57,7 @@ public class DashboardController {
         model.addAttribute("currentPage", page.getPage());
         model.addAttribute("filter", page.getFilter());
         model.addAttribute("numberOfPages", page.getTotalPages());
+
     }
 
     @RequestMapping(method = RequestMethod.POST)
