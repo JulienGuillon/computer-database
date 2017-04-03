@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.servlet;
+package com.excilys.computerdatabase.controller;
 
 import java.util.List;
 import java.util.Map;

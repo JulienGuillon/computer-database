@@ -47,20 +47,7 @@ public class CrudCompanyImpl implements CrudCompany {
 
     private ResultSet resultSet;
 
-/**
-    @Override
-    public Company getById(long pId) {
-        Company company = null;
-        company = this.jdbcTemplate.queryForObject(SELECT_BY_ID,
-                new Object[] {pId},
-                new RowMapper<Company>() {
-                    public Company mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-                        return JdbcMapper.extractCompany(resultSet);
-                    }
-                });
-        return company;
-    }
-**/
+
     public CrudCompanyImpl() {
         loadProperties.setFileName("queries.properties");
         loadProperties.initLoadProperties();

@@ -35,16 +35,6 @@ public class DatabaseManager {
     @Autowired
     private Datasource datasource;
     
-    //private JdbcTemplate jdbcTemplate;
-/**
-    @Autowired
-    public void setDataSource(Datasource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate();
-        this.jdbcTemplate.setDataSource(dataSource);
-    }
-**/
-
-
     /**
      * @return the connect
      * @throws PersistenceException
