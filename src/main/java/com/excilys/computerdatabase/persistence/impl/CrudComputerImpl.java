@@ -2,19 +2,19 @@ package com.excilys.computerdatabase.persistence.impl;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import com.excilys.computerdatabase.entity.Computer;
@@ -23,8 +23,9 @@ import com.excilys.computerdatabase.pagination.Page;
 import com.excilys.computerdatabase.persistence.CrudComputer;
 import com.excilys.computerdatabase.persistence.DatabaseManager;
 import com.excilys.computerdatabase.persistence.Datasource;
-import com.excilys.computerdatabase.persistence.mapper.MapperComputer;
+import com.excilys.computerdatabase.persistence.mapper.ComputerRowMapper;
 import com.excilys.computerdatabase.util.LoadProperties;
+import com.mysql.fabric.xmlrpc.base.Array;
 
 /**
  * @author Guillon Julien
@@ -55,51 +56,46 @@ public class CrudComputerImpl implements CrudComputer {
     @Autowired
     private DatabaseManager databaseManager;
 
+    @Autowired
+    private Datasource dataSource;
     
+    private JdbcTemplate jdbcTemplateObject;
+
+    @PostConstruct
+    public void setDataSource() {
+
+       this.jdbcTemplateObject = new JdbcTemplate(dataSource);
+
+    }
+
     public CrudComputerImpl() {
         loadProperties.initLoadProperties("queries.properties");
         properties = loadProperties.getProperties();
     }
-
-
 
     /**
      * @param id :
      * @return an optional computer
      */
     public Optional<Computer> find(Connection connection, long id) {
-        Optional<Computer> computer = Optional.empty();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty(SELECT_COMPUTER_BY_ID));) {
-            preparedStatement.setLong(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    computer = MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet));
-                } else {
-                    LOGGER.info("Id doesn't match any computer in database");
-                }
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        Computer computer = null;
+        try {    
+            computer = (Computer) jdbcTemplateObject.queryForObject(properties.getProperty(SELECT_COMPUTER_BY_ID), new Object[] {id}, new ComputerRowMapper());
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
-        return computer;
+        return Optional.ofNullable(computer);
     }
 
     /**
      * @return an Optional ResultSet
      */
     public List<Computer> findAll(Connection connection) {
-
         List<Computer> computers = new ArrayList<>();
-        try (Statement statement = connection.createStatement();) {
-            try (ResultSet resultSet = statement.executeQuery(properties.getProperty(SELECT_COMPUTERS))) {
-                while (resultSet.next()) {
-                    if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
-                        computers.add(MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).get());
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        try {
+            computers = jdbcTemplateObject.query(SELECT_COMPUTERS, new BeanPropertyRowMapper(Computer.class));
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
         return computers;
     }
@@ -109,17 +105,10 @@ public class CrudComputerImpl implements CrudComputer {
      * @param id :
      */
     public void delete(Connection connection, long id) {
-
-
-        try (PreparedStatement preparedStatementDelete = connection.prepareStatement(properties.getProperty(DELETE_COMPUTER_BY_ID));) {
-            preparedStatementDelete.setLong(1, id);
-            if (preparedStatementDelete.executeUpdate() == 0) {
-                LOGGER.info("This id doesn't match any computer in database");
-            }
-            databaseManager.commit();
-        } catch (SQLException e) {
-            databaseManager.rollback();
-            throw new PersistenceException(e);
+        try {
+            jdbcTemplateObject.update(properties.getProperty(DELETE_COMPUTER_BY_ID), new Object[] {id}, Computer.class);
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
     }
 
@@ -130,25 +119,17 @@ public class CrudComputerImpl implements CrudComputer {
      *
      */
     public void update(Connection connection, Optional<Computer> optionalComputer) {
-        if (optionalComputer.isPresent()) {
-            Computer computer = optionalComputer.get();
-            long id = computer.getId();
-            try (PreparedStatement preparedStatementUpdate = connection.prepareStatement(properties.getProperty(UPDATE_COMPUTER_BY_ID));) {
-                preparedStatementUpdate.setString(1, computer.getName());
-                preparedStatementUpdate.setDate(2,
-                        computer.getIntroduced() != null ? Date.valueOf(computer.getIntroduced()) : null);
-                preparedStatementUpdate.setDate(3,
-                        computer.getDiscontinued() != null ? Date.valueOf(computer.getDiscontinued()) : null);
-                if (computer.getManufacturer() != null) {
-                    preparedStatementUpdate.setLong(4, computer.getManufacturer().getId());
-                } else {
-                    preparedStatementUpdate.setNull(4, Types.BIGINT);
-                }
-                preparedStatementUpdate.setLong(5, id);
-                preparedStatementUpdate.execute();
-            } catch (SQLException e) {
-                throw new PersistenceException(e);
+        try {
+            if (optionalComputer.isPresent()) {
+                Computer computer = optionalComputer.get();
+                jdbcTemplateObject.update(properties.getProperty(UPDATE_COMPUTER_BY_ID), computer.getName(),
+                        computer.getIntroduced() != null ? Date.valueOf(computer.getIntroduced()) : null,
+                                computer.getDiscontinued() != null ? Date.valueOf(computer.getDiscontinued()) : null,
+                                        computer.getManufacturer() != null ? computer.getManufacturer().getId() : null,
+                                                computer.getId());
             }
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
     }
 
@@ -160,19 +141,16 @@ public class CrudComputerImpl implements CrudComputer {
      *
      */
     public void create(Connection connection, Optional<Computer> optionalComputer) throws SQLException {
-        if (optionalComputer.isPresent()) {
-            Computer computer = optionalComputer.get();
-            
-            PreparedStatement preparedStatementInsert = connection.prepareStatement(properties.getProperty(INSERT_COMPUTER));
-            preparedStatementInsert.setString(1, computer.getName());
-            preparedStatementInsert.setObject(2, computer.getIntroduced());
-            preparedStatementInsert.setObject(3, computer.getDiscontinued());
-            if (computer.getManufacturer() != null) {
-                preparedStatementInsert.setLong(4, computer.getManufacturer().getId());
-            } else {
-                preparedStatementInsert.setNull(4, Types.BIGINT);
+        
+        try {
+            if (optionalComputer.isPresent()) {
+                Computer computer = optionalComputer.get();
+                
+                jdbcTemplateObject.update(properties.getProperty(INSERT_COMPUTER), computer.getName(), computer.getIntroduced(),
+                        computer.getDiscontinued(), computer.getManufacturer().getId());
             }
-            preparedStatementInsert.execute();
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
     }
 
@@ -181,49 +159,35 @@ public class CrudComputerImpl implements CrudComputer {
      */
     @Override
     public int getNumber(Connection connection, String filter) {
-
-        int number = 0;
-        try (PreparedStatement statement = connection.prepareStatement(properties.getProperty(SELECT_COMPUTERS_NUMBER));) {
-            statement.setString(1, "%" + filter);
-            try (ResultSet resultSet = statement.executeQuery();) {
-                resultSet.next();
-                number = resultSet.getInt("number");
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        int number;
+        try {   
+            number = jdbcTemplateObject.queryForObject(properties.getProperty(SELECT_COMPUTERS_NUMBER), new Object[] {filter + "%"}, Integer.class);
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
         return number;
-        }
+    }
 
     @Override
     public Page<Computer> getPage(Connection connection, Page<Computer> page) {
-
-        List<Computer> computers = new ArrayList<>();      
-        try ( PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty(PAGINATION_COMPUTERS));) {
-                preparedStatementPagination.setString(1, "%" + page.getFilter());
-            preparedStatementPagination.setInt(2, page.getElementsByPage());
-            preparedStatementPagination.setInt(3, page.getPage()*page.getElementsByPage());
-            try (ResultSet resultSet = preparedStatementPagination.executeQuery();) {
-                while (resultSet.next()) {
-                    if (MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).isPresent()) {
-                        computers.add(MapperComputer.resultSetToComputer(Optional.ofNullable(resultSet)).get());
-                    }
-                }
-                page.setElements(computers);
-                page.setTotalElements(getNumber(connection, page.getFilter()));
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        List<Computer> computers = new ArrayList<>();
+        try {
+            computers = (List<Computer>) jdbcTemplateObject.query(properties.getProperty(PAGINATION_COMPUTERS), new ComputerRowMapper(),
+                    page.getFilter()+"%", page.getElementsByPage(), page.getPage()*page.getElementsByPage());
+            page.setElements(computers);
+            page.setTotalElements(getNumber(connection, page.getFilter()));
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
         return page;
     }
     
     @Override
     public void multipleDelete(Connection connection, String selection) {
-        try (Statement preparedStatementDelete = connection.createStatement();) {
-            preparedStatementDelete.execute(properties.getProperty(DELETE_COMPUTERS)+selection+");");
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        try {
+            jdbcTemplateObject.update(properties.getProperty(DELETE_COMPUTERS)+selection+");");
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
     }
 

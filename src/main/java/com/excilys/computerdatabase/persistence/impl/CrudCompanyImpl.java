@@ -10,14 +10,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.entity.Company;
+import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.pagination.Page;
 import com.excilys.computerdatabase.persistence.CrudCompany;
+import com.excilys.computerdatabase.persistence.Datasource;
+import com.excilys.computerdatabase.persistence.mapper.CompanyRowMapper;
+import com.excilys.computerdatabase.persistence.mapper.ComputerRowMapper;
 import com.excilys.computerdatabase.persistence.mapper.MapperCompany;
 import com.excilys.computerdatabase.util.LoadProperties;
 
@@ -45,6 +55,17 @@ public class CrudCompanyImpl implements CrudCompany {
 
     private ResultSet resultSet;
 
+    @Autowired
+    private Datasource dataSource;
+    
+    private JdbcTemplate jdbcTemplateObject;
+
+    @PostConstruct
+    public void setDataSource() {
+
+       this.jdbcTemplateObject = new JdbcTemplate(dataSource);
+
+    }
 
     public CrudCompanyImpl() {
         loadProperties.initLoadProperties("queries.properties");
@@ -56,21 +77,13 @@ public class CrudCompanyImpl implements CrudCompany {
      * @return an Optional Company
      */
     public Optional<Company> find(Connection connection, long id) {
-        Optional<Company> company = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty(SELECT_COMPANY_BY_ID));) {
-            preparedStatement.setLong(1, id);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                company = MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet));
-            } else {
-                LOGGER.info("Id doesn't match any company in database");
-            }
-            resultSet.next();
-            company = MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet));
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        Company company = null;
+        try {
+            company = (Company) jdbcTemplateObject.queryForObject(properties.getProperty(SELECT_COMPANY_BY_ID), new Object[] {id}, new CompanyRowMapper());
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
-        return company;
+        return Optional.ofNullable(company);
     }
 
     /**
@@ -78,15 +91,10 @@ public class CrudCompanyImpl implements CrudCompany {
      */
     public List<Company> findAll(Connection connection) {
         List<Company> companies = new ArrayList<>();
-        try (Statement statement = connection.createStatement();) {
-            resultSet = statement.executeQuery(properties.getProperty(SELECT_COMPANIES));
-            while (resultSet.next()) {
-                if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
-                    companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).get());
-                }
-            }
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        try {
+            companies = jdbcTemplateObject.query(properties.getProperty(SELECT_COMPANIES), new CompanyRowMapper());
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
         return companies;
     }
@@ -96,15 +104,11 @@ public class CrudCompanyImpl implements CrudCompany {
      */
     @Override
     public int getNumber(Connection connection, String filter) {
-        ResultSet resultSet = null;
-        int number = 0;
-        try (PreparedStatement statement = connection.prepareStatement(properties.getProperty(SELECT_COMPANIES_NUMBER));) {
-            statement.setString(1, "%" + filter + "%");
-            resultSet = statement.executeQuery();
-            resultSet.next();
-            number = resultSet.getInt("number");
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
+        int number;
+        try {
+            number = jdbcTemplateObject.queryForObject(properties.getProperty(SELECT_COMPANIES_NUMBER), new Object[] {filter + "%"}, Integer.class);
+        } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
         }
         return number;
     }
@@ -114,24 +118,16 @@ public class CrudCompanyImpl implements CrudCompany {
 	 */
 	@Override
 	public Page<Company> getPage(Connection connection, Page<Company> page) {
-		 List<Company> companies = new ArrayList<>();
-	        page.getPage();
-	        try (PreparedStatement preparedStatementPagination = connection.prepareStatement(properties.getProperty(PAGINATION_COMPANIES));) {
-	                preparedStatementPagination.setInt(1, page.getElementsByPage());
-	                preparedStatementPagination.setInt(2, page.getPage());
-	                try (ResultSet resultSet = preparedStatementPagination.executeQuery();) {
-	                    while (resultSet.next()) {
-	                        if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
-	                            companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).get());
-	                        }
-	                    }
-	                    page.setElements(companies);
-	                    page.setTotalElements(getNumber(connection, page.getFilter()));
-	                }
-	            } catch (SQLException e) {
-	                throw new PersistenceException(e);
-	            }
-	        return page;
+	    List<Company> companies = new ArrayList<>();
+	    try {
+    	    companies = (List<Company>) jdbcTemplateObject.query(properties.getProperty(PAGINATION_COMPANIES), new CompanyRowMapper(),
+                    page.getElementsByPage(), page.getPage()*page.getElementsByPage());
+            page.setElements(companies);
+            page.setTotalElements(getNumber(connection, page.getFilter()));
+	    } catch (DataAccessException dataAccessException) {
+            throw new PersistenceException(dataAccessException);
+        }
+	    return page;
 	}
 
 }

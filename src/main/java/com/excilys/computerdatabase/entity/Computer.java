@@ -1,5 +1,6 @@
 package com.excilys.computerdatabase.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -10,7 +11,7 @@ import com.excilys.computerdatabase.validation.EntityValidation;
  *
  *         20 févr. 2017
  */
-public class Computer {
+public class Computer implements Serializable {
     private long id;
     private String name;
     private LocalDate introduced;
