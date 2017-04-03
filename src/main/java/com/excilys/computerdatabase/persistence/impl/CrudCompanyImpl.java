@@ -13,13 +13,13 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.entity.Company;
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.pagination.Page;
 import com.excilys.computerdatabase.persistence.CrudCompany;
-import com.excilys.computerdatabase.persistence.DatabaseManager;
 import com.excilys.computerdatabase.persistence.mapper.MapperCompany;
 import com.excilys.computerdatabase.util.LoadProperties;
 
@@ -45,11 +45,8 @@ public class CrudCompanyImpl implements CrudCompany {
     private static final String PAGINATION_COMPANIES = "PAGINATION_COMPANIES";
     private static final String SELECT_COMPANIES_NUMBER = "SELECT_COMPANIES_NUMBER";
 
-    @Autowired
-    private DatabaseManager databaseManager;
-    private Connection connection;
     private ResultSet resultSet;
-    
+
 
     public CrudCompanyImpl() {
         loadProperties.setFileName("queries.properties");

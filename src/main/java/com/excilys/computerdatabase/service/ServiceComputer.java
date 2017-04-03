@@ -16,4 +16,9 @@ public interface ServiceComputer extends ServiceBase<Computer> {
     public void delete(long id);
 
     public void update(Optional<Computer> optionalComputer);
+
+    /**
+     * @param selection
+     */
+    public void multipleDelete(String selection);
 }

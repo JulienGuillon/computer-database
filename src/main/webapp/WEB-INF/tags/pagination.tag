@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib prefix="page" tagdir="/WEB-INF/tags" %>
 <%@ attribute name="currentPage" required="true" type="java.lang.Integer" description="Num of current page"%>
-<%@ attribute name="size" required="false" type="java.lang.Integer" description="Number of elements per page"%>
+<%@ attribute name="size" required="true" type="java.lang.Integer" description="Number of elements per page"%>
 <%@ attribute name="numbers" required="true" type="java.lang.Integer" description="Number of computers"%>
 <%@ attribute name="filter" required="true" type="java.lang.String" description="String to make search"%>
 <div class="container text-center">
@@ -18,7 +18,7 @@
 				</li>
 			</c:otherwise>
 		</c:choose>
-		<c:forEach var="i" begin="${(currentPage - 2 > 0) ? (currentPage - 2) : 1}" end="${(currentPage + 2 < (numbers / size)) ? (currentPage + 2) : (numbers / size)}">
+		<c:forEach var="i" begin="${(currentPage - 3 > 0) ? (currentPage - 3) : 0}" end="${(currentPage + 2 < (numbers / size)) ? (currentPage + 1) : (numbers / size)-1}">
 			<c:choose>
 				<c:when test="${currentPage == i + 1}">
 					<li class="active">
@@ -33,7 +33,7 @@
 			</c:choose>
 		</c:forEach>
 		<c:choose> 
-			<c:when test="${(currentPage * size) < numbers}">
+			<c:when test="${((currentPage+1) * size) < numbers}">
 				<li>
 					<page:link body="<span aria-hidden='true'>&raquo;</span>" limit="${size}" numOfPage="${currentPage + 1}" filter="${filter}" target="computerdatabase"/>
 				</li>

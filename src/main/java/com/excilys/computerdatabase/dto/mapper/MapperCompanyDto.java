@@ -27,6 +27,14 @@ public class MapperCompanyDto {
        return companies;
    }
    
+   public static List<CompanyDTO> fromCompaniesToCompaniesDto(List<Company> companies) {
+       List<CompanyDTO> companiesDto = new ArrayList<>();
+       for (Company company : companies) {
+           companiesDto.add(toDTO(company));
+       }
+       return companiesDto;
+   }
+   
    public static Company fromDTO(CompanyDTO companyDto) {
 	   Company company = new Company.Builder()
 			   .withId(companyDto.getId())

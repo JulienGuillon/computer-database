@@ -7,10 +7,10 @@
 <head>
 <title>Computer Database</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="css/main.css" rel="stylesheet" media="screen">
+
+<link href="<c:url value='/resources/css/bootstrap.min.css'/>" rel="stylesheet" media="screen">
+<link href="<c:url value='/resources/css/font-awesome.css/'/>" rel="stylesheet" media="screen">
+<link href="<c:url value='/resources/css/main.css'/>" rel="stylesheet" media="screen">
 </head>
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
@@ -23,16 +23,18 @@
             <div class="row">
                 <div class="col-xs-8 col-xs-offset-2 box">
                     <div class="label label-default pull-right">
-                        id: <c:out value="${id}"/>
+                        id: <c:out value="${computer.id}"/>
                     </div>
                     <h1>Edit Computer</h1>
 
                     <form action="editComputer" method="POST">
-                        <input name="action" type="hidden" value="edit" id="${id}"/>
+                        <input name="action" type="hidden" value="edit" id="${computer.id}"/>
+                        <input name="id" type="hidden" value="${computer.id}" id="${computer.id}"/>
+                        
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" placeholder="${computer.name}" name="computerName">
+                                <input type="text" class="form-control" id="computerName" placeholder="${computer.name}" name="computerName" value="${computer.name}">
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
@@ -55,14 +57,15 @@
                         <div class="actions pull-right">
                             <input type="submit" value="Edit" class="btn btn-primary">
                             or
-                            <a href="dashboard.html" class="btn btn-default">Cancel</a>
+                            <a href="computerdatabase" class="btn btn-default">Cancel</a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </section>
-    <script src="./js/jquery.min.js"></script>
-    <script src="./js/addComputer.js"></script>
+<script src="<c:url value='/resources/js/jquery.min.js'/>"></script>
+<script src="<c:url value='/resources/js/bootstrap.min.js'/>"></script>
+<script src="<c:url value='/resources/js/addComputer.js'/>"></script>
 </body>
 </html>

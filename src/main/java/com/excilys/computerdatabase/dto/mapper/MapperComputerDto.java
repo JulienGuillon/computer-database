@@ -26,7 +26,10 @@ public class MapperComputerDto {
     public static List<ComputerDTO> toComputersDTO(List<Computer> computers) {
         List<ComputerDTO> computersDTO = new ArrayList<>();
         for (Computer computer : computers) {
-            computersDTO.add(toComputerDTO(computer));
+            Optional<ComputerDTO> optional = toComputerDTO(Optional.ofNullable(computer));
+            if (optional.isPresent()) {                
+                computersDTO.add(optional.get());
+            }
         }
         return computersDTO;
     }
@@ -37,14 +40,18 @@ public class MapperComputerDto {
      * @param computer :
      * @return a computer dto
      */
-    public static ComputerDTO toComputerDTO(Computer computer) {
-        ComputerDTO computerDTO = new ComputerDTO();
-        computerDTO.setId(computer.getId());
-        computerDTO.setName(computer.getName());
-        computerDTO.setIntroduced(computer.getIntroduced() == null ? "" : computer.getIntroduced().toString());
-        computerDTO.setDiscontinued(computer.getDiscontinued() == null ? "" : computer.getDiscontinued().toString());
-        computerDTO.setManufacturerName(computer.getManufacturer() == null ? "" : computer.getManufacturer().getName());
-        return computerDTO;
+    public static Optional<ComputerDTO> toComputerDTO(Optional<Computer> optionalComputer) {
+        Optional<ComputerDTO> optional = Optional.empty();
+        ComputerDTO computerDTO = new ComputerDTO();            
+        if (optionalComputer.isPresent()) {
+            Computer computer = optionalComputer.get();
+            computerDTO.setId(computer.getId());
+            computerDTO.setName(computer.getName());
+            computerDTO.setIntroduced(computer.getIntroduced() == null ? "" : computer.getIntroduced().toString());
+            computerDTO.setDiscontinued(computer.getDiscontinued() == null ? "" : computer.getDiscontinued().toString());
+            computerDTO.setManufacturerName(computer.getManufacturer() == null ? "" : computer.getManufacturer().getName());
+        }
+        return optional.ofNullable(computerDTO);
     }
 
     /**
