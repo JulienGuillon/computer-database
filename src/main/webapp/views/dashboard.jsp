@@ -9,9 +9,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
-<link href="./css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="./css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="./css/main.css" rel="stylesheet" media="screen">
+<link href="<c:url value='/resources/css/bootstrap.min.css'/>" rel="stylesheet" media="screen">
+<link href="<c:url value='/resources/css/font-awesome.css/'/>" rel="stylesheet" media="screen">
+<link href="<c:url value='/resources/css/main.css'/>" rel="stylesheet" media="screen">
 </head>
 
 <body>
@@ -35,13 +35,13 @@
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="?action=add">Add Computer</a> 
+                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a> 
                     <a class="btn btn-default" id="editComputer" onclick="$.fn.toggleEditMode();">Edit</a>
                 </div>
             </div>
         </div>
 
-        <form id="deleteForm" action="?action=delete" method="POST">
+        <form id="deleteForm" action="computerdatabase" method="POST">
             <input type="hidden" name="selection" value="">
         </form>
 
@@ -91,12 +91,12 @@
     </section>
 
 	<footer class="navbar-fixed-bottom">
-		<page:pagination currentPage="${currentPage}" size="${size}" numbers="${numberOfComputers}" filter="${filter}">
+		<page:pagination currentPage="${currentPage}" size="${limit}" numbers="${numberOfComputers}" filter="${filter}">
 		</page:pagination>
 	</footer>
-<script src="./js/jquery.min.js"></script>
-<script src="./js/bootstrap.min.js"></script>
-<script src="./js/dashboard.js"></script>
+<script src="<c:url value='/resources/js/jquery.min.js'/>"></script>
+<script src="<c:url value='/resources/js/bootstrap.min.js'/>"></script>
+<script src="<c:url value='/resources/js/dashboard.js'/>"></script>
 
 </body>
 </html>

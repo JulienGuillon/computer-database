@@ -9,6 +9,8 @@ import com.excilys.computerdatabase.pagination.Page;
  *
  * 22 mars 2017
  */
+
+
 public interface ServiceBase<T> {
     public List<T> findAll();
 

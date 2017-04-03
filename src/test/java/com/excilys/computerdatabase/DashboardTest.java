@@ -34,22 +34,33 @@ public class DashboardTest {
   public void testDashboard() throws Exception {
     driver.get(baseUrl + "/computerdatabase");
     driver.findElement(By.linkText("»")).click();
+    Thread.sleep(100);
     driver.findElement(By.linkText("3")).click();
+    Thread.sleep(100);
     driver.findElement(By.linkText("«")).click();
+    Thread.sleep(100);
     driver.findElement(By.id("searchbox")).clear();
+    Thread.sleep(100);
     driver.findElement(By.id("searchbox")).sendKeys("mac");
+    Thread.sleep(100);
     driver.findElement(By.id("searchsubmit")).click();
+    Thread.sleep(100);
     driver.findElement(By.id("addComputer")).click();
     Thread.sleep(100);
     driver.findElement(By.id("homePage")).click();
+    Thread.sleep(100);
     driver.findElement(By.linkText("100")).click();
     Thread.sleep(100);
     driver.findElement(By.linkText("50")).click();
     Thread.sleep(100);
     driver.findElement(By.linkText("10")).click();
+    Thread.sleep(100);
     driver.findElement(By.linkText("Edit")).click();
+    Thread.sleep(100);
     driver.findElement(By.id("deleteSelected")).click();
+    Thread.sleep(100);
     driver.switchTo().alert().dismiss();
+    Thread.sleep(100);
     driver.findElement(By.linkText("View")).click();
 
   }

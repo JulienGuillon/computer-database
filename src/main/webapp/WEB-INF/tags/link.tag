@@ -15,4 +15,4 @@
 	description="Pattern to search"%>
 <%@ attribute name="lang" type="java.lang.String"
 	description="Just for a change of locale"%>
-<a class="${classes}" href="${target}?numOfPage=${numOfPage}&limit=${limit}&filter=${filter}">${body}</a>
+<a class="${classes}" href="?numOfPage=${numOfPage}&limit=${limit}&filter=${filter}">${body}</a>

@@ -21,8 +21,6 @@ public enum LoadProperties {
 
     private Properties properties;
 
-    private String fileName;
-
     /**
      *
      */
@@ -32,7 +30,7 @@ public enum LoadProperties {
     /**
      *
      */
-    public void initLoadProperties() {
+    public void initLoadProperties(String fileName) {
         properties = new Properties();
         InputStream input = null;
         input = LoadProperties.class.getClassLoader().getResourceAsStream(fileName);
@@ -50,20 +48,6 @@ public enum LoadProperties {
 
     public Properties getProperties() {
         return properties;
-    }
-
-    /**
-     * @return the filename
-     */
-    public String getFileName() {
-        return fileName;
-    }
-
-    /**
-     * @param fileName the fileName to set
-     */
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
     }
 
 }

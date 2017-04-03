@@ -2,6 +2,7 @@ package com.excilys.computerdatabase.springConfig;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("com.excilys.computerdatabase")
+@EnableTransactionManagement
 public class AppConfig {
    
 }
