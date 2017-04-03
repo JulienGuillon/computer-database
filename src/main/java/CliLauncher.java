@@ -5,7 +5,7 @@ import com.excilys.computerdatabase.cli.view.IView;
  *
  * 20 févr. 2017
  */
-public class App {
+public class CliLauncher {
 
     /**
      * @param args :

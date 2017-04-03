@@ -57,8 +57,7 @@ public class CrudComputerImpl implements CrudComputer {
 
     
     public CrudComputerImpl() {
-        loadProperties.setFileName("queries.properties");
-        loadProperties.initLoadProperties();
+        loadProperties.initLoadProperties("queries.properties");
         properties = loadProperties.getProperties();
     }
 

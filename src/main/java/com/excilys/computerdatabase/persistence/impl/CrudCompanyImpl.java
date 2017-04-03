@@ -12,8 +12,6 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.excilys.computerdatabase.entity.Company;
@@ -49,8 +47,7 @@ public class CrudCompanyImpl implements CrudCompany {
 
 
     public CrudCompanyImpl() {
-        loadProperties.setFileName("queries.properties");
-        loadProperties.initLoadProperties();
+        loadProperties.initLoadProperties("queries.properties");
         properties = loadProperties.getProperties();
     }
 
@@ -60,7 +57,7 @@ public class CrudCompanyImpl implements CrudCompany {
      */
     public Optional<Company> find(Connection connection, long id) {
         Optional<Company> company = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty("SELECT_COMPANY_BY_ID"));) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(properties.getProperty(SELECT_COMPANY_BY_ID));) {
             preparedStatement.setLong(1, id);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -82,7 +79,7 @@ public class CrudCompanyImpl implements CrudCompany {
     public List<Company> findAll(Connection connection) {
         List<Company> companies = new ArrayList<>();
         try (Statement statement = connection.createStatement();) {
-            resultSet = statement.executeQuery(properties.getProperty("SELECT_COMPANIES"));
+            resultSet = statement.executeQuery(properties.getProperty(SELECT_COMPANIES));
             while (resultSet.next()) {
                 if (MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).isPresent()) {
                     companies.add(MapperCompany.resultSetToCompany(Optional.ofNullable(resultSet)).get());
