@@ -4,7 +4,7 @@
 
   <groupId>com.excilys.computerdatabase</groupId>
   <artifactId>cdb</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
   <packaging>war</packaging>
   
   <name>cdb</name>
@@ -246,6 +246,7 @@
 			<groupId>io.github.bonigarcia</groupId>
 			<artifactId>webdrivermanager</artifactId>
 			<version>${webdrivermanager.version}</version>
+		    <scope>test</scope>
 		</dependency>
 	   	
 	</dependencies>
