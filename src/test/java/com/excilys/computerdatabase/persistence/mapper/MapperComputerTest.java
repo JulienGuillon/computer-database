@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.dao.mapper;
+package com.excilys.computerdatabase.persistence.mapper;
 
 import static org.junit.Assert.assertEquals;
 

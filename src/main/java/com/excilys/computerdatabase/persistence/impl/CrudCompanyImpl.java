@@ -50,7 +50,7 @@ public class CrudCompanyImpl implements CrudCompany {
         loadProperties.initLoadProperties("queries.properties");
         properties = loadProperties.getProperties();
     }
-
+    
     /**
      * @param id :
      * @return an Optional Company
