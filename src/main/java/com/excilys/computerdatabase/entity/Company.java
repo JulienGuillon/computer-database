@@ -2,6 +2,11 @@ package com.excilys.computerdatabase.entity;
 
 import java.util.Optional;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import com.excilys.computerdatabase.validation.EntityValidation;
 
 /**
@@ -11,7 +16,12 @@ import com.excilys.computerdatabase.validation.EntityValidation;
  */
 public class Company {
 
+    @Min(0)
     private long id;
+    
+    @NotNull
+    @Size(min = 2, max = 20)
+    @Pattern(regexp="[\\w-_.\\s]*")
     private String name;
 
     /**

@@ -15,25 +15,24 @@ import com.excilys.computerdatabase.entity.Computer;
 public interface CrudComputer extends Crud<Computer> {
     /**
      *
-     * @param computer :
-     * @throws SQLException 
+     * @param computer : 
      */
-    void create(Connection connection, Optional<Computer> computer) throws SQLException;
+    void create(Optional<Computer> computer);
 
     /**
      *
      * @param id :
      */
-    void delete(Connection connection, long id) throws SQLException;
+    void delete(long id);
 
     /**
      *
      * @param computer :
      */
-    void update(Connection connection, Optional<Computer> computer) throws SQLException;
+    void update(Optional<Computer> computer);
 
     /**
      * @param selection
      */
-    void multipleDelete(Connection connection, String selection) throws SQLException;
+    void multipleDelete(String selection);
 }

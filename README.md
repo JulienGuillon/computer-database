@@ -18,7 +18,7 @@ Here is the macro-planning and timeline of all milestones:
 
 #Installation
 
-##1. Database
+## 1. Database
 Create a local **MySQL** server.  
 Execute scripts **1-SCHEMA.sql**, **2-PRIVILEGES.sql** and **3-ENTRIES.sql** in config/db.  
 Schema created: **computer-database-db**
@@ -26,19 +26,19 @@ Tables created: **company, computer**
 User created: `admincdb`
 with password: `qwerty1234`
 
-##2. IDE  
-###2.1. Eclipse  
+## 2. IDE  
+### 2.1. Eclipse  
 - Add your project to the current workspace: **File** -> **Import** -> **Existing projects into workspace**    
 - Create a new Tomcat 8.0 Server: Follow steps **[HERE](http://www.eclipse.org/webtools/jst/components/ws/M4/tutorials/InstallTomcat.html)**
 - In your project properties, select **Project facets**, convert your project to faceted form, and tick **Dynamic Web Module** (3.0) and **Java** (1.8)
 - Select **Runtime** tab (in the previous **project facets** menu)  and check the Tomcat 8.0 Server created above as your project runtime  
 
-###2.2. IntelliJ IDEA   
+### 2.2. IntelliJ IDEA   
 - Add your project to the current workspace: **Import Project**, select **Create project from existing sources**
 - Create a new Tomcat 8.0 Server: **Run** -> **Edit Configurations** and point it to your local Tomcat directory (button **Configure...**) 
 - Set project structure: In **File** -> **Project Structure**, add an Artifact with default options (Artifact tab)  
 
-##3. Git repository
+## 3. Git repository
 - Create your own github account, and initialize a new git repository called "computer-database".  
 - After the initial commit, add and commit a meaningful .gitignore file. 
 

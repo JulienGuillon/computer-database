@@ -77,7 +77,7 @@ public class CrudComputerImpl implements CrudComputer {
      * @param id :
      * @return an optional computer
      */
-    public Optional<Computer> find(Connection connection, long id) {
+    public Optional<Computer> find(long id) {
         Computer computer = null;
         try {    
             computer = (Computer) jdbcTemplateObject.queryForObject(properties.getProperty(SELECT_COMPUTER_BY_ID), new Object[] {id}, new ComputerRowMapper());
@@ -90,7 +90,7 @@ public class CrudComputerImpl implements CrudComputer {
     /**
      * @return an Optional ResultSet
      */
-    public List<Computer> findAll(Connection connection) {
+    public List<Computer> findAll() {
         List<Computer> computers = new ArrayList<>();
         try {
             computers = jdbcTemplateObject.query(SELECT_COMPUTERS, new BeanPropertyRowMapper(Computer.class));
@@ -104,7 +104,7 @@ public class CrudComputerImpl implements CrudComputer {
      * Delete a computer on database.
      * @param id :
      */
-    public void delete(Connection connection, long id) {
+    public void delete(long id) {
         try {
             jdbcTemplateObject.update(properties.getProperty(DELETE_COMPUTER_BY_ID), new Object[] {id}, Computer.class);
         } catch (DataAccessException dataAccessException) {
@@ -118,7 +118,7 @@ public class CrudComputerImpl implements CrudComputer {
      * @param optionalComputer :
      *
      */
-    public void update(Connection connection, Optional<Computer> optionalComputer) {
+    public void update(Optional<Computer> optionalComputer) {
         try {
             if (optionalComputer.isPresent()) {
                 Computer computer = optionalComputer.get();
@@ -136,18 +136,17 @@ public class CrudComputerImpl implements CrudComputer {
     /**
      * Persist a computer on database.
      *
-     * @param optionalComputer :
-     * @throws SQLException 
+     * @param optionalComputer : 
      *
      */
-    public void create(Connection connection, Optional<Computer> optionalComputer) throws SQLException {
+    public void create(Optional<Computer> optionalComputer) {
         
         try {
             if (optionalComputer.isPresent()) {
                 Computer computer = optionalComputer.get();
                 
                 jdbcTemplateObject.update(properties.getProperty(INSERT_COMPUTER), computer.getName(), computer.getIntroduced(),
-                        computer.getDiscontinued(), computer.getManufacturer().getId());
+                        computer.getDiscontinued(), computer.getManufacturer() != null ? computer.getManufacturer().getId() : null);
             }
         } catch (DataAccessException dataAccessException) {
             throw new PersistenceException(dataAccessException);
@@ -158,7 +157,7 @@ public class CrudComputerImpl implements CrudComputer {
      * @see com.excilys.computerdatabase.dao.Crud#getNumber()
      */
     @Override
-    public int getNumber(Connection connection, String filter) {
+    public int getNumber(String filter) {
         int number;
         try {   
             number = jdbcTemplateObject.queryForObject(properties.getProperty(SELECT_COMPUTERS_NUMBER), new Object[] {filter + "%"}, Integer.class);
@@ -169,13 +168,13 @@ public class CrudComputerImpl implements CrudComputer {
     }
 
     @Override
-    public Page<Computer> getPage(Connection connection, Page<Computer> page) {
+    public Page<Computer> getPage(Page<Computer> page) {
         List<Computer> computers = new ArrayList<>();
         try {
             computers = (List<Computer>) jdbcTemplateObject.query(properties.getProperty(PAGINATION_COMPUTERS), new ComputerRowMapper(),
                     page.getFilter()+"%", page.getElementsByPage(), page.getPage()*page.getElementsByPage());
             page.setElements(computers);
-            page.setTotalElements(getNumber(connection, page.getFilter()));
+            page.setTotalElements(getNumber(page.getFilter()));
         } catch (DataAccessException dataAccessException) {
             throw new PersistenceException(dataAccessException);
         }
@@ -183,7 +182,7 @@ public class CrudComputerImpl implements CrudComputer {
     }
     
     @Override
-    public void multipleDelete(Connection connection, String selection) {
+    public void multipleDelete(String selection) {
         try {
             jdbcTemplateObject.update(properties.getProperty(DELETE_COMPUTERS)+selection+");");
         } catch (DataAccessException dataAccessException) {

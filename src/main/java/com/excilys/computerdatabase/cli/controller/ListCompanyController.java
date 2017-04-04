@@ -13,7 +13,7 @@ import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.pagination.Page;
 import com.excilys.computerdatabase.service.ServiceCompany;
 import com.excilys.computerdatabase.service.impl.ServiceCompanyImpl;
-import com.excilys.computerdatabase.springConfig.AppConfig;
+import com.excilys.computerdatabase.springConfig.CdbConfiguration;
 
 /**
  * @author Guillon Julien
@@ -33,7 +33,7 @@ public enum ListCompanyController {
 
     private int offset;
 
-    private ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+    private ApplicationContext context = new AnnotationConfigApplicationContext(CdbConfiguration.class);
     
     private ServiceCompany serviceCompany = context.getBean(ServiceCompanyImpl.class);
 

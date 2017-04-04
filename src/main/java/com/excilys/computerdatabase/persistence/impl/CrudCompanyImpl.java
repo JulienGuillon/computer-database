@@ -76,7 +76,7 @@ public class CrudCompanyImpl implements CrudCompany {
      * @param id :
      * @return an Optional Company
      */
-    public Optional<Company> find(Connection connection, long id) {
+    public Optional<Company> find(long id) {
         Company company = null;
         try {
             company = (Company) jdbcTemplateObject.queryForObject(properties.getProperty(SELECT_COMPANY_BY_ID), new Object[] {id}, new CompanyRowMapper());
@@ -89,7 +89,7 @@ public class CrudCompanyImpl implements CrudCompany {
     /**
      * @return an Optional ResultSet
      */
-    public List<Company> findAll(Connection connection) {
+    public List<Company> findAll() {
         List<Company> companies = new ArrayList<>();
         try {
             companies = jdbcTemplateObject.query(properties.getProperty(SELECT_COMPANIES), new CompanyRowMapper());
@@ -103,7 +103,7 @@ public class CrudCompanyImpl implements CrudCompany {
      * @see com.excilys.computerdatabase.dao.Crud#getNumber()
      */
     @Override
-    public int getNumber(Connection connection, String filter) {
+    public int getNumber(String filter) {
         int number;
         try {
             number = jdbcTemplateObject.queryForObject(properties.getProperty(SELECT_COMPANIES_NUMBER), new Object[] {filter + "%"}, Integer.class);
@@ -117,13 +117,13 @@ public class CrudCompanyImpl implements CrudCompany {
 	 * @see com.excilys.computerdatabase.persistence.Crud#getPage(com.excilys.computerdatabase.pagination.Page)
 	 */
 	@Override
-	public Page<Company> getPage(Connection connection, Page<Company> page) {
+	public Page<Company> getPage(Page<Company> page) {
 	    List<Company> companies = new ArrayList<>();
 	    try {
     	    companies = (List<Company>) jdbcTemplateObject.query(properties.getProperty(PAGINATION_COMPANIES), new CompanyRowMapper(),
                     page.getElementsByPage(), page.getPage()*page.getElementsByPage());
             page.setElements(companies);
-            page.setTotalElements(getNumber(connection, page.getFilter()));
+            page.setTotalElements(getNumber(page.getFilter()));
 	    } catch (DataAccessException dataAccessException) {
             throw new PersistenceException(dataAccessException);
         }

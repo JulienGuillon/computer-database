@@ -18,7 +18,8 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.excilys.computerdatabase")
+@ComponentScan(basePackages = {"com.excilys.computerdatabase", "com.excilys.computerdatabase.persistence",
+        "com.excilys.computerdatabase.controller"})
 public class CdbConfiguration extends WebMvcConfigurerAdapter {
     @Bean
     public ViewResolver viewResolver() {

@@ -1,6 +1,5 @@
 package com.excilys.computerdatabase.persistence;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -21,20 +20,20 @@ public interface Crud<T> {
      * @param id :
      * @return <T>
      */
-    Optional<T> find(Connection connection, long id) throws SQLException;
+    Optional<T> find(long id);
 
     /**
      *
      * @return a ResultSet
      */
-    List<T> findAll(Connection connection) throws SQLException;
+    List<T> findAll();
 
     /**
      *
      * @param filter :
      * @return number of row in the database
      */
-    int getNumber(Connection connection, String filter) throws SQLException;
+    int getNumber(String filter);
 
     /**
      *
@@ -42,5 +41,5 @@ public interface Crud<T> {
      * @return
      * @throws SQLException 
      */
-    Page<T> getPage(Connection connection, Page<T> page) throws SQLException;
+    Page<T> getPage(Page<T> page);
 }

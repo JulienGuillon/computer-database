@@ -1,16 +1,32 @@
 package com.excilys.computerdatabase.dto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 /**
  * @author Guillon Julien
  *
  * 1 mars 2017
  */
 public class ComputerDTO {
+    @Min(0)
     private long id;
+    
+    @NotNull
+    @Size(min = 2, max = 20)
+    @Pattern(regexp="[\\w-_.\\s]*", message="Not valid !")
     private String name;
+    
+    @Pattern(regexp="(\\d{4}-\\d{2}-\\d{2}|\\d{2}-\\d{2}-\\d{4})")
     private String introduced;
+    
+    @Pattern(regexp="\\d{4}-\\d{2}-\\d{2}")
     private String discontinued;
+    
     private String manufacturerName;
+    
     private long manufacturerId;
 
     /**

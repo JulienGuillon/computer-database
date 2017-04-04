@@ -66,7 +66,9 @@ public class MapperComputerDto {
                     .withIntroduced(StringUtils.isNotBlank(computerDTO.getIntroduced()) ? LocalDate.parse(computerDTO.getIntroduced()) : null)
                     .withDiscontinued(StringUtils.isNotBlank(computerDTO.getDiscontinued()) ? LocalDate.parse(computerDTO.getDiscontinued()) : null)
                     .withManufacturer(computerDTO.getManufacturerId() != 0 ? new Company.Builder().withId(computerDTO.getManufacturerId())
-                            .withName(computerDTO.getManufacturerName()).build() : null)
+                            //.withName(computerDTO.getManufacturerId() != 0 ? computerDTO.getManufacturerName() : "")
+                            .withName("")
+                            .build() : null)
                     .build();
             return Optional.ofNullable(computer);
         }

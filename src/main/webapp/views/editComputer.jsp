@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-    
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+    <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -27,31 +29,32 @@
                     </div>
                     <h1>Edit Computer</h1>
 
-                    <form action="editComputer" method="POST">
+                    <form:form action="editComputer"
+                    	method="POST" modelAttribute="computerEdit">
                         <input name="action" type="hidden" value="edit" id="${computer.id}"/>
-                        <input name="id" type="hidden" value="${computer.id}" id="${computer.id}"/>
+                        <form:input path="id" name="id" type="hidden" value="${computer.id}" id="${computer.id}"/>
                         
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
-                                <input type="text" class="form-control" id="computerName" placeholder="${computer.name}" name="computerName" value="${computer.name}">
+                                <form:input path="name" type="text" class="form-control" id="computerName" placeholder="${computer.name}" name="computerName" value="${computer.name}"/>
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>
-                                <input type="date" class="form-control" id="introduced" placeholder="${computer.introduced}" name="introduced">
+                                <form:input path="introduced" type="date" class="form-control" id="introduced" placeholder="${computer.introduced}" name="introduced"/>
                             </div>
                             <div class="form-group">
                                 <label for="discontinued">Discontinued date</label>
-                                <input type="date" class="form-control" id="discontinued" placeholder="${computer.discontinued}" name="discontinued">
+                                <form:input path="discontinued" type="date" class="form-control" id="discontinued" placeholder="${computer.discontinued}" name="discontinued"/>
                             </div>
                             <div class="form-group">
                                 <label for="companyId">Company</label>
-                                <select name="companyId" class="form-control" id="companyId" >
-                                    <option value="${computer.manufacturerId}"><c:out value="${computer.manufacturerName}"/></option>
+                                <form:select path="manufacturerId" name="companyId" class="form-control" id="companyId" >
+                                    <form:option value="${computer.manufacturerId}"><c:out value="${computer.manufacturerName}"/></form:option>
 									<c:forEach items="${companies}" var="company">										
-										<option value="${company.id}">${company.name}</option>
+										<form:option value="${company.id}">${company.name}</form:option>
 									</c:forEach>
-                                </select>
+                                </form:select>
                             </div>            
                         </fieldset>
                         <div class="actions pull-right">
@@ -59,7 +62,7 @@
                             or
                             <a href="computerdatabase" class="btn btn-default">Cancel</a>
                         </div>
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>

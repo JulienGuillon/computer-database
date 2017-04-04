@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import com.excilys.computerdatabase.validation.EntityValidation;
 
 /**
@@ -12,10 +17,20 @@ import com.excilys.computerdatabase.validation.EntityValidation;
  *         20 févr. 2017
  */
 public class Computer implements Serializable {
+    @Min(0)
     private long id;
+    
+    @NotNull
+    @Size(min = 2, max = 20)
+    @Pattern(regexp="[\\w-_.\\s]*", message="Not valid !")
     private String name;
+    
+    @Pattern(regexp="\\d{4}-\\d{2}-\\d{2}")
     private LocalDate introduced;
+    
+    @Pattern(regexp="\\d{4}-\\d{2}-\\d{2}")
     private LocalDate discontinued;
+    
     private Company manufacturer;
 
     public String getName() {

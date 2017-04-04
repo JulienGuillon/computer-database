@@ -36,6 +36,7 @@
 		<spring.version>4.3.7.RELEASE</spring.version>
 		<webdrivermanager.version>1.6.1</webdrivermanager.version>
 		<selenium.version>3.3.1</selenium.version>
+		<validation.version>1.1.0.Final</validation.version>
     	<checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
   	</properties>
 	<build>
@@ -248,6 +249,13 @@
 			<version>${webdrivermanager.version}</version>
 		    <scope>test</scope>
 		</dependency>
+		
+	   	<dependency>
+		    <groupId>javax.validation</groupId>
+		    <artifactId>validation-api</artifactId>
+		    <version>${validation.version}</version>
+		</dependency>
+
 	   	
 	</dependencies>
 </project>

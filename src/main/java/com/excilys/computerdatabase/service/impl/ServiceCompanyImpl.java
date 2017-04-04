@@ -39,14 +39,7 @@ public class ServiceCompanyImpl implements ServiceCompany {
      */
     public List<Company> findAll() {
         List<Company> companies = new ArrayList<>();
-        try {
-            Connection connection = databaseManager.getConnection();
-            companies = crudCompany.findAll(connection);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        } finally {
-            databaseManager.closeConnection();
-        }
+        companies = crudCompany.findAll();
         return companies;
     }
 
@@ -56,14 +49,7 @@ public class ServiceCompanyImpl implements ServiceCompany {
      */
     public int getNumber(String filter) {
         int number = -1;
-        try {
-            Connection connection = databaseManager.getConnection();
-            number = crudCompany.getNumber(connection, filter);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        } finally {
-            databaseManager.closeConnection();
-        }
+        number = crudCompany.getNumber(filter);
         return number;
     }
 
@@ -74,26 +60,12 @@ public class ServiceCompanyImpl implements ServiceCompany {
      */
     public Optional<Company> find(long id) {
         Optional<Company> company = Optional.empty();
-        try {
-            Connection connection = databaseManager.getConnection();
-            company = crudCompany.find(connection, id);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        } finally {
-            databaseManager.closeConnection();
-        }
+        company = crudCompany.find(id);
         return company;
     }
     
     public Page<Company> getPage(Page<Company> page) {
-        try {
-            Connection connection = databaseManager.getConnection();
-            page = crudCompany.getPage(connection, page);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        } finally {
-            databaseManager.closeConnection();
-        }
+        page = crudCompany.getPage(page);
         return page;
     } 
 }
