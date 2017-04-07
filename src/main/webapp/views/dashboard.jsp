@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib prefix="page" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title>Computer Database</title>
+<title><spring:message code="cdb.dashboard.title"/></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 <!-- Bootstrap -->
@@ -17,26 +19,28 @@
 <body>
     <header class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <a id="homePage" class="navbar-brand" href="computerdatabase"> Application - Computer Database </a>
+            <a id="homePage" class="navbar-brand" href="computerdatabase"> <spring:message code="cdb.dashboard.home"/> </a>
         </div>
+        lang : <a href="?locale=en">English</a> | <a
+				href="?locale=fr">French</a>
     </header>
 
     <section id="main">
         <div class="container">
             <h1 id="homeTitle">
-            	${numberOfComputers} Computers found            	
+            	${numberOfComputers} <spring:message code="cdb.dashboard.count"/>            	
             </h1>
             <div id="actions" class="form-horizontal">
                 <div class="pull-left">
                     <form id="searchForm" action="#" method="GET" class="form-inline">
 
-                        <input type="search" id="searchbox" name="filter" class="form-control" placeholder="Search name"/>
-                        <input type="submit" id="searchsubmit" value="Filter by name" class="btn btn-primary"/>
+                        <input type="search" id="searchbox" name="filter" class="form-control" placeholder="<spring:message code="cdb.dashboard.search"/>"/>
+                        <input type="submit" id="searchsubmit" value="<spring:message code="cdb.dashboard.search"/>" class="btn btn-primary"/>
                     </form>
                 </div>
                 <div class="pull-right">
-                    <a class="btn btn-success" id="addComputer" href="addComputer">Add Computer</a> 
-                    <a class="btn btn-default" id="editComputer" onclick="$.fn.toggleEditMode();">Edit</a>
+                    <a class="btn btn-success" id="addComputer" href="addComputer"><spring:message code="cdb.dashboard.add"/></a> 
+                    <a class="btn btn-default" id="editComputer" onclick="$.fn.toggleEditMode();"><spring:message code="cdb.dashboard.edit"/></a>
                 </div>
             </div>
         </div>
@@ -61,18 +65,18 @@
                             </span>
                         </th>
                         <th>
-                            Computer name
+                            <spring:message code="cdb.dashboard.name"/>
                         </th>
                         <th>
-                            Introduced date
+                            <spring:message code="cdb.dashboard.introduced"/>
                         </th>
                         <!-- Table header for Discontinued Date -->
                         <th>
-                            Discontinued date
+                            <spring:message code="cdb.dashboard.discontinued"/>
                         </th>
                         <!-- Table header for Company -->
                         <th>
-                            Company
+                            <spring:message code="cdb.dashboard.company"/>
                         </th>
 
                     </tr>

@@ -50,6 +50,7 @@ public class MapperComputerDto {
             computerDTO.setIntroduced(computer.getIntroduced() == null ? "" : computer.getIntroduced().toString());
             computerDTO.setDiscontinued(computer.getDiscontinued() == null ? "" : computer.getDiscontinued().toString());
             computerDTO.setManufacturerName(computer.getManufacturer() == null ? "" : computer.getManufacturer().getName());
+            computerDTO.setManufacturerId(computer.getManufacturer() == null ? 0 : computer.getManufacturer().getId());
         }
         return optional.ofNullable(computerDTO);
     }
@@ -66,7 +67,8 @@ public class MapperComputerDto {
                     .withIntroduced(StringUtils.isNotBlank(computerDTO.getIntroduced()) ? LocalDate.parse(computerDTO.getIntroduced()) : null)
                     .withDiscontinued(StringUtils.isNotBlank(computerDTO.getDiscontinued()) ? LocalDate.parse(computerDTO.getDiscontinued()) : null)
                     .withManufacturer(computerDTO.getManufacturerId() != 0 ? new Company.Builder().withId(computerDTO.getManufacturerId())
-                            .withName(computerDTO.getManufacturerName()).build() : null)
+                            .withName(computerDTO.getManufacturerId() != 0 ? computerDTO.getManufacturerName() : "")
+                            .build() : null)
                     .build();
             return Optional.ofNullable(computer);
         }

@@ -1,22 +1,20 @@
 package com.excilys.computerdatabase.service.impl;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.excilys.computerdatabase.entity.Computer;
-import com.excilys.computerdatabase.exception.PersistenceException;
-import com.excilys.computerdatabase.pagination.Page;
-import com.excilys.computerdatabase.persistence.CrudComputer;
-import com.excilys.computerdatabase.persistence.DatabaseManager;
+import com.excilys.computerdatabase.pagination.Pagination;
+import com.excilys.computerdatabase.persistence.CrudComputerSpring;
 import com.excilys.computerdatabase.service.ServiceComputer;
 
 /**
@@ -32,10 +30,7 @@ public class ServiceComputerImpl implements ServiceComputer {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceComputerImpl.class);
 
     @Autowired
-    private CrudComputer crudComputer;
-    
-    @Autowired
-    private DatabaseManager databaseManager;
+    private CrudComputerSpring manager;
 
     /**
      *
@@ -43,32 +38,16 @@ public class ServiceComputerImpl implements ServiceComputer {
      *
      */
     public void create(Optional<Computer> optionalComputer) {
-        Connection connection = databaseManager.getConnection();
-        try {
-            crudComputer.create(connection, optionalComputer);
-            databaseManager.commit();
-        } catch (SQLException e) {
-            databaseManager.rollback();
-            throw new PersistenceException(e);
-        } finally {
-            databaseManager.closeConnection();
-        }
+        manager.save(optionalComputer.get());
     }
 
     /**
      *
      * @return all computers in an optional list
      */
-    public List<Computer> findAll() {
-        List<Computer> computers = new ArrayList();
-        try {
-            Connection connection = databaseManager.getConnection();
-            computers =  crudComputer.findAll(connection);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        } finally {
-            databaseManager.closeConnection();
-        }
+    public Iterable<Computer> findAll() {
+        Iterable<Computer> computers = new ArrayList<>();
+        computers =  manager.findAll();
         return computers;
     }
 
@@ -78,17 +57,7 @@ public class ServiceComputerImpl implements ServiceComputer {
      *
      */
     public void delete(long id) {
-
-        try {
-            Connection connection = databaseManager.getConnection();
-            crudComputer.delete(connection, id);
-            databaseManager.commit();
-        } catch (SQLException e) {
-            databaseManager.rollback();
-            throw new PersistenceException(e);
-        } finally {
-            databaseManager.closeConnection();
-        }
+        manager.delete(id);
     }
 
     /**
@@ -97,16 +66,7 @@ public class ServiceComputerImpl implements ServiceComputer {
      *
      */
     public void update(Optional<Computer> optionalComputer) {
-        try {
-            Connection connection = databaseManager.getConnection();
-            crudComputer.update(connection, optionalComputer);
-            databaseManager.commit();
-        } catch (SQLException e) {
-            databaseManager.rollback();
-            throw new PersistenceException(e);
-        } finally {            
-            databaseManager.closeConnection();
-        }
+        manager.save(optionalComputer.get());
     }
 
     /**
@@ -114,15 +74,9 @@ public class ServiceComputerImpl implements ServiceComputer {
      * @return number of row in database
      */
     public int getNumber(String filter) {
+       
         int number = -1;
-        try {
-            Connection connection = databaseManager.getConnection();
-            number = crudComputer.getNumber(connection, filter);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        } finally {            
-            databaseManager.closeConnection();
-        }
+        number = manager.countByNameContaining(filter);
         return number;
     }
 
@@ -132,46 +86,26 @@ public class ServiceComputerImpl implements ServiceComputer {
      * @return a computer found using its id
      */
     public Optional<Computer> find(long id) {
-        Optional<Computer> computer = Optional.empty();
-        try {
-            Connection connection = databaseManager.getConnection();
-            computer = crudComputer.find(connection, id);
-        } catch (SQLException e) {
-            throw new PersistenceException(e);
-        } finally {            
-            databaseManager.closeConnection();
-        }
-        return computer;
+        Computer computer = manager.findById(id);
+        return Optional.ofNullable(computer);
     }
 
     /**
      *
-     */
-    public Page<Computer> getPage(Page<Computer> page) {
-        try {
-            Connection connection = databaseManager.getConnection();
-            page = crudComputer.getPage(connection, page);
-        } catch (SQLException e) {
-            databaseManager.closeConnection();
-            throw new PersistenceException(e);
-        }
-        return page;
+     */ 
+    public Pagination<Computer> getPage(Pagination<Computer> page) {
+        PageRequest request =
+                new PageRequest(page.getPage(), page.getElementsByPage(), Sort.Direction.ASC, "name");
+            Page<Computer> pageComputer = manager.findByNameContaining(page.getFilter(), request);
+            page.setElements(pageComputer.getContent());
+            page.setTotalElements(getNumber(page.getFilter()));
+            return page;
     }
 
     /**
      * @param selection
      */
     public void multipleDelete(String selection) {
-        try {
-            Connection connection = databaseManager.getConnection();
-            crudComputer.multipleDelete(connection, selection);
-            databaseManager.commit();
-        } catch (SQLException e) {
-            //databaseManager.rollback();
-            LOGGER.info(e.toString());
-            throw new PersistenceException(e);
-        } finally {
-            databaseManager.closeConnection();
-        }
+        //manager.deleteComputers(selection);
     }
 }

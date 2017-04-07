@@ -1,5 +1,6 @@
 package com.excilys.computerdatabase.dto;
 
+
 /**
  * @author Guillon Julien
  *
@@ -7,10 +8,15 @@ package com.excilys.computerdatabase.dto;
  */
 public class ComputerDTO {
     private long id;
+
     private String name;
+    
     private String introduced;
+    
     private String discontinued;
+    
     private String manufacturerName;
+    
     private long manufacturerId;
 
     /**

@@ -8,7 +8,7 @@ import java.util.List;
  * 2017-03-21
  */
 
-public class Page<T> {
+public class Pagination<T> {
     private int elementsByPage = 10;
     private int page = 0;
     private int totalElements;
@@ -16,11 +16,11 @@ public class Page<T> {
     private String filter = "";
     private List<T> elements;
     
-    public Page() {
+    public Pagination() {
     }
 
     
-    public Page(int pElemByPage) {
+    public Pagination(int pElemByPage) {
         elementsByPage = pElemByPage;
     }
     

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.excilys.computerdatabase.dto.ComputerDTO;
 import com.excilys.computerdatabase.dto.mapper.MapperComputerDto;
 import com.excilys.computerdatabase.entity.Computer;
-import com.excilys.computerdatabase.pagination.Page;
+import com.excilys.computerdatabase.pagination.Pagination;
 import com.excilys.computerdatabase.service.ServiceComputer;
 
 /**
@@ -35,7 +35,7 @@ public class DashboardController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String doGet(ModelMap model, @RequestParam Map<String, String> params) {
-        Page<Computer> page = new Page<>();
+        Pagination<Computer> page = new Pagination<>();
 
         page.setPage(params.get("numOfPage") != null ? Integer.parseInt(params.get("numOfPage")) : 0);
         page.setFilter(params.get("filter") != null ? params.get("filter") : "");
@@ -48,7 +48,7 @@ public class DashboardController {
     /**
      * 
      */
-    private void setParamToJsp(ModelMap model, Page<Computer> page) {
+    private void setParamToJsp(ModelMap model, Pagination<Computer> page) {
         page = serviceComputer.getPage(page);
         List<ComputerDTO> computers = MapperComputerDto.toComputersDTO(page.getElements());
         model.addAttribute("numberOfComputers", page.getTotalElements());        

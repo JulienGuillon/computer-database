@@ -2,7 +2,10 @@ package com.excilys.computerdatabase.service;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+
 import com.excilys.computerdatabase.entity.Computer;
+import com.excilys.computerdatabase.pagination.Pagination;
 
 /**
  * @author Guillon Julien
@@ -21,4 +24,5 @@ public interface ServiceComputer extends ServiceBase<Computer> {
      * @param selection
      */
     public void multipleDelete(String selection);
+    
 }
