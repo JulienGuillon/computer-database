@@ -2,7 +2,11 @@ package com.excilys.computerdatabase.service;
 
 import java.util.List;
 import java.util.Optional;
-import com.excilys.computerdatabase.pagination.Page;
+
+import org.springframework.data.domain.Page;
+
+import com.excilys.computerdatabase.entity.Computer;
+import com.excilys.computerdatabase.pagination.Pagination;
 
 /**
  * @author Guillon Julien
@@ -12,12 +16,12 @@ import com.excilys.computerdatabase.pagination.Page;
 
 
 public interface ServiceBase<T> {
-    public List<T> findAll();
+    public Iterable<T> findAll();
 
     public int getNumber(String filter);
 
     public Optional<T> find(long id);
     
-    public Page<T> getPage(Page<T> page);
+    public Pagination<T> getPage(Pagination<T> page);
 
 }

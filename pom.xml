@@ -23,7 +23,7 @@
 		<webapp.username>admin</webapp.username>
 		<webapp.password>admin</webapp.password>
 		<jxr.version>2.3</jxr.version>
-		<mysql.version>5.1.40</mysql.version>
+		<mysql.version>5.1.6</mysql.version>
 		<slf4j.version>1.7.23</slf4j.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>1.9.5</mockito.version>
@@ -37,6 +37,7 @@
 		<webdrivermanager.version>1.6.1</webdrivermanager.version>
 		<selenium.version>3.3.1</selenium.version>
 		<validation.version>1.1.0.Final</validation.version>
+		<persistence.version>2.1.1</persistence.version>
     	<checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
   	</properties>
 	<build>
@@ -249,13 +250,20 @@
 			<version>${webdrivermanager.version}</version>
 		    <scope>test</scope>
 		</dependency>
+	
 		
-	   	<dependency>
-		    <groupId>javax.validation</groupId>
-		    <artifactId>validation-api</artifactId>
-		    <version>${validation.version}</version>
+		<dependency>
+		    <groupId>org.springframework.data</groupId>
+		    <artifactId>spring-data-jpa</artifactId>
+		    <version>1.11.1.RELEASE</version>
 		</dependency>
-
-	   	
+		
+		
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-core</artifactId>
+		    <version>5.2.9.Final</version>
+		</dependency>
+		
 	</dependencies>
 </project>

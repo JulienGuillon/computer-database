@@ -3,8 +3,6 @@ package com.excilys.computerdatabase.controller;
 
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +60,7 @@ public class AddComputerController {
     }
    
     @RequestMapping(method = RequestMethod.POST)
-    public String doPost( @Valid @ModelAttribute("computerForm") ComputerDTO computerDto, BindingResult result, Model model, final RedirectAttributes redirectAttribute) {
+    public String doPost(@ModelAttribute("computerForm") ComputerDTO computerDto, BindingResult result, Model model, final RedirectAttributes redirectAttribute) {
         
         validator.validate(computerDto, result);
         LOGGER.info("result: " + result.hasErrors());

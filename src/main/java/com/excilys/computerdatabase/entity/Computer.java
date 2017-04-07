@@ -4,10 +4,17 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 
 import com.excilys.computerdatabase.validation.EntityValidation;
 
@@ -16,23 +23,36 @@ import com.excilys.computerdatabase.validation.EntityValidation;
  *
  *         20 févr. 2017
  */
+
+@Entity
+@Table(name="computer")
 public class Computer implements Serializable {
-    @Min(0)
+  //  @Min(0)
+    @Id
+    //@GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
     
-    @NotNull
-    @Size(min = 2, max = 20)
-    @Pattern(regexp="[\\w-_.\\s]*", message="Not valid !")
+//  @NotNull
+   // @Size(min = 2, max = 20)
+    //@Pattern(regexp="[\\w-_.\\s]*", message="Not valid !")
+    @Column(name="name")
     private String name;
     
-    @Pattern(regexp="\\d{4}-\\d{2}-\\d{2}")
+   // @Pattern(regexp="\\d{4}-\\d{2}-\\d{2}")
+    @Column(name="introduced")
     private LocalDate introduced;
     
-    @Pattern(regexp="\\d{4}-\\d{2}-\\d{2}")
+   // @Pattern(regexp="\\d{4}-\\d{2}-\\d{2}")
+    @Column(name="discontinued")
     private LocalDate discontinued;
     
-    private Company manufacturer;
+    @ManyToOne
+    private Company company;
 
+    public Computer() {
+        
+    }
+    
     public String getName() {
         return name;
     }
@@ -46,7 +66,7 @@ public class Computer implements Serializable {
     }
 
     public Company getManufacturer() {
-        return manufacturer;
+        return company;
     }
 
     public void setName(String name) {
@@ -62,7 +82,7 @@ public class Computer implements Serializable {
     }
 
     public void setManufacturer(Company manufacturer) {
-        this.manufacturer = manufacturer;
+        this.company = manufacturer;
     }
 
     public long getId() {
@@ -88,7 +108,7 @@ public class Computer implements Serializable {
         result = prime * result + ((discontinued == null) ? 0 : discontinued.hashCode());
         result = prime * result + (int) (id ^ (id >>> 32));
         result = prime * result + ((introduced == null) ? 0 : introduced.hashCode());
-        result = prime * result + ((manufacturer == null) ? 0 : manufacturer.hashCode());
+        result = prime * result + ((company == null) ? 0 : company.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
@@ -122,11 +142,11 @@ public class Computer implements Serializable {
         } else if (!introduced.equals(other.introduced)) {
             return false;
         }
-        if (manufacturer == null) {
-            if (other.manufacturer != null) {
+        if (company == null) {
+            if (other.company != null) {
                 return false;
             }
-        } else if (!manufacturer.equals(other.manufacturer)) {
+        } else if (!company.equals(other.company)) {
             return false;
         }
         if (name == null) {
@@ -142,7 +162,7 @@ public class Computer implements Serializable {
     @Override
     public String toString() {
         return "Computer [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued=" + discontinued
-                + ", manufacturer=" + manufacturer + "]";
+                + ", manufacturer=" + company + "]";
     }
 
     public static class Builder {
@@ -202,7 +222,7 @@ public class Computer implements Serializable {
          * @return a Builder
          */
         public Builder withManufacturer(Company manufacturer) {
-            this.computer.manufacturer = manufacturer;
+            this.computer.company = manufacturer;
             return this;
         }
 

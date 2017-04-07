@@ -11,7 +11,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import com.excilys.computerdatabase.cli.view.ListComputerView;
 import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
-import com.excilys.computerdatabase.pagination.Page;
+import com.excilys.computerdatabase.pagination.Pagination;
 import com.excilys.computerdatabase.service.ServiceComputer;
 import com.excilys.computerdatabase.service.impl.ServiceComputerImpl;
 import com.excilys.computerdatabase.springConfig.CdbConfiguration;
@@ -37,7 +37,7 @@ public enum ListComputerController {
     
     private ServiceComputer serviceComputer = context.getBean(ServiceComputerImpl.class);
 
-    private Page<Computer> page = new Page();
+    private Pagination<Computer> page = new Pagination();
 
     /**
      *
@@ -75,7 +75,7 @@ public enum ListComputerController {
             }
             if (!quit && offset >= 0) {
             	page.setPage(offset);
-                page = serviceComputer.getPage(page);
+                //page = serviceComputer.getPage(page);
                 listComputerView.displayComputers(page.getElements());
             }
         }

@@ -2,10 +2,13 @@ package com.excilys.computerdatabase.entity;
 
 import java.util.Optional;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 import com.excilys.computerdatabase.validation.EntityValidation;
 
@@ -14,14 +17,19 @@ import com.excilys.computerdatabase.validation.EntityValidation;
  *
  *         20 févr. 2017
  */
+@Entity
+@Table(name="company")
 public class Company {
 
-    @Min(0)
+   // @Min(0)
+    @Id
+    //@GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
     
-    @NotNull
-    @Size(min = 2, max = 20)
-    @Pattern(regexp="[\\w-_.\\s]*")
+   // @NotNull
+   // @Size(min = 2, max = 20)
+    //@Pattern(regexp="[\\w-_.\\s]*")
+    @Column(name="name")
     private String name;
 
     /**

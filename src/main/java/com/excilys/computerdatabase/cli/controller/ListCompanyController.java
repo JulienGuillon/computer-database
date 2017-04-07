@@ -10,7 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import com.excilys.computerdatabase.cli.view.ListCompanyView;
 import com.excilys.computerdatabase.entity.Company;
 import com.excilys.computerdatabase.exception.PersistenceException;
-import com.excilys.computerdatabase.pagination.Page;
+import com.excilys.computerdatabase.pagination.Pagination;
 import com.excilys.computerdatabase.service.ServiceCompany;
 import com.excilys.computerdatabase.service.impl.ServiceCompanyImpl;
 import com.excilys.computerdatabase.springConfig.CdbConfiguration;
@@ -37,7 +37,7 @@ public enum ListCompanyController {
     
     private ServiceCompany serviceCompany = context.getBean(ServiceCompanyImpl.class);
 
-    private Page<Company> page = new Page();
+    private Pagination<Company> page = new Pagination();
 
     /**
      *
@@ -73,7 +73,7 @@ public enum ListCompanyController {
             }
             if (!quit && offset >= 0) {
             	page.setPage(offset);
-                page = serviceCompany.getPage(page);
+                //page = serviceCompany.getPage(page);
                 listCompanyView.displayCompanies(page.getElements());
             }
         }

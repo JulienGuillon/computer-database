@@ -27,7 +27,7 @@ public class MapperCompanyDto {
        return companies;
    }
    
-   public static List<CompanyDTO> fromCompaniesToCompaniesDto(List<Company> companies) {
+   public static List<CompanyDTO> fromCompaniesToCompaniesDto(Iterable<Company> companies) {
        List<CompanyDTO> companiesDto = new ArrayList<>();
        for (Company company : companies) {
            companiesDto.add(toDTO(company));

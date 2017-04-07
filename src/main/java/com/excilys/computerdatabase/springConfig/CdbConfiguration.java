@@ -2,11 +2,14 @@ package com.excilys.computerdatabase.springConfig;
 
 import java.util.Locale;
 
+import javax.persistence.PersistenceContext;
+
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -26,8 +29,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.excilys.computerdatabase", "com.excilys.computerdatabase.persistence",
-        "com.excilys.computerdatabase.controller"})
+@ComponentScan("com.excilys.computerdatabase")
 public class CdbConfiguration extends WebMvcConfigurerAdapter {
     /**
      * Set configuration for errors messages.
