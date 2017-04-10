@@ -32,12 +32,13 @@
                     <form:form action="editComputer"
                     	method="POST" modelAttribute="computerEdit">
                         <input name="action" type="hidden" value="edit" id="${computer.id}"/>
-                        <form:input path="id" name="id" type="hidden" value="${computer.id}" id="${computer.id}"/>
+                        <form:input path="id" name="id" type="hidden" value="${computer.id}" id="${computer.id}"/>                        
                         
                         <fieldset>
                             <div class="form-group">
                                 <label for="computerName">Computer name</label>
                                 <form:input path="name" type="text" class="form-control" id="computerName" placeholder="${computer.name}" name="computerName" value="${computer.name}"/>
+				                <form:errors path="name" cssClass="error"/>                    
                             </div>
                             <div class="form-group">
                                 <label for="introduced">Introduced date</label>

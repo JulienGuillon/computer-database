@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.springConfig;
+package com.excilys.computerdatabase.config;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 

@@ -27,3 +27,9 @@ input[type='checkbox'] {
     border-radius: 5px;
     white-space: nowrap;
 }
+
+#login {
+    position: absolute;
+    right: 0px;
+    padding: 10px;
+}

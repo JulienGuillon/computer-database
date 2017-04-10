@@ -9,12 +9,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.excilys.computerdatabase.cli.view.ListComputerView;
+import com.excilys.computerdatabase.config.CdbConfiguration;
 import com.excilys.computerdatabase.entity.Computer;
 import com.excilys.computerdatabase.exception.PersistenceException;
 import com.excilys.computerdatabase.pagination.Pagination;
 import com.excilys.computerdatabase.service.ServiceComputer;
 import com.excilys.computerdatabase.service.impl.ServiceComputerImpl;
-import com.excilys.computerdatabase.springConfig.CdbConfiguration;
 
 /**
  * @author Guillon Julien

@@ -21,8 +21,14 @@
         <div class="container">
             <a id="homePage" class="navbar-brand" href="computerdatabase"> <spring:message code="cdb.dashboard.home"/> </a>
         </div>
-        lang : <a href="?locale=en">English</a> | <a
-				href="?locale=fr">French</a>
+        
+        <div>
+	    	<a href="?locale=en">English</a> | <a href="?locale=fr">French</a>
+        </div>
+
+		<div id="login">
+			<a href="login?logout">Logout</a>
+		</div>
     </header>
 
     <section id="main">

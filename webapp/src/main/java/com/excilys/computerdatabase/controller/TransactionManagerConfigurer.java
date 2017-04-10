@@ -1,4 +1,4 @@
-package com.excilys.computerdatabase.springConfig;
+package com.excilys.computerdatabase.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
