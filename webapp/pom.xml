@@ -2,21 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.excilys.computerdatabase</groupId>
-  <artifactId>cdb</artifactId>
-  <version>1.2.0</version>
-  <packaging>pom</packaging>
+    <parent>
+      <groupId>com.excilys.computerdatabase</groupId>
+      <artifactId>cdb</artifactId>
+      <version>1.1.0</version>
+    </parent>
   
-  <name>cdb</name>
-  <url>https://github.com/JulienGuillon/computer-database</url>
-
-    <modules>
-        <module>core</module>
-        <module>persistence</module>
-        <module>service</module>
-        <module>webapp</module>
-        <module>console</module>
-    </modules>
+    <packaging>war</packaging>    
+    <artifactId>webapp</artifactId>
     
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -44,10 +37,6 @@
 		<spring.version>4.3.7.RELEASE</spring.version>
 		<webdrivermanager.version>1.6.1</webdrivermanager.version>
 		<selenium.version>3.3.1</selenium.version>
-		<validation.version>1.1.0.Final</validation.version>
-		<persistence.version>2.1.1</persistence.version>
-		<spring.data.jpa.version>1.11.1.RELEASE</spring.data.jpa.version>
-		<hibernate.version>5.2.9.Final</hibernate.version>
 		<validation.version>1.1.0.Final</validation.version>
 		<persistence.version>2.1.1</persistence.version>
 		<spring.security.version>4.2.2.RELEASE</spring.security.version>
@@ -139,47 +128,39 @@
 			</plugin>
 			
 			<plugin>
-	           <groupId>org.apache.maven.plugins</groupId>
-	           <artifactId>maven-jxr-plugin</artifactId>
-	           <version>${jxr.version}</version>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-jxr-plugin</artifactId>
+           <version>${jxr.version}</version>
 			</plugin>
 		</plugins>
 	</reporting>
-	
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-			    <groupId>org.slf4j</groupId>
-			    <artifactId>slf4j-api</artifactId>
-			    <version>${slf4j.version}</version>
-			</dependency>
-		
-		   <dependency>
-		       <groupId>org.slf4j</groupId>
-		       <artifactId>slf4j-simple</artifactId>
-		       <version>${slf4j.version}</version>
-		   </dependency>
-	
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-				<scope>test</scope>
-			</dependency>
-			
-			<dependency>
-			    <groupId>org.apache.commons</groupId>
-			    <artifactId>commons-lang3</artifactId>
-			    <version>${commons.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	
 	<dependencies>
 		<dependency>
 		    <groupId>mysql</groupId>
 		    <artifactId>mysql-connector-java</artifactId>
 		    <version>${mysql.version}</version>
+		</dependency>
+
+
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>${slf4j.version}</version>
+		</dependency>
+	
+	   <dependency>
+	       <groupId>org.slf4j</groupId>
+	       <artifactId>slf4j-simple</artifactId>
+	       <version>${slf4j.version}</version>
+	   </dependency>
+
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
 		</dependency>
 
 
@@ -191,22 +172,9 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>jstl</artifactId>
-		    <version>${jstl.version}</version>
-		</dependency>
-			
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>${servlet.api.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>javax.servlet.jsp-api</artifactId>
-			<version>${servlet.jsp.version}</version>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>${commons.version}</version>
 		</dependency>
 		
 		<dependency>
@@ -260,6 +228,26 @@
 		</dependency>
 		
 		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>jstl</artifactId>
+		    <version>${jstl.version}</version>
+		</dependency>
+			
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<version>${servlet.jsp.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
 			<groupId>io.github.bonigarcia</groupId>
 			<artifactId>webdrivermanager</artifactId>
 			<version>${webdrivermanager.version}</version>
@@ -270,15 +258,57 @@
 		<dependency>
 		    <groupId>org.springframework.data</groupId>
 		    <artifactId>spring-data-jpa</artifactId>
-		    <version>${spring.data.jpa.version}</version>
+		    <version>1.11.1.RELEASE</version>
 		</dependency>
 		
 		
 		<dependency>
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-core</artifactId>
-		    <version>${hibernate.version}</version>
+		    <version>5.2.9.Final</version>
 		</dependency>
+		
+		<dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>	
+        
+		<dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>service</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>	
+        
+		<dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>persistence</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>	
+
+		<dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+            <version>${spring.security.version}</version>
+        </dependency>
 		
 	</dependencies>
 </project>
