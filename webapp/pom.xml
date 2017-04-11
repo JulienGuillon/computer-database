@@ -40,6 +40,7 @@
 		<validation.version>1.1.0.Final</validation.version>
 		<persistence.version>2.1.1</persistence.version>
 		<spring.security.version>4.2.2.RELEASE</spring.security.version>
+		<jackson.version>2.8.8</jackson.version>
     	<checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
   	</properties>
 	<build>
@@ -309,6 +310,23 @@
             <artifactId>spring-security-taglibs</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
+		
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
 		
 	</dependencies>
 </project>

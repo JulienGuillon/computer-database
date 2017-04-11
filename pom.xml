@@ -16,6 +16,7 @@
         <module>service</module>
         <module>webapp</module>
         <module>console</module>
+        <module>webservice</module>
     </modules>
     
 	<properties>
