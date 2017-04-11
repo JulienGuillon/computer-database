@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.authorizeRequests().antMatchers("/addComputer","/computerdatabase")
+        http.authorizeRequests().antMatchers("/addComputer","/computerdatabase", "/editComputer")
             .access("hasRole('ROLE_ADMIN')").and().formLogin()
             .loginPage("/login").failureUrl("/login?error")
                 .usernameParameter("username")

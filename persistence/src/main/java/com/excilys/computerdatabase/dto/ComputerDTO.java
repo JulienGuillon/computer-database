@@ -1,7 +1,5 @@
 package com.excilys.computerdatabase.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * @author Guillon Julien
@@ -12,8 +10,6 @@ import javax.validation.constraints.Size;
 public class ComputerDTO {
     private long id;
 
-    @NotNull
-    @Size(min=3, message="Not valid, min 3 char")
     private String name;
     
     private String introduced;

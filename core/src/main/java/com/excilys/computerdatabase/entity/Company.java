@@ -4,8 +4,6 @@ import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -21,14 +19,10 @@ import com.excilys.computerdatabase.validation.EntityValidation;
 @Table(name="company")
 public class Company {
 
-   // @Min(0)
     @Id
-    //@GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
     
-   // @NotNull
-   // @Size(min = 2, max = 20)
-    //@Pattern(regexp="[\\w-_.\\s]*")
+
     @Column(name="name")
     private String name;
 
