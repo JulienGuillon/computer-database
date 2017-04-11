@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.excilys.computerdatabase.dto.CompanyDTO;
-import com.excilys.computerdatabase.dto.CompanyDTO.Builder;
 import com.excilys.computerdatabase.entity.Company;
 
 /**

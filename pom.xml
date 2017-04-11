@@ -4,7 +4,7 @@
 
   <groupId>com.excilys.computerdatabase</groupId>
   <artifactId>cdb</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <packaging>pom</packaging>
   
   <name>cdb</name>
@@ -46,6 +46,11 @@
 		<selenium.version>3.3.1</selenium.version>
 		<validation.version>1.1.0.Final</validation.version>
 		<persistence.version>2.1.1</persistence.version>
+		<spring.data.jpa.version>1.11.1.RELEASE</spring.data.jpa.version>
+		<hibernate.version>5.2.9.Final</hibernate.version>
+		<validation.version>1.1.0.Final</validation.version>
+		<persistence.version>2.1.1</persistence.version>
+		<spring.security.version>4.2.2.RELEASE</spring.security.version>
     	<checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
   	</properties>
 	<build>
@@ -134,12 +139,41 @@
 			</plugin>
 			
 			<plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-jxr-plugin</artifactId>
-           <version>${jxr.version}</version>
+	           <groupId>org.apache.maven.plugins</groupId>
+	           <artifactId>maven-jxr-plugin</artifactId>
+	           <version>${jxr.version}</version>
 			</plugin>
 		</plugins>
 	</reporting>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+			    <groupId>org.slf4j</groupId>
+			    <artifactId>slf4j-api</artifactId>
+			    <version>${slf4j.version}</version>
+			</dependency>
+		
+		   <dependency>
+		       <groupId>org.slf4j</groupId>
+		       <artifactId>slf4j-simple</artifactId>
+		       <version>${slf4j.version}</version>
+		   </dependency>
+	
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			
+			<dependency>
+			    <groupId>org.apache.commons</groupId>
+			    <artifactId>commons-lang3</artifactId>
+			    <version>${commons.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	
 	<dependencies>
 		<dependency>
@@ -150,37 +184,10 @@
 
 
 		<dependency>
-		    <groupId>org.slf4j</groupId>
-		    <artifactId>slf4j-api</artifactId>
-		    <version>${slf4j.version}</version>
-		</dependency>
-	
-	   <dependency>
-	       <groupId>org.slf4j</groupId>
-	       <artifactId>slf4j-simple</artifactId>
-	       <version>${slf4j.version}</version>
-	   </dependency>
-
-
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-
-		<dependency>
 		    <groupId>org.mockito</groupId>
 		    <artifactId>mockito-all</artifactId>
 		    <version>${mockito.version}</version>
 		    <scope>test</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-lang3</artifactId>
-		    <version>${commons.version}</version>
 		</dependency>
 		
 		<dependency>
@@ -263,14 +270,14 @@
 		<dependency>
 		    <groupId>org.springframework.data</groupId>
 		    <artifactId>spring-data-jpa</artifactId>
-		    <version>1.11.1.RELEASE</version>
+		    <version>${spring.data.jpa.version}</version>
 		</dependency>
 		
 		
 		<dependency>
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-core</artifactId>
-		    <version>5.2.9.Final</version>
+		    <version>${hibernate.version}</version>
 		</dependency>
 		
 	</dependencies>

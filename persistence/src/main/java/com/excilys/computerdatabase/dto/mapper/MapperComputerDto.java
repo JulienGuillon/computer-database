@@ -41,7 +41,6 @@ public class MapperComputerDto {
      * @return a computer dto
      */
     public static Optional<ComputerDTO> toComputerDTO(Optional<Computer> optionalComputer) {
-        Optional<ComputerDTO> optional = Optional.empty();
         ComputerDTO computerDTO = new ComputerDTO();            
         if (optionalComputer.isPresent()) {
             Computer computer = optionalComputer.get();
@@ -52,7 +51,7 @@ public class MapperComputerDto {
             computerDTO.setManufacturerName(computer.getManufacturer() == null ? "" : computer.getManufacturer().getName());
             computerDTO.setManufacturerId(computer.getManufacturer() == null ? 0 : computer.getManufacturer().getId());
         }
-        return optional.ofNullable(computerDTO);
+        return Optional.ofNullable(computerDTO);
     }
 
     /**
