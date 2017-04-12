@@ -26,7 +26,7 @@ public class ComputerController {
     @RequestMapping(value="computers/{id}", method=RequestMethod.GET)
     public ComputerDTO getComputer(@PathVariable Long id){
         ComputerDTO computer = MapperComputerDto.toComputerDTO(serviceComputer.find(id)).get();
-        LOGGER.info(computer.getName());
         return computer;
     }
+    
 }

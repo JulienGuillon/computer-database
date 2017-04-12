@@ -53,6 +53,8 @@
 		<persistence.version>2.1.1</persistence.version>
 		<spring.security.version>4.2.2.RELEASE</spring.security.version>
     	<checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
+		<jackson.version>2.8.8</jackson.version>
+    	
   	</properties>
 	<build>
 		<plugins>
