@@ -52,7 +52,7 @@ public class DashboardController {
      */
     private void setParamToJsp(ModelMap model, Pagination<Computer> page) {
         page = serviceComputer.getPage(page);
-        List<ComputerDTO> computers = MapperComputerDto.toComputersDTO(page.getElements());
+        Iterable<ComputerDTO> computers = MapperComputerDto.toComputersDTO(page.getElements());
         model.addAttribute("numberOfComputers", page.getTotalElements());        
         model.addAttribute("computers", computers);
         model.addAttribute("limit", page.getElementsByPage());

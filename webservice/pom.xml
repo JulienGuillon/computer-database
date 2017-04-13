@@ -9,8 +9,9 @@
     </parent>
   
     <packaging>war</packaging>    
-    <artifactId>webapp</artifactId>
+    <artifactId>webservice</artifactId>
     
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -104,50 +105,21 @@
 		</plugins>
 	</reporting>
 	
-	<dependencies>		
-		<dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>core</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>	
+	<dependencies>
         
 		<dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>service</artifactId>
             <version>${project.parent.version}</version>
-        </dependency>	
+        </dependency>
         
 		<dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>persistence</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>	
-
-		<dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>${spring.security.version}</version>
-        </dependency>
+		    <groupId>javax.ws.rs</groupId>
+		    <artifactId>javax.ws.rs-api</artifactId>
+		    <version>2.0</version>
+		</dependency>
         
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>${spring.security.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>${spring.security.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-taglibs</artifactId>
-            <version>${spring.security.version}</version>
-        </dependency>
-		
-		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-core</artifactId>
 		    <version>${jackson.version}</version>
@@ -164,13 +136,6 @@
 		    <artifactId>jackson-annotations</artifactId>
 		    <version>${jackson.version}</version>
 		</dependency>
-		
-		<dependency>
-		    <groupId>javax.validation</groupId>
-		    <artifactId>validation-api</artifactId>
-		    <version>1.1.0.Final</version>
-		</dependency>
 
-		
 	</dependencies>
 </project>

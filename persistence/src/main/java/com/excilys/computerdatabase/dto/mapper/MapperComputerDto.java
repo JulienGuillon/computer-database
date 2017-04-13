@@ -23,7 +23,7 @@ public class MapperComputerDto {
      * @param computers :
      * @return a list of computer dto
      */
-    public static List<ComputerDTO> toComputersDTO(List<Computer> computers) {
+    public static Iterable<ComputerDTO> toComputersDTO(Iterable<Computer> computers) {
         List<ComputerDTO> computersDTO = new ArrayList<>();
         for (Computer computer : computers) {
             Optional<ComputerDTO> optional = toComputerDTO(Optional.ofNullable(computer));

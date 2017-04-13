@@ -1,5 +1,8 @@
 package com.excilys.computerdatabase.dto;
 
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author Guillon Julien
@@ -7,8 +10,13 @@ package com.excilys.computerdatabase.dto;
  * 1 mars 2017
  */
 
-public class ComputerDTO {
-    private long id;
+public class ComputerDTO implements Serializable {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private long id;
 
     private String name;
     
@@ -103,8 +111,16 @@ public class ComputerDTO {
     public void setManufacturerId(long manufacturerId) {
         this.manufacturerId = manufacturerId;
     }
+    
+    
 
-    public static Builder builder() {
+    @Override
+	public String toString() {
+		return "ComputerDTO [id=" + id + ", name=" + name + ", introduced=" + introduced + ", discontinued="
+				+ discontinued + ", manufacturerName=" + manufacturerName + ", manufacturerId=" + manufacturerId + "]";
+	}
+
+	public static Builder builder() {
         return new Builder();
     }
 
